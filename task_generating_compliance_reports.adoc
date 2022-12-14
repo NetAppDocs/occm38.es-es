@@ -1,0 +1,184 @@
+---
+sidebar: sidebar 
+permalink: task_generating_compliance_reports.html 
+keywords: report, privacy, risk, privacy risk assessment, compliance status, severity, compliance, privacy risk, data subjects, privacy, credit cards, pci dss, hipaa 
+summary: Cloud Compliance proporciona informes que puede usar para comprender mejor el estado del programa de privacidad de datos de su organización. 
+---
+= Ver informes de cumplimiento
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Compliance proporciona informes que puede usar para comprender mejor el estado del programa de privacidad de datos de su organización.
+
+De forma predeterminada, la consola de Cloud Compliance muestra los datos de cumplimiento de normativas de todas las bases de datos y entornos de trabajo. Si desea ver informes que contengan datos sólo para algunos de los entornos de trabajo, <<Selección de los entornos de trabajo para los informes,seleccione esos entornos de trabajo>>.
+
+
+NOTE: NetApp no puede garantizar una precisión del 100 % de los datos personales y datos personales confidenciales que identifica Cloud Compliance. Siempre debe validar la información revisando los datos.
+
+
+
+== Informe de evaluación del riesgo de privacidad
+
+El informe de evaluación de riesgos de privacidad proporciona una descripción general del estado de riesgo de privacidad de su organización, tal y como lo exigen las normativas de privacidad como RGPD y CCPA. El informe incluye la siguiente información:
+
+Estado de cumplimiento:: A. <<Puntuación de gravedad,puntuación de gravedad>> y la distribución de los datos, ya sean personales, confidenciales o no confidenciales.
+Descripción general de la evaluación:: Desglose de los tipos de datos personales encontrados, así como de las categorías de datos.
+Datos sujetos en esta evaluación:: El número de personas, por ubicación, para las cuales se encontraron identificadores nacionales.
+
+
+
+
+=== Generación del Informe de Evaluación de riesgo de Privacidad
+
+Vaya a la ficha cumplimiento para generar el informe.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Cloud Compliance*.
+. En *Informes*, haga clic en el icono de descarga situado junto a *Evaluación de riesgo de privacidad*.
++
+image:screenshot_privacy_risk_assessment.gif["Captura de pantalla de la ficha cumplimiento de normativas de Cloud Manager que muestra el panel Informes en el que puede hacer clic en Evaluación de riesgos de privacidad."]
+
+
+
+.Resultado
+Cloud Compliance genera un informe en PDF que puede revisar y enviar a otros grupos según sea necesario.
+
+
+
+=== Puntuación de gravedad
+
+Cloud Compliance calcula la puntuación de gravedad del informe de evaluación del riesgo de privacidad sobre la base de tres variables:
+
+* El porcentaje de datos personales de todos los datos.
+* El porcentaje de datos personales confidenciales de todos los datos.
+* El porcentaje de archivos que incluyen temas de datos, determinado por identificadores nacionales como ID nacionales, números de Seguro Social y números de identificación fiscal.
+
+
+La lógica utilizada para determinar la puntuación es la siguiente:
+
+[cols="27,73"]
+|===
+| Puntuación de gravedad | Lógica 
+
+
+| 0 | Las tres variables son exactamente 0 % 
+
+
+| 1 | Una de las variables es mayor que 0 % 
+
+
+| 2 | Una de las variables es mayor que el 3 % 
+
+
+| 3 | Dos de las variables son mayores que el 3% 
+
+
+| 4 | Tres de las variables son mayores que el 3% 
+
+
+| 5 | Una de las variables es mayor que el 6 % 
+
+
+| 6 | Dos de las variables son mayores que el 6% 
+
+
+| 7 | Tres de las variables son mayores que el 6% 
+
+
+| 8 | Una de las variables es mayor que el 15 % 
+
+
+| 9 | Dos de las variables son mayores que el 15% 
+
+
+| 10 | Tres de las variables son mayores que el 15% 
+|===
+
+
+== Informe PCI DSS
+
+El Informe de estándares de seguridad de datos del sector de la tarjeta de pago (PCI DSS) puede ayudarle a identificar la distribución de información de la tarjeta de crédito a través de sus archivos. El informe incluye la siguiente información:
+
+Descripción general:: Cuántos archivos contienen información de tarjeta de crédito y en qué entornos de trabajo.
+Cifrado:: Porcentaje de archivos que contienen información de la tarjeta de crédito en entornos de trabajo cifrados o no cifrados. Esta información es específica de Cloud Volumes ONTAP.
+Protección contra ransomware:: Porcentaje de archivos que contienen información de tarjetas de crédito en entornos de trabajo que tienen o no la protección contra ransomware habilitada. Esta información es específica de Cloud Volumes ONTAP.
+Retención:: El periodo de tiempo en el que se modificaron por última vez los archivos. Esto es útil porque no debe mantener la información de la tarjeta de crédito por más tiempo de lo que necesita para procesarla.
+Distribución de la información de la tarjeta de crédito:: Entornos en los que se encontró la información de la tarjeta de crédito y si la protección mediante cifrado y ransomware están habilitadas.
+
+
+
+
+=== Generación del informe PCI DSS
+
+Vaya a la ficha cumplimiento para generar el informe.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Cloud Compliance*.
+. En *Informes*, haga clic en el icono de descarga situado junto a *PCI DSS Report*.
++
+image:screenshot_pci_dss.gif["Captura de pantalla de la ficha cumplimiento de normativas de Cloud Manager que muestra el panel Informes en el que puede hacer clic en Evaluación de riesgos de privacidad."]
+
+
+
+.Resultado
+Cloud Compliance genera un informe en PDF que puede revisar y enviar a otros grupos según sea necesario.
+
+
+
+== Informe HIPAA
+
+El Informe de la Ley de Portabilidad y responsabilidad de los Seguros médicos (HIPAA) puede ayudarle a identificar archivos que contengan información médica. Está diseñado para ayudar en el requisito de su organización de cumplir con las leyes de privacidad de datos HIPAA. El Cloud Compliance de información incluye:
+
+* Patrón de referencia de salud
+* Código médico ICD-10-cm
+* Código médico ICD-9-cm
+* HR – Categoría de salud
+* Datos de aplicación de Salud
+
+
+El informe incluye la siguiente información:
+
+Descripción general:: Cuántos archivos contienen información médica y en qué entornos de trabajo.
+Cifrado:: Porcentaje de archivos que contienen información médica en entornos de trabajo cifrados o no cifrados. Esta información es específica de Cloud Volumes ONTAP.
+Protección contra ransomware:: Porcentaje de archivos que contienen información médica en entornos de trabajo que tienen o no la protección contra ransomware activada. Esta información es específica de Cloud Volumes ONTAP.
+Retención:: El periodo de tiempo en el que se modificaron por última vez los archivos. Esto es útil porque no debe mantener la información de salud por más tiempo de lo que necesita para procesarla.
+Distribución de la información de salud:: Entornos en los que se encontró la información médica y si está habilitada el cifrado y la protección contra ransomware.
+
+
+
+
+=== Generación del informe HIPAA
+
+Vaya a la ficha cumplimiento para generar el informe.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Cloud Compliance*.
+. En *Informes*, haga clic en el icono de descarga situado junto a *Informe HIPAA*.
++
+image:screenshot_hipaa.gif["Captura de pantalla de la ficha cumplimiento de normativas de Cloud Manager que muestra el panel Informes en el que puede hacer clic en HIPAA."]
+
+
+
+.Resultado
+Cloud Compliance genera un informe en PDF que puede revisar y enviar a otros grupos según sea necesario.
+
+
+
+== Selección de los entornos de trabajo para los informes
+
+Puede filtrar el contenido del panel de Cloud Compliance para ver los datos de cumplimiento de normativas de todos los entornos de trabajo y bases de datos, o solo en entornos de trabajo específicos.
+
+Al filtrar la consola, Cloud Compliance determina los datos de cumplimiento de normativas e informa solo a los entornos de trabajo que haya seleccionado.
+
+.Pasos
+. Haga clic en el menú desplegable filtro, seleccione los entornos de trabajo para los que desea ver datos y haga clic en *Ver*.
++
+image:screenshot_cloud_compliance_filter.gif["Captura de pantalla de la selección de los entornos de trabajo para los informes que desea ejecutar."]
+
+

@@ -1,0 +1,178 @@
+---
+sidebar: sidebar 
+permalink: concept_before_you_begin_to_deploy_gfc.html 
+keywords: global file cache, core, edge, management server 
+summary: Hay muchos requisitos que debe tener en cuenta antes de comenzar a implementar la caché de archivos global en el cloud y en sus oficinas remotas. 
+---
+= Antes de comenzar a implementar la caché de archivos global
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Hay muchos requisitos que debe tener en cuenta antes de comenzar a implementar la caché de archivos global en el cloud y en sus oficinas remotas.
+
+
+
+== Consideraciones de diseño del núcleo de caché de archivos global
+
+En función de sus necesidades, es posible que deba implementar una o varias instancias de Global File Cache Core para crear la estructura Global File Cache. La instancia de Core está diseñada para actuar como un cop de tráfico entre las instancias distribuidas de Global File Cache Edge y los recursos del servidor de archivos del centro de datos, por ejemplo, recursos compartidos de archivos, carpetas y archivos.
+
+Al diseñar su implementación de caché de archivos global, necesita determinar cuál es el más adecuado para su entorno en términos de escala, disponibilidad de recursos y redundancia. Global File Cache Core se puede implementar de las siguientes maneras:
+
+* Instancia independiente de GFC Core
+* Diseño distribuido de carga central GFC (en espera en frío)
+
+
+Consulte <<Directrices de tamaño>> Para comprender el número máximo de instancias de Edge y el total de usuarios que cada configuración admite:
+
+Consulte a un ingeniero de soluciones globales de caché de archivos si desea conocer las mejores opciones para la implementación de su empresa.
+
+
+
+== Directrices de tamaño
+
+Hay algunas pautas de tamaño que debe tener en cuenta a la hora de configurar el sistema inicial. Debe volver a revisar estas relaciones una vez acumulado algún historial de uso para asegurarse de que está utilizando el sistema de forma óptima. Entre ellos se incluyen:
+
+* Proporción de bordes de caché de archivos global/núcleo
+* Proporción de usuarios distribuidos/Global File Cache Edge
+* Proporción de usuarios distribuidos/núcleo de caché global de archivos
+
+
+
+
+=== Número de instancias de Edge por instancia de Core
+
+Nuestras directrices recomiendan hasta 10 instancias Edge por instancia de Core de caché de archivos global, con un máximo de 20 bordes por instancia de Core de caché de archivos global. Depende en gran medida del tipo y el tamaño medio de los archivos de la carga de trabajo más común. En algunos casos, con cargas de trabajo más comunes, puede añadir más instancias de Edge por Core, pero, en estos casos, debe ponerse en contacto con el servicio de soporte de NetApp para ajustar correctamente el tamaño de las instancias de Edge y Core, en función de los tipos y tamaños de los conjuntos de archivos.
+
+
+NOTE: Puede aprovechar múltiples instancias de Global File Cache Edge y Core simultáneamente para escalar horizontalmente su infraestructura en función de los requisitos.
+
+
+
+=== Número de usuarios simultáneos por instancia de Edge
+
+Global File Cache Edge gestiona el trabajo pesado en términos de algoritmos de almacenamiento en caché y diferenciación a nivel de archivo. Una única instancia de Global File Cache Edge puede servir hasta 400 usuarios por instancia física Edge dedicada y hasta 200 usuarios para puestas en marcha virtuales dedicadas. Depende en gran medida del tipo y el tamaño medio de los archivos de la carga de trabajo más común. Para tipos de archivos de colaboración más grandes, guiar hacia el 50% del límite inferior máximo de usuarios por límite inferior de Global File Cache Edge (en función de la implementación física o virtual). Para elementos de Office más comunes con un tamaño medio de archivo <1 MB, guía hacia el 100% de usuarios por límite superior de borde de caché de archivos global (dependiendo de la implementación física o virtual).
+
+
+NOTE: Global File Cache Edge detecta si se está ejecutando en una instancia virtual o física y limitará el número de conexiones SMB al recurso compartido local de archivos virtuales al máximo de 200 o 400 conexiones simultáneas.
+
+
+
+=== Número de usuarios simultáneos por instancia de Core
+
+La instancia de Global File Cache Core es extremadamente escalable, con un número recomendado de usuarios simultáneos de 3,000 usuarios por Core. Depende en gran medida del tipo y el tamaño medio de los archivos de la carga de trabajo más común.
+
+Consulte a un ingeniero de soluciones globales de caché de archivos si desea conocer las mejores opciones para la implementación de su empresa.
+
+
+
+== Requisitos previos
+
+Los requisitos previos descritos en esta sección son para los componentes instalados en la nube: El servidor de administración de caché global de archivos y el núcleo de caché global de archivos.
+
+Se describen los requisitos previos de Global File Cache Edge link:download_gfc_resources.html#global-file-cache-edge-requirements["aquí"].
+
+
+
+=== Instancia de Cloud Manager
+
+Cuando utilice Cloud Volumes ONTAP para Azure como plataforma de almacenamiento, asegúrese de que Cloud Manager tenga los permisos que se muestran en la información más reciente https://occm-sample-policies.s3.amazonaws.com/Policy_for_cloud_Manager_Azure_3.8.7.json["Política de Cloud Manager para Azure"^].
+
+Las instancias recién creadas tendrán todos los permisos necesarios de forma predeterminada. Si implementó su instancia antes de la versión 3.8.7 (3 de agosto de 2020), tendrá que añadir estos elementos.
+
+[source, json]
+----
+"Microsoft.Resources/deployments/operationStatuses/read",
+"Microsoft.Insights/Metrics/Read",
+"Microsoft.Compute/virtualMachines/extensions/write",
+"Microsoft.Compute/virtualMachines/extensions/read",
+"Microsoft.Compute/virtualMachines/extensions/delete",
+"Microsoft.Compute/virtualMachines/delete",
+"Microsoft.Network/networkInterfaces/delete",
+"Microsoft.Network/networkSecurityGroups/delete",
+"Microsoft.Resources/deployments/delete",
+----
+
+
+=== Plataforma de almacenamiento (volúmenes)
+
+La plataforma de almacenamiento del entorno de administración, en este caso, la instancia de Cloud Volumes ONTAP implementada, debería presentar recursos compartidos de archivos SMB. Todos los recursos compartidos que se expongan a través de la caché global de archivos deben permitir al grupo Everyone Control total en el nivel de recurso compartido, restringiendo al mismo tiempo los permisos a través de los permisos NTFS.
+
+Si no ha configurado al menos un recurso compartido de archivos SMB en la instancia de Cloud Volumes ONTAP, debe tener lista la siguiente información para poder configurar esta información durante la instalación:
+
+* Nombre de dominio de Active Directory, dirección IP del servidor de nombres y credenciales de administración de Active Directory.
+* El nombre y el tamaño del volumen que se desea crear, el nombre del agregado en el que se creará el volumen y el nombre del recurso compartido.
+
+
+Recomendamos que el volumen sea lo suficientemente grande como para alojar el conjunto de datos total para la aplicación junto con la capacidad de escalar en función de lo que crezca el conjunto de datos. Si tiene varios agregados en el entorno de trabajo, consulte link:task_managing_storage.html["Gestión de los agregados existentes"^] para determinar qué agregado tiene el espacio más disponible para el nuevo volumen.
+
+
+
+=== Servidor de gestión de caché de archivos global
+
+Este servidor de gestión global de caché de archivos requiere acceso externo a través de HTTPS (puerto TCP 443) para conectarse al servicio de suscripción del proveedor de cloud y acceder a estas direcciones URL:
+
+* https://talonazuremicroservices.azurewebsites.net["https://talonazuremicroservices.azurewebsites.net"]
+* https://talonlicensing.table.core.windows.net["https://talonlicensing.table.core.windows.net"]
+
+
+Este puerto debe excluirse de cualquier dispositivo de optimización WAN o políticas de restricción de firewall para que el software de caché de archivos global funcione correctamente.
+
+El servidor de administración de caché de archivos global también requiere un nombre NetBIOS único (geográfico) para la instancia (como GFC-MS1).
+
+
+NOTE: Un servidor de administración puede admitir varias instancias de Global File Cache Core implementadas en diferentes entornos de trabajo. Cuando se pone en marcha desde Cloud Manager, cada entorno de trabajo tiene su propio almacenamiento back-end independiente y no contendría los mismos datos.
+
+
+
+=== Núcleo de caché de archivos global
+
+Este núcleo de caché de archivos global escucha el intervalo de puertos TCP 6618-6630. En función de su firewall o de la configuración del grupo de seguridad de red (NSG), es posible que tenga que permitir explícitamente el acceso a estos puertos mediante reglas de puerto entrantes. Además, estos puertos deben excluirse de cualquier dispositivo de optimización WAN o directivas de restricción de firewall para que el software de caché de archivos global funcione correctamente.
+
+Los requisitos principales de la caché global de archivos son:
+
+* Nombre NetBIOS exclusivo (geográfico) para la instancia (Como GFC-CORE1)
+* Nombre de dominio de Active Directory
++
+** Las instancias de caché de archivos global deben unirse al dominio de Active Directory.
+** Las instancias de caché de archivos global deben gestionarse en una unidad organizativa específica (OU) de caché de archivos global y excluirse de los GPO de la empresa heredados.
+
+
+* Cuenta de servicio. Los servicios de este núcleo de caché global de archivos se ejecutan como una cuenta de usuario de dominio específica. Esta cuenta, también conocida como cuenta de servicio, debe tener los siguientes privilegios en cada uno de los servidores SMB que se asociarán a la instancia de núcleo de caché de archivos global:
++
+** La cuenta de servicio aprovisionada debe ser un usuario de dominio.
+
+
+
+
+Dependiendo del nivel de restricciones y GPO del entorno de red, esta cuenta podría requerir privilegios de administrador de dominio.
+
+* Debe tener privilegios de "Ejecutar como servicio".
+* La contraseña se debe establecer en "no caducar nunca".
+* La opción de cuenta "el usuario debe cambiar la contraseña en el siguiente inicio de sesión" debe ESTAR DESACTIVADA (sin marcar).
+* Debe ser miembro del grupo operadores de copia de seguridad integrados del servidor de archivos back-end (esto se habilita automáticamente cuando se implementa a través de Cloud Manager).
+
+
+
+
+=== Servidor de gestión de licencias
+
+* El servidor de gestión de licencias de caché global de archivos (LMS) debe configurarse en una edición de Microsoft Windows Server 2016 Standard o Datacenter o Windows Server 2019 Standard o Datacenter, preferiblemente en la instancia de núcleo de caché global de archivos en el centro de datos o en la nube.
+* Si necesita una instancia LMS de caché global de archivos independiente, debe instalar el paquete de instalación más reciente del software de caché global de archivos en una instancia prístina de Microsoft Windows Server.
+* La instancia de LMS debe poder conectarse al servicio de suscripción (servicios Azure / Internet pública) mediante HTTPS (puerto TCP 443).
+* Las instancias Core y Edge deben conectarse a la instancia LMS mediante HTTPS (puerto TCP 443).
+
+
+
+
+=== Redes
+
+* Firewall: Se deben permitir los puertos TCP entre las instancias Global File Cache Edge y Core.
+* Puertos TCP de caché de archivos global: 443 (HTTPS), 6618–6630.
+* Los dispositivos de optimización de red (como Riverbed Steelhead) deben configurarse para pasar por los puertos específicos de la caché global de archivos (TCP 6618-6630).
+

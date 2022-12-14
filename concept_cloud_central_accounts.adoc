@@ -1,0 +1,110 @@
+---
+sidebar: sidebar 
+permalink: concept_cloud_central_accounts.html 
+keywords: accounts, workspaces, Connector, users, cloud central, admin, Account Admin, Workspace Admin, account settings, workspaces, users, connector, service connector, user accounts, what are users, what is a workspace, users and workspaces 
+summary: Una cuenta de Cloud Central proporciona multi-tenancy y le permite organizar usuarios y recursos en espacios de trabajo aislados desde Cloud Manager. 
+---
+= Configuración de cuentas: Usuarios, espacios de trabajo, conectores y suscripciones
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Una cuenta _Cloud Central_ proporciona multi-tenancy y le permite organizar usuarios y recursos en espacios de trabajo aislados desde Cloud Manager.
+
+Por ejemplo, varios usuarios pueden implementar y administrar sistemas Cloud Volumes ONTAP en entornos aislados denominados _espacios de trabajo_. Estos espacios de trabajo son invisibles para otros usuarios, a menos que se compartan.
+
+Cuando acceda por primera vez a Cloud Manager, se le pedirá que seleccione o cree una cuenta de Cloud Central:
+
+image:screenshot_account_selection.gif["Una captura de pantalla del asistente de configuración de Cloud Manager que le solicita la cuenta de Cloud Central en la que desea crear Cloud Manager."]
+
+A continuación, los administradores de cuentas pueden modificar la configuración de esta cuenta mediante la administración de usuarios, áreas de trabajo, conectores y suscripciones:
+
+image:screenshot_account_settings.gif["Captura de pantalla que muestra el widget Configuración de la cuenta desde el que puede gestionar usuarios, áreas de trabajo y conectores."]
+
+Para obtener instrucciones paso a paso, consulte link:task_setting_up_cloud_central_accounts.html["Configurar la cuenta de Cloud Central"].
+
+
+
+== Configuración de la cuenta
+
+El widget Configuración de cuenta de Cloud Manager permite a los administradores de cuentas administrar una cuenta de Cloud Central. Si acaba de crear su cuenta, entonces comenzará desde cero. Pero si ya ha configurado una cuenta, verá _All_ los usuarios, espacios de trabajo, conectores y suscripciones asociados a la cuenta.
+
+
+
+== Usuarios
+
+Los usuarios que se muestran en la Configuración de la cuenta son usuarios de NetApp Cloud Central que está asociado a la cuenta de Cloud Central. La asociación de un usuario con una cuenta y uno o varios espacios de trabajo de esa cuenta permite a esos usuarios crear y administrar entornos de trabajo en Cloud Manager.
+
+Al asociar un usuario, debe asignarles un rol:
+
+* _Account Admin_: Puede realizar cualquier acción en Cloud Manager.
+* _Workspace Admin_: Puede crear y administrar recursos en el área de trabajo asignada.
+* _Cloud Compliance Viewer_: Sólo puede ver la información de cumplimiento y generar informes para los sistemas a los que tienen permiso para acceder.
+
+
+
+
+== Espacios de trabajo
+
+En Cloud Manager, un espacio de trabajo aísla cualquier número de _entornos de trabajo_ de otros entornos de trabajo. Los administradores de área de trabajo no pueden acceder a los entornos de trabajo de un área de trabajo a menos que el administrador de cuentas asocie el administrador a ese espacio de trabajo.
+
+Un entorno de trabajo representa un sistema de almacenamiento:
+
+* Un sistema Cloud Volumes ONTAP de un único nodo o un par de alta disponibilidad
+* Un clúster ONTAP en las instalaciones de la red
+* Un clúster de ONTAP en una configuración de almacenamiento privado de NetApp
+
+
+
+
+== Conectores
+
+Un conector permite a Cloud Manager gestionar recursos y procesos dentro de su entorno de cloud público. El conector se ejecuta en una instancia de máquina virtual que se implementa en su proveedor de cloud o en un host en las instalaciones que configuró.
+
+Puede utilizar un conector con más de un servicio de datos en cloud de NetApp. Por ejemplo, si ya tiene un conector para Cloud Manager, puede seleccionarlo cuando configura el servicio Cloud Tiering.
+
+
+
+== Suscripciones
+
+El widget Account Settings muestra las suscripciones de NetApp asociadas con la cuenta seleccionada.
+
+Al suscribirse a Cloud Manager desde el mercado de un proveedor de cloud, se le redirigirá a Cloud Central, donde necesita guardar su suscripción y asociarla a cuentas específicas.
+
+Una vez que se haya suscrito, todas las suscripciones estarán disponibles en el widget Configuración de la cuenta. Solo verá las suscripciones asociadas a la cuenta que está viendo actualmente.
+
+Puede cambiar el nombre de una suscripción y desasociar la suscripción de una o más cuentas.
+
+Por ejemplo, digamos que tiene dos cuentas y cada una se factura mediante suscripciones independientes. Puede desasociar una suscripción de una de las cuentas para que los usuarios de esa cuenta no elijan accidentalmente la suscripción incorrecta al crear un entorno de trabajo de Cloud Volume ONTAP.
+
+
+
+== Ejemplos
+
+Los siguientes ejemplos muestran cómo se pueden configurar las cuentas.
+
+
+NOTE: En las dos imágenes de ejemplo siguientes, el conector y los sistemas Cloud Volumes ONTAP no residen en la cuenta de Cloud Central de NetApp, que se ejecutan en un proveedor de cloud. Ésta es una representación conceptual de la relación entre cada componente.
+
+
+
+=== Ejemplo 1
+
+En el ejemplo siguiente se muestra una cuenta que utiliza dos espacios de trabajo para crear entornos aislados. El primer espacio de trabajo es para un entorno de producción y el segundo para un entorno de desarrollo.
+
+image:diagram_cloud_central_accounts_one.png["Diagrama que muestra una única cuenta de Cloud Central que contiene dos áreas de trabajo. Cada área de trabajo está asociada con el mismo conector y cada una tiene su propio administrador de área de trabajo"]
+
+
+
+=== Ejemplo 2
+
+Aquí tenemos otro ejemplo que muestra el máximo nivel de multi-tenancy utilizando dos cuentas de Cloud Central separadas. Por ejemplo, un proveedor de servicios puede usar Cloud Manager en una cuenta para proporcionar servicios a sus clientes, mientras que otro utiliza para proporcionar recuperación ante desastres para una de sus unidades de negocio.
+
+Tenga en cuenta que la cuenta 2 incluye dos conectores independientes. Esto puede suceder si tiene sistemas en regiones independientes o en proveedores de cloud independientes.
+
+image:diagram_cloud_central_accounts_two.png["Un diagrama que muestra dos cuentas de Cloud Central, cada una con varios espacios de trabajo y sus administradores de área de trabajo asociados."]

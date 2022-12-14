@@ -1,0 +1,185 @@
+---
+sidebar: sidebar 
+permalink: task_getting_started_monitoring.html 
+keywords: monitoring, cloud insights, tenant, acquisition unit, iops, throughput, latency, performance, cloud volumes ontap performance, volume performance 
+summary: Complete unos pasos para empezar a supervisar el rendimiento de Cloud Volumes ONTAP. 
+---
+= Supervisión de Cloud Volumes ONTAP en AWS
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Complete unos pasos para empezar a supervisar el rendimiento de Cloud Volumes ONTAP.
+
+
+
+== Inicio rápido
+
+Empiece rápidamente siguiendo estos pasos o desplácese hacia abajo hasta las secciones restantes para obtener todos los detalles.
+
+
+
+==== image:number1.png["Número 1"] Verifique la compatibilidad con la configuración
+
+[role="quick-margin-para"]
+Necesita una nueva instalación de Cloud Manager 3.8.4 o posterior en AWS o Cloud Volumes ONTAP en AWS, y debe ser un nuevo cliente de Cloud Insights.
+
+
+
+==== image:number2.png["Número 2"] Active la supervisión en su sistema nuevo o existente
+
+[role="quick-margin-list"]
+* Nuevos entornos de trabajo: Asegúrese de mantener la monitorización activada al crear el entorno de trabajo (está activada de forma predeterminada).
+* Entornos de trabajo existentes: Seleccione un entorno de trabajo y haga clic en *Iniciar supervisión*.
+
+
+
+
+==== image:number3.png["Número 3"] Ver los datos de rendimiento
+
+[role="quick-margin-para"]
+Haga clic en *Supervisión* y vea los datos de rendimiento de sus volúmenes.
+
+
+
+==== image:number4.png["Número 4"] Suscríbase a Cloud Insights
+
+[role="quick-margin-para"]
+Suscríbase antes de finalizar su prueba gratuita de 30 días para seguir viendo datos de rendimiento en Cloud Manager y Cloud Insights. https://docs.netapp.com/us-en/cloudinsights/concept_subscribing_to_cloud_insights.html["Aprenda a suscribirse"^].
+
+
+
+== Requisitos
+
+Lea los siguientes requisitos para asegurarse de tener una configuración compatible.
+
+Versiones de Cloud Manager compatibles:: Necesita una nueva instalación de Cloud Manager 3.8.4 o posterior. Se necesita una nueva instalación porque se necesita una nueva infraestructura para habilitar el servicio de supervisión. Esta infraestructura está disponible a partir de nuevas instalaciones de Cloud Manager 3.8.4.
+Versiones de Cloud Volumes ONTAP compatibles:: Cualquier versión de Cloud Volumes ONTAP en AWS.
+Requisito de Cloud Insights:: Debe ser un nuevo cliente de Cloud Insights. La supervisión no se admite si ya tiene un inquilino Cloud Insights.
+Dirección de correo electrónico de Cloud Central:: La dirección de correo electrónico de su cuenta de usuario de Cloud Central debe ser la dirección de correo electrónico de su empresa. Los dominios de correo electrónico gratuitos como gmail y hotmail no son compatibles al crear un inquilino Cloud Insights.
+Conexión de red para la unidad de adquisición:: La unidad de adquisición utiliza autenticación bidireccional/mutua para conectarse al servidor Cloud Insights. El certificado de cliente debe pasarse al servidor Cloud Insights para autenticarse. Para ello, el proxy debe configurarse para reenviar la solicitud http al servidor Cloud Insights sin descifrarse los datos.
++
+--
+La unidad de adquisición utiliza los dos puntos finales siguientes para comunicarse con Cloud Insights. Si tiene un firewall entre el servidor de la unidad de adquisición y Cloud Insights, necesitará estos puntos finales al configurar las reglas de firewall:
+
+....
+https://aulogin.<Cloud Insights Domain>
+https://<your-tenant-ID>.<Cloud Insights Domain>
+....
+Por ejemplo:
+
+....
+https://aulogin.c01.cloudinsights.netapp.com
+https://cg0c586a-ee05-45rb-a5ac-333b5ae7718d7.c01.cloudinsights.netapp.com
+....
+Póngase en contacto con nosotros a través del chat en el producto si necesita ayuda para identificar su dominio de Cloud Insights y su ID de inquilino.
+
+--
+Conexión en red para el conector:: De forma similar a la unidad de adquisición, el conector debe tener conectividad de salida al inquilino Cloud Insights. Pero el extremo que los contactos del conector son ligeramente diferentes. Se pone en contacto con la URL del host de inquilino mediante el ID de inquilino acortado:
++
+--
+ https://<your-short-tenant-ID>.<Cloud Insights Domain>
+Por ejemplo:
+
+ https://abcd12345.c01.cloudinsights.netapp.com
+De nuevo, puede ponerse en contacto con nosotros a través del chat de producto si necesita ayuda para identificar la URL del host de inquilinos.
+
+--
+
+
+
+
+== Activación de la supervisión en un sistema nuevo
+
+El servicio Supervisión está activado de forma predeterminada en el asistente del entorno de trabajo. Asegúrese de mantener la opción habilitada.
+
+.Pasos
+. Haga clic en *Crear Cloud Volumes ONTAP*.
+. Seleccione Amazon Web Services como proveedor de cloud y, a continuación, elija un único nodo o sistema de alta disponibilidad.
+. Rellene la página Details & Credentials.
+. En la página Servicios, deje el servicio activado y haga clic en *continuar*.
++
+image:screenshot_monitoring.gif["Captura de pantalla del servicio Supervisión que puede activar desde el asistente entornos de trabajo."]
+
+
+
+
+
+== Activación de la supervisión en un sistema existente
+
+Active la supervisión en cualquier momento desde el entorno de trabajo.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *entornos de trabajo*.
+. Seleccione un entorno de trabajo.
+. En el panel de la derecha, haga clic en *Iniciar supervisión*.
++
+image:screenshot_enable_monitoring.gif["[Captura de pantalla que muestra el icono Habilitar supervisión que está disponible en la ficha entornos de trabajo después de seleccionar un entorno de trabajo."]
+
+
+
+
+
+== Supervisar los volúmenes
+
+Supervise el rendimiento viendo las IOPS, el rendimiento y la latencia de cada volumen.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Supervisión*.
+. Filtre el contenido de la consola para obtener la información necesaria.
++
+** Seleccione un entorno de trabajo específico.
+** Seleccione un período de tiempo diferente.
+** Seleccione una SVM específica.
+** Busque un volumen específico.
++
+La siguiente imagen resalta cada una de estas opciones:
+
++
+image:screenshot_filter_options.gif["Captura de pantalla de la ficha Supervisión que muestra las opciones que puede utilizar para filtrar el contenido del panel."]
+
+
+
+. Haga clic en un volumen de la tabla para expandir la fila y ver una escala de tiempo para IOPS, rendimiento y latencia.
++
+image:screenshot_vol_performance.gif["Una captura de pantalla de los datos de rendimiento de un volumen."]
+
+. Utilice los datos para identificar problemas de rendimiento y minimizar el impacto en sus usuarios y aplicaciones.
+
+
+
+
+== Obtener más información de Cloud Insights
+
+La pestaña Monitoring de Cloud Manager proporciona datos de rendimiento básicos para los volúmenes. Desde el explorador, puede ir a la interfaz web de Cloud Insights para realizar supervisión más profunda y configurar alertas para sus sistemas Cloud Volumes ONTAP.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Supervisión*.
+. Haga clic en el enlace *Cloud Insights*.
++
+image:screenshot_cloud_insights.gif["Captura de pantalla que muestra el vínculo Cloud Insights disponible en la parte superior derecha de la ficha Supervisión."]
+
+
+
+.Resultado
+Cloud Insights se abre en una nueva pestaña del navegador. Si necesita ayuda, consulte https://docs.netapp.com/us-en/cloudinsights["Documentación de Cloud Insights"^].
+
+
+
+== Deshabilitar la supervisión
+
+Si ya no desea supervisar Cloud Volumes ONTAP, puede deshabilitar el servicio en cualquier momento.
+
+
+NOTE: Si deshabilita la supervisión desde cada uno de los entornos de trabajo, deberá eliminar la instancia de EC2 usted mismo. La instancia se denomina _AcquisitionUnit_ con un hash generado (UUID) concatenado. Por ejemplo: _AcquisitionUnit-FAN7FqeH_
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *entornos de trabajo*.
+. Seleccione un entorno de trabajo.
+. En el panel de la derecha, haga clic en image:screenshot_gallery_options.gif["Captura de pantalla del icono de opciones que aparece en la Panel Servicios después de seleccionar un entorno de trabajo"] Y seleccione *Desactivar escaneado*.
+

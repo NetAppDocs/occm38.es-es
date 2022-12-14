@@ -1,0 +1,147 @@
+---
+sidebar: sidebar 
+permalink: task_scanning_databases.html 
+keywords: cloud compliance, enable cloud compliance, outbound internet, endpoints, cloud compliance internet, web browser connectivity, cloud compliance access, privacy, compliance, databases, database schemas, Oracle, SAP HANA, SQL Server, MongoDB, PostgreSQL 
+summary: Realice algunos pasos para empezar a analizar sus esquemas de base de datos con Cloud Compliance. 
+---
+= Analizando esquemas de base de datos
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Realice algunos pasos para empezar a analizar sus esquemas de base de datos con Cloud Compliance.
+
+
+
+== Inicio rápido
+
+Empiece rápidamente siguiendo estos pasos o desplácese hacia abajo hasta las secciones restantes para obtener todos los detalles.
+
+
+
+==== image:number1.png["Número 1"] Revisar los requisitos previos de la base de datos
+
+[role="quick-margin-para"]
+Asegúrese de que la base de datos es compatible y de que dispone de la información necesaria para conectarse a la base de datos.
+
+
+
+==== image:number2.png["Número 2"] Implemente la instancia de Cloud Compliance
+
+[role="quick-margin-para"]
+link:task_deploy_cloud_compliance.html["Ponga en marcha Cloud Compliance en Cloud Manager"^] si aún no hay una instancia implementada.
+
+
+
+==== image:number3.png["Número 3"] Agregue el servidor de la base de datos
+
+[role="quick-margin-para"]
+Agregue el servidor de base de datos al que desea acceder.
+
+
+
+==== image:number4.png["Número 4"] Seleccione los esquemas
+
+[role="quick-margin-para"]
+Seleccione los esquemas que desea analizar.
+
+
+
+== Revisión de requisitos previos
+
+Revise los siguientes requisitos previos para asegurarse de tener una configuración compatible antes de habilitar Cloud Compliance.
+
+
+
+=== Bases de datos compatibles
+
+Cloud Compliance puede analizar esquemas de las siguientes bases de datos:
+
+* MongoDB
+* Oracle
+* PostgreSQL
+* SAP HANA
+* Servidor SQL (MSSQL)
+
+
+
+IMPORTANT: La característica de recopilación de estadísticas *debe estar activada* en la base de datos.
+
+
+
+=== Requisitos de base de datos
+
+Es posible analizar cualquier base de datos con conectividad a la instancia de Cloud Compliance, independientemente de dónde se encuentre. Sólo necesita la siguiente información para conectarse a la base de datos:
+
+* Dirección IP o nombre de host
+* Puerto
+* Nombre del servicio (sólo para acceder a bases de datos Oracle)
+* Credenciales que permiten el acceso de lectura a los esquemas
++
+Al elegir un nombre de usuario y contraseña, es importante elegir uno que tenga permisos de lectura completos para todos los esquemas y tablas que desee analizar. Le recomendamos que cree un usuario dedicado para el sistema Cloud Compliance con todos los permisos necesarios.
+
+
+
+*Nota:* para MongoDB, se requiere una función de administrador de sólo lectura.
+
+
+
+== Agregando el servidor de la base de datos
+
+Debe tener link:task_deploy_cloud_compliance.html["Ya se puso en marcha una instancia de Cloud Compliance en Cloud Manager"^].
+
+Agregue el servidor de base de datos donde residen los esquemas.
+
+. En la página _Scan Configuration_, haga clic en el botón *Add DB Server*.
++
+image:screenshot_compliance_add_db_server_button.png["Captura de pantalla de la página Configuración de exploración donde puede hacer clic en el botón Agregar servidor de base de datos."]
+
+. Introduzca la información necesaria para identificar el servidor de bases de datos.
++
+.. Seleccione el tipo de base de datos.
+.. Introduzca el puerto y el nombre de host o la dirección IP para conectarse a la base de datos.
+.. Para las bases de datos de Oracle, introduzca el nombre del servicio.
+.. Introduzca las credenciales para que Cloud Compliance pueda acceder al servidor.
+.. Haga clic en *Agregar servidor de base de datos*.
++
+image:screenshot_compliance_add_db_server_dialog.png["Captura de pantalla de la página Agregar servidor de base de datos para poder identificar la base de datos."]
+
+
+
+
+
+La base de datos se agrega a la lista de directorios de trabajo.
+
+
+
+== Habilitar y deshabilitar los análisis de cumplimiento de normativas en esquemas de base de datos
+
+Puede detener o iniciar esquemas de análisis en cualquier momento.
+
+. En la página _Scan Configuration_, haga clic en el botón *Configuración* de la base de datos que desee configurar.
++
+image:screenshot_compliance_db_server_config.png["Captura de pantalla de la página Configuración de exploración donde puede seleccionar el botón Configuración."]
+
+. Seleccione los esquemas que desea analizar moviendo el control deslizante hacia la derecha.
++
+image:screenshot_compliance_select_schemas.png["Captura de pantalla de la página Configuración de exploración donde puede elegir los esquemas que desea escanear."]
+
+
+
+.Resultado
+Cloud Compliance comienza a analizar los esquemas de base de datos que ha habilitado. Si hay algún error, aparecerán en la columna Estado, junto con la acción necesaria para corregir el error.
+
+
+
+== Quitar una base de datos de Cloud Manager
+
+Si ya no desea analizar una determinada base de datos, puede eliminarla de la interfaz de Cloud Manager y detener todos los análisis.
+
+En la página _Scan Configuration_, haga clic en image:screenshot_gallery_options.gif["Botón más"] En la fila de la base de datos y, a continuación, haga clic en *Quitar servidor de base de datos*.
+
+image:screenshot_compliance_remove_db.png["Captura de pantalla del botón Eliminar servidor de base de datos de la página Configuración de exploración."]

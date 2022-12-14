@@ -1,0 +1,106 @@
+---
+sidebar: sidebar 
+permalink: task_sync_installing_gcp.html 
+keywords: data broker, install, gcp, google, networking, permissions, regions, install data broker in gcp, install in gcp, deploy in gcp, deploy data broker in gcp, install data broker in google, install in google, deploy in google, deploy data broker in google, networking requirements, port, ports, 443, port 443, ntp, network time protocol, gcp data broker, service account 
+summary: Al crear una relación de sincronización, elija la opción GCP Data Broker para implementar el software de broker de datos en una nueva instancia de máquina virtual en un VPC. Cloud Sync le guía durante el proceso de instalación, pero en esta página se repiten los requisitos y los pasos que le ayudarán a preparar la instalación. 
+---
+= Instalación del agente de datos en Google Cloud Platform
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Al crear una relación de sincronización, elija la opción GCP Data Broker para implementar el software de broker de datos en una nueva instancia de máquina virtual en un VPC. Cloud Sync le guía durante el proceso de instalación, pero en esta página se repiten los requisitos y los pasos que le ayudarán a preparar la instalación.
+
+También tiene la opción de instalar el agente de datos en un host Linux existente en el cloud o en sus instalaciones. link:task_sync_installing_linux.html["Leer más"].
+
+
+
+== Regiones compatibles de GCP
+
+Se admiten todas las regiones.
+
+
+
+== Requisitos de red
+
+* El agente de datos necesita una conexión saliente a Internet para que pueda sondear el servicio Cloud Sync para las tareas a través del puerto 443.
++
+Cuando Cloud Sync implementa el intermediario de datos en GCP, crea un grupo de seguridad que habilita la comunicación saliente necesaria.
+
++
+Si necesita limitar la conectividad saliente, consulte link:reference_sync_networking.html["lista de puntos finales con los que se contacta el data broker"].
+
+* NetApp recomienda configurar el origen, el destino y el intermediario de datos para utilizar un servicio de protocolo de tiempo de redes (NTP). La diferencia de tiempo entre los tres componentes no debe superar los 5 minutos.
+
+
+
+
+== Permisos necesarios para desplegar el agente de datos en GCP
+
+Asegúrese de que el usuario de GCP que despliega el intermediario de datos tiene los siguientes permisos:
+
+[source, yaml]
+----
+- compute.networks.list
+- compute.regions.list
+- deploymentmanager.deployments.create
+- deploymentmanager.deployments.delete
+- deploymentmanager.operations.get
+- iam.serviceAccounts.list
+----
+
+
+== Permisos necesarios para la cuenta de servicio
+
+Al implementar el agente de datos, debe seleccionar una cuenta de servicio que tenga los siguientes permisos:
+
+[source, yaml]
+----
+- logging.logEntries.create
+- resourcemanager.projects.get
+- storage.buckets.get
+- storage.buckets.list
+- storage.objects.*
+----
+
+
+== Instalación del Data broker
+
+Puede instalar un intermediario de datos en GCP cuando cree una relación de sincronización.
+
+.Pasos
+. Haga clic en *Crear nueva sincronización*.
+. En la página *definir relación de sincronización*, elija un origen y un destino y haga clic en *continuar*.
++
+Complete los pasos hasta llegar a la página *Data Broker*.
+
+. En la página *Data Broker*, haga clic en *Crear Data Broker* y seleccione *Google Cloud Platform*.
++
+Si ya tiene un agente de datos, tendrá que hacer clic en el image:screenshot_plus_icon.gif["Una captura de pantalla si el icono más"] icono primero.
+
++
+image:screenshot_create_data_broker.gif["Captura de pantalla de la página Data Broker que le permita elegir entre AWS, Azure, GCP y un agente de datos en las instalaciones."]
+
+. Introduzca un nombre para el Data broker y haga clic en *continuar*.
+. Si se le solicita, inicie sesión con su cuenta de Google.
++
+El formulario es propiedad de Google y está alojado en él. Sus credenciales no se proporcionan a NetApp.
+
+. Seleccione un proyecto y una cuenta de servicio y, a continuación, elija una ubicación para el agente de datos.
++
+image:screenshot_data_broker_gcp.gif["Captura de pantalla que muestra la información necesaria para implementar un agente de datos en Google Cloud."]
+
+. Una vez que el Data broker esté disponible, haga clic en *continuar* en Cloud Sync.
++
+La puesta en marcha de la instancia tarda entre 5 y 10 minutos, aproximadamente. Puede supervisar el progreso desde el servicio Cloud Sync, que se actualiza automáticamente cuando la instancia está disponible.
+
+. Complete las páginas del asistente para crear la nueva relación de sincronización.
+
+
+.Resultado
+Ha implementado un agente de datos en GCP y creado una nueva relación de sincronización. Puede utilizar este Data broker con relaciones de sincronización adicionales.

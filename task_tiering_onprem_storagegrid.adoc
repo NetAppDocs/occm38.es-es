@@ -1,0 +1,194 @@
+---
+sidebar: sidebar 
+permalink: task_tiering_onprem_storagegrid.html 
+keywords: data tiering, fabricpool, cloud tiering, tiering cold data, tiering inactive data, tiering aff, tiering fas, tiering ontap, tiering volumes, tier data, tier cold data, tier fas, tier aff, tier ontap, storagegrid, tier to storagegrid, fabricpool storagegrid 
+summary: Libere espacio en sus clústeres de ONTAP en las instalaciones organizando en niveles los datos en StorageGRID. La organización en niveles de los datos utiliza el servicio Cloud Tiering de NetApp. 
+---
+= Organización en niveles de los datos de los clústeres de ONTAP en las instalaciones a StorageGRID
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Libere espacio en sus clústeres de ONTAP en las instalaciones organizando en niveles los datos en StorageGRID. La organización en niveles de los datos utiliza el servicio Cloud Tiering de NetApp.
+
+
+
+== Inicio rápido
+
+Empiece rápidamente siguiendo estos pasos o desplácese hacia abajo hasta las secciones restantes para obtener todos los detalles.
+
+
+
+==== image:number1.png["número 1"] Prepárese para organizar los datos en niveles en StorageGRID
+
+[role="quick-margin-para"]
+Necesita lo siguiente:
+
+[role="quick-margin-list"]
+* Un sistema AFF o FAS con agregados compuestos íntegramente de SSD que ejecutan ONTAP 9.4 o posterior, y una conexión a StorageGRID por un puerto especificado por el usuario.
+* StorageGRID 10.3 o una versión posterior con claves de acceso de AWS que tienen permisos de S3.
+* Un conector instalado en sus instalaciones.
+* Redes para el conector que permite una conexión HTTPS de salida al clúster de ONTAP, a StorageGRID y al servicio de organización en niveles del cloud.
+
+
+
+
+==== image:number2.png["número 2"] Configure la organización en niveles
+
+[role="quick-margin-para"]
+Seleccione un entorno de trabajo en las instalaciones, haga clic en *Configurar organización en niveles* y siga las indicaciones para organizar los datos en niveles en StorageGRID.
+
+
+
+== Requisitos
+
+Verifique la compatibilidad con su clúster de ONTAP, configure las redes y prepare el almacenamiento de objetos.
+
+La siguiente imagen muestra cada componente y las conexiones que necesita preparar entre ellos:
+
+image:diagram_cloud_tiering_storagegrid.png["\"Una imagen de arquitectura que muestra el servicio Cloud Tiering con una conexión al Service Connector de sus instalaciones, al Service Connector con una conexión al clúster de ONTAP y una conexión entre el clúster de ONTAP y el almacenamiento de objetos. Los datos activos residen en el clúster de ONTAP, mientras que los datos inactivos residen en el almacenamiento de objetos»."]
+
+
+NOTE: La comunicación entre el conector y StorageGRID es únicamente para la configuración del almacenamiento de objetos.
+
+
+
+=== Preparar los clústeres de ONTAP
+
+Los clústeres de ONTAP deben cumplir los siguientes requisitos cuando organizando datos en niveles en StorageGRID.
+
+Plataformas ONTAP compatibles:: Cloud Tiering admite sistemas AFF y agregados íntegramente de SSD en sistemas FAS.
+Versión de ONTAP compatible:: ONTAP 9.4 o posterior
+Licencia:: No se necesita una licencia de FabricPool en el clúster de ONTAP cuando se Tiering los datos en StorageGRID.
+Requisitos para la red de clúster::
++
+--
+* El clúster de ONTAP inicia una conexión HTTPS a través de un puerto especificado por el usuario a StorageGRID (el puerto se puede configurar durante la configuración del almacenamiento por niveles).
++
+ONTAP lee y escribe datos en y desde el almacenamiento de objetos. El almacenamiento de objetos nunca se inicia, solo responde.
+
+* Es necesaria una conexión de entrada desde el conector, que debe residir en sus instalaciones.
++
+No se necesita una conexión entre el clúster y el servicio Cloud Tiering.
+
+* Se requiere una LIF de interconexión de clústeres en cada nodo ONTAP que aloje volúmenes por niveles. La LIF debe estar asociada al _IPspace_ que ONTAP debería utilizar para conectarse al almacenamiento de objetos.
++
+Los espacios IP permiten la segregación del tráfico de red, lo que permite separar el tráfico de clientes para garantizar la privacidad y la seguridad. http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-69120CF0-F188-434F-913E-33ACB8751A5D.html["Obtenga más información acerca de los espacios IP"^].
+
++
+Cuando configura la organización en niveles de datos, Cloud Tiering le solicita que utilice el espacio IP. Debe elegir el espacio IP al que está asociada cada LIF. Puede ser el espacio IP «predeterminado» o un espacio IP personalizado que haya creado.
+
+
+
+--
+Volúmenes y agregados compatibles:: El número total de volúmenes que puede organizar en niveles en Cloud puede ser menor que el número de volúmenes en su sistema ONTAP. Esto se debe a que los volúmenes no pueden estar organizados en niveles desde algunos agregados. Por ejemplo, no se pueden organizar los datos por niveles desde SnapLock Volumes o desde configuraciones MetroCluster. Consulte la documentación de ONTAP para link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/GUID-8E421CC9-1DE1-492F-A84C-9EB1B0177807.html["Funcionalidad o funciones no compatibles con FabricPool"^].
+
+
+
+NOTE: Cloud Tiering admite FlexGroup Volumes, a partir de ONTAP 9.5. El programa de instalación funciona igual que cualquier otro volumen.
+
+
+
+=== Preparando StorageGRID
+
+StorageGRID debe cumplir con los siguientes requisitos.
+
+Versiones de StorageGRID compatibles:: Se admiten StorageGRID 10.3 y versiones posteriores.
+Credenciales de S3:: Cuando se configura una organización en niveles en StorageGRID, debe proporcionar la organización en niveles del cloud con una clave de acceso S3 y una clave secreta. Cloud Tiering utiliza las claves para acceder a sus bloques.
++
+--
+Estas claves de acceso deben estar asociadas a un usuario que tenga los siguientes permisos:
+
+[source, json]
+----
+"s3:ListAllMyBuckets",
+"s3:ListBucket",
+"s3:GetObject",
+"s3:PutObject",
+"s3:DeleteObject",
+"s3:CreateBucket"
+----
+--
+Control de versiones de objetos:: No debe habilitar el control de versiones de objetos StorageGRID en el bloque de almacenamiento de objetos.
+
+
+
+
+=== Creación o conmutación de conectores
+
+Se requiere un conector para organizar los datos en niveles en el cloud. Al organizar los datos en niveles en StorageGRID, debe haber un conector disponible en las instalaciones. Tendrá que instalar un conector nuevo o asegurarse de que el conector seleccionado actualmente reside en las instalaciones.
+
+* link:concept_connectors.html["Más información sobre conectores"]
+* link:reference_cloud_mgr_reqs.html["Requisitos del host del conector"]
+* link:task_installing_linux.html["Instalar el conector en un host Linux existente"]
+* link:task_managing_connectors.html["Cambio entre conectores"]
+
+
+
+
+=== Preparación de la conexión a redes para el conector
+
+Asegúrese de que el conector tiene las conexiones de red necesarias.
+
+.Pasos
+. Asegúrese de que la red en la que está instalado el conector habilita las siguientes conexiones:
++
+** Una conexión de Internet saliente al servicio Cloud Tiering Puerto 443 (HTTPS)
+** Una conexión HTTPS a través del puerto 443 a StorageGRID
+** Una conexión HTTPS a través del puerto 443 en los clústeres de ONTAP
+
+
+
+
+
+
+== Organización en niveles de los datos inactivos del primer clúster en StorageGRID
+
+Después de preparar su entorno, comience a organizar en niveles los datos inactivos del primer clúster.
+
+.Lo que necesitará
+* link:task_discovering_ontap.html["Un entorno de trabajo en las instalaciones"].
+* Una clave de acceso de AWS que tiene los permisos de S3 requeridos.
+
+
+.Pasos
+. Seleccione un clúster en las instalaciones.
+. Haga clic en *Configurar organización en niveles*.
++
+image:screenshot_setup_tiering_onprem.gif["Una captura de pantalla que muestra la opción Setup Tiering que aparece en la parte derecha de la pantalla después de seleccionar un entorno de trabajo ONTAP en las instalaciones."]
+
++
+Ahora se encuentra en la consola de almacenamiento por niveles.
+
+. Haga clic en *Configurar organización en niveles* junto al clúster.
+. Complete los pasos en la página *Configuración de niveles*:
++
+.. *Elija su proveedor*: Seleccione StorageGRID.
+.. *servidor*: Introduzca el FQDN del servidor StorageGRID, introduzca el puerto que ONTAP debe utilizar para la comunicación HTTPS con StorageGRID e introduzca la clave de acceso y la clave secreta para una cuenta AWS que tenga los permisos S3 necesarios.
+.. *Bucket*: Agregue un nuevo cucharón o seleccione un cucharón existente para los datos organizados por niveles.
+.. *Red de clúster*: Seleccione el espacio IP que ONTAP debe utilizar para conectarse al almacenamiento de objetos y haga clic en *continuar*.
++
+Al seleccionar el espacio IP correcto, se garantiza que Cloud Tiering pueda configurar una conexión entre ONTAP y el almacenamiento de objetos de su proveedor de cloud.
+
+
+
+. Haga clic en *continuar* para seleccionar los volúmenes que desea organizar en niveles.
+. En la página *Tier Volumes*, configure la clasificación por niveles para cada volumen. Haga clic en la image:screenshot_edit_icon.gif["Captura de pantalla del icono de edición que aparece en la final de cada fila de la tabla para organizar en niveles los volúmenes"] Seleccione una política de organización en niveles, ajuste opcionalmente los días de refrigeración y haga clic en *aplicar*.
++
+link:concept_cloud_tiering.html#volume-tiering-policies["Más información acerca de las políticas de organización en niveles de volúmenes"].
+
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_volumes_select.gif["Captura de pantalla que muestra los volúmenes seleccionados en la página Seleccionar volúmenes de origen."]
+
+
+
+.Resultado
+Ha configurado correctamente la organización en niveles de datos de los volúmenes del clúster en StorageGRID.
+
+.El futuro
+Puede añadir clústeres adicionales o revisar información sobre los datos activos e inactivos del clúster. Para obtener más información, consulte link:task_managing_tiering.html["Gestionar la organización en niveles de datos desde los clústeres"].

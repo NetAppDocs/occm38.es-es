@@ -1,0 +1,111 @@
+---
+sidebar: sidebar 
+permalink: task_sync_installing_aws.html 
+keywords: data broker, install, aws, networking, permissions, regions, install data broker in aws, install in aws, deploy in aws, deploy data broker in aws, cft, template, iam role, use your own iam role, regions, supported regions, networking requirements, port, ports, 443, port 443, ntp, network time protocol, permissions, iam role, iam permissions, aws data broker 
+summary: Al crear una relación de sincronización, elija la opción AWS Data Broker para implementar el software de agente de datos en una nueva instancia de EC2 en un VPC. Cloud Sync le guía durante el proceso de instalación, pero en esta página se repiten los requisitos y los pasos que le ayudarán a preparar la instalación. 
+---
+= Instalar el agente de datos en AWS
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Al crear una relación de sincronización, elija la opción AWS Data Broker para implementar el software de agente de datos en una nueva instancia de EC2 en un VPC. Cloud Sync le guía durante el proceso de instalación, pero en esta página se repiten los requisitos y los pasos que le ayudarán a preparar la instalación.
+
+También tiene la opción de instalar el agente de datos en un host Linux existente en el cloud o en sus instalaciones. link:task_sync_installing_linux.html["Leer más"].
+
+
+
+== Regiones admitidas de AWS
+
+Todas las regiones están soportadas excepto las regiones China y GovCloud (EE.UU.).
+
+
+
+== Requisitos de red
+
+* El agente de datos necesita una conexión saliente a Internet para que pueda sondear el servicio Cloud Sync para las tareas a través del puerto 443.
++
+Cuando Cloud Sync implementa el agente de datos en AWS, crea un grupo de seguridad que permite la comunicación saliente necesaria. Tenga en cuenta que puede configurar el agente de datos para que utilice un servidor proxy durante el proceso de instalación.
+
++
+Si necesita limitar la conectividad saliente, consulte link:reference_sync_networking.html["lista de puntos finales con los que se contacta el data broker"].
+
+* NetApp recomienda configurar el origen, el destino y el intermediario de datos para utilizar un servicio de protocolo de tiempo de redes (NTP). La diferencia de tiempo entre los tres componentes no debe superar los 5 minutos.
+
+
+
+
+== Permisos necesarios para implementar el agente de datos en AWS
+
+La cuenta de usuario de AWS que utiliza para implementar el el agente de datos debe tener los permisos incluidos en https://s3.amazonaws.com/metadata.datafabric.io/docs/aws_iam_policy.json["Esta política proporcionada por NetApp"^].
+
+
+
+== [[iam]]requisitos para utilizar su propia función de IAM con el agente de datos de AWS
+
+Cuando Cloud Sync implementa el Data broker, crea una función IAM para la instancia de Data broker. Si lo prefiere, puede implementar el agente de datos con su propio rol de IAM. Puede usar esta opción si su organización tiene políticas de seguridad estrictas.
+
+El rol del IAM debe cumplir los siguientes requisitos:
+
+* Se debe permitir al servicio EC2 asumir el rol IAM como entidad de confianza.
+* link:media/aws_iam_policy_data_broker.json["Los permisos definidos en este archivo JSON"^] Se debe adjuntar a la función IAM para que el intermediario de datos pueda funcionar correctamente.
+
+
+Siga los pasos que se indican a continuación para especificar la función de IAM al implementar el agente de datos.
+
+
+
+== Instalación del Data broker
+
+Puede instalar un agente de datos en AWS al crear una relación de sincronización.
+
+.Pasos
+. Haga clic en *Crear nueva sincronización*.
+. En la página *definir relación de sincronización*, elija un origen y un destino y haga clic en *continuar*.
++
+Complete los pasos hasta llegar a la página *Data Broker*.
+
+. En la página *Data Broker*, haga clic en *Crear Data Broker* y, a continuación, seleccione *Amazon Web Services*.
++
+Si ya tiene un agente de datos, tendrá que hacer clic en el image:screenshot_plus_icon.gif["Una captura de pantalla si el icono más"] icono primero.
+
++
+image:screenshot_create_data_broker.gif["Captura de pantalla de la página Data Broker que le permita elegir entre AWS, Azure, GCP y un agente de datos en las instalaciones."]
+
+. Introduzca un nombre para el Data broker y haga clic en *continuar*.
+. Introduzca una clave de acceso de AWS para que Cloud Sync pueda crear el agente de datos en AWS en su nombre.
++
+Las teclas no se guardan ni utilizan para ningún otro propósito.
+
++
+Si prefiere no proporcionar claves de acceso, haga clic en el vínculo situado en la parte inferior de la página para utilizar una plantilla CloudFormation en su lugar. Cuando usa esta opción, no necesita proporcionar credenciales, ya que inicia sesión directamente en AWS.
+
++
+[[cft]]en el siguiente vídeo se muestra cómo iniciar la instancia de Data broker mediante una plantilla CloudFormation:
+
++
+video::video_cloud_sync.mp4[width=848,height=480]
+. Si introdujo una clave de acceso de AWS, seleccione una ubicación para la instancia, seleccione un par de claves, elija si desea habilitar una dirección IP pública y, a continuación, seleccione un rol de IAM existente o deje el campo en blanco para que Cloud Sync cree el rol para usted.
++
+Si elige su propio rol de IAM, <<iam,deberá proporcionar los permisos necesarios>>.
+
++
+image:screenshot_aws_data_broker.gif["Una captura de pantalla de la información que debe proporcionar al implementar un agente de datos en AWS."]
+
+. Después de que el Data broker esté disponible, haga clic en *continuar* en Cloud Sync.
++
+En la siguiente imagen se muestra una instancia implementada correctamente en AWS:
+
++
+image:screenshot_created_instance.gif["Esta captura de pantalla muestra una instancia implementada correctamente. La interfaz muestra detalles acerca de la instancia, incluidas las redes de AWS."]
+
+. Complete las páginas del asistente para crear la nueva relación de sincronización.
+
+
+.Resultado
+Ha implementado un agente de datos en AWS y creado una nueva relación de sincronización. Puede utilizar este Data broker con relaciones de sincronización adicionales.

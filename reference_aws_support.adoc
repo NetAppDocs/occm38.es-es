@@ -1,0 +1,79 @@
+---
+sidebar: sidebar 
+permalink: reference_aws_support.html 
+keywords: aws, amazon, s3, support, regions, storage classes 
+summary: Cloud Tiering admite varias clases de almacenamiento S3 y la mayoría de regiones. 
+---
+= Clases y regiones de almacenamiento S3 admitidas
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Tiering admite varias clases de almacenamiento S3 y la mayoría de regiones.
+
+
+
+== Clases de almacenamiento S3 compatibles
+
+La organización en niveles de cloud puede aplicar una regla de ciclo de vida para que los datos se transiciones desde la clase de almacenamiento _Standard_ a otra clase de almacenamiento después de 30 días. Puede elegir entre las siguientes clases de almacenamiento:
+
+* Acceso Estándar-poco frecuente
+* Una Zona-IA
+* Inteligente
+
+
+Si elige Estándar, los datos permanecen en esa clase de almacenamiento.
+
+https://aws.amazon.com/s3/storage-classes/["Obtenga información acerca de las clases de almacenamiento S3"^].
+
+
+
+== Regiones admitidas de AWS
+
+Cloud Tiering admite las siguientes regiones de AWS.
+
+
+
+==== Asia-Pacífico
+
+* Bombay
+* Seúl
+* Singapur
+* Sídney
+* Tokio
+
+
+
+
+==== Europa
+
+* Frankfurt
+* Irlanda
+* Londres
+* París
+* Estocolmo
+
+
+
+
+==== América del Norte
+
+* Canada Central
+* GovCloud (EE. UU.-oeste) – a partir de ONTAP 9.3
+* Este DE EE. UU. (N. Virginia)
+* Este DE EE. UU. (Ohio)
+* Oeste DE EE. UU. (N. California)
+* Oeste DE EE. UU. (Oregón)
+
+
+
+
+==== Sudamérica
+
+* São Paulo
+

@@ -1,0 +1,75 @@
+---
+sidebar: sidebar 
+permalink: task_managing_state.html 
+keywords: schedule, schedules, scheduling, shutdowns, shut down, restart, stop, stopping, turn off, weekday, weekend 
+summary: Puede parar y iniciar Cloud Volumes ONTAP desde Cloud Manager para gestionar sus costes de tecnología de cloud. 
+---
+= Administrar el estado de Cloud Volumes ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Puede parar y iniciar Cloud Volumes ONTAP desde Cloud Manager para gestionar sus costes de tecnología de cloud.
+
+
+
+== Programar apagados automáticos de Cloud Volumes ONTAP
+
+Es posible que desee apagar Cloud Volumes ONTAP durante intervalos de tiempo específicos para reducir los costes de computación. En lugar de hacerlo manualmente, puede configurar Cloud Manager para que se apague automáticamente y, a continuación, reinicie los sistemas en momentos específicos.
+
+.Acerca de esta tarea
+Cuando se programa un apagado automático del sistema de Cloud Volumes ONTAP, Cloud Manager pospone el apagado si hay una transferencia de datos activa en curso. Cloud Manager apaga el sistema una vez que finaliza la transferencia.
+
+Esta tarea programa los apagados automáticos de ambos nodos en un par de alta disponibilidad.
+
+.Pasos
+. En el entorno de trabajo, haga clic en el icono del reloj:
++
+image:screenshot_shutdown_icon.gif["Captura de pantalla: Muestra el icono que carga la página de apagado automático."]
+
+. Especifique la programación de apagado:
++
+.. Elija si desea apagar el sistema todos los días, todos los días de la semana, cada fin de semana o cualquier combinación de las tres opciones.
+.. Especifique cuándo desea apagar el sistema y durante cuánto tiempo desea apagarlo.
++
+*ejemplo*
+
++
+En la siguiente imagen, se muestra una programación que indica a Cloud Manager que apague el sistema todos los sábados a las 12:00 a. m. durante 48 horas. Cloud Manager reinicia el sistema cada lunes a las 12:00
+
++
+image:screenshot_shutdown.gif["Captura de pantalla: Muestra un programa de apagado que apaga Cloud Volumes ONTAP todos los fines de semana a las 12:00 AM durante 48 horas."]
+
+
+
+. Haga clic en *Guardar*.
+
+
+.Resultado
+Cloud Manager guarda la programación. El icono de reloj cambia para indicar que se ha establecido una programación: image:screenshot_shutdown_icon_scheduled.gif["Captura de pantalla: Muestra el icono de apagado automático después de definir una programación."]
+
+
+
+== Detener Cloud Volumes ONTAP
+
+Detener Cloud Volumes ONTAP le ahorra acumular costes informáticos y crear snapshots de los discos raíz y de arranque, lo que puede ser útil para la solución de problemas.
+
+.Acerca de esta tarea
+Cuando detiene una pareja de alta disponibilidad, Cloud Manager apaga ambos nodos.
+
+.Pasos
+. En el entorno de trabajo, haga clic en el icono *Apagar*.
++
+image:screenshot_otc_turn_off.gif["Captura de pantalla: Muestra el icono para apagar un sistema Cloud Volumes ONTAP."]
+
+. Mantenga la opción de crear snapshots habilitadas porque las snapshots pueden habilitar la recuperación del sistema.
+. Haga clic en *Apagar*.
++
+Detener el sistema puede tardar hasta unos minutos. Puede reiniciar los sistemas más adelante desde la página del entorno de trabajo.
+
+

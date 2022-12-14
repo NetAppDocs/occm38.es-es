@@ -1,0 +1,74 @@
+---
+sidebar: sidebar 
+permalink: reference_user_roles.html 
+keywords: user, users, roles, role, task, permission, permissions, tasks, admin, Account Admin, Workspace Admin, Cloud Compliance Viewer 
+summary: Las funciones Administrador de cuentas, Administrador de área de trabajo y Visor de cumplimiento de la nube proporcionan permisos específicos a los usuarios. 
+---
+= Funciones
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Las funciones Administrador de cuentas, Administrador de área de trabajo y Visor de cumplimiento de la nube proporcionan permisos específicos a los usuarios.
+
+[cols="31,23,23,23"]
+|===
+| Tarea | Administrador de cuentas | Administrador de área de trabajo | Visor de cumplimiento de normativas cloud 
+
+
+| Gestionar entornos de trabajo | Sí | Sí | No 
+
+
+| Activar servicios en entornos de trabajo | Sí | Sí | No 
+
+
+| Ver el estado de replicación de datos | Sí | Sí | No 
+
+
+| Visualice la línea de tiempo | Sí | Sí | No 
+
+
+| Cambiar entre espacios de trabajo | Sí | Sí | Sí 
+
+
+| Ver resultados de análisis de cumplimiento | Sí | Sí | Sí 
+
+
+| Eliminar entornos de trabajo | Sí | No | No 
+
+
+| Conecte los clústeres de Kubernetes a entornos de trabajo | Sí | No | No 
+
+
+| Reciba el informe de Cloud Volumes ONTAP | Sí | No | No 
+
+
+| Crear conectores | Sí | No | No 
+
+
+| Administrar cuentas de Cloud Central | Sí | No | No 
+
+
+| Gestionar credenciales | Sí | No | No 
+
+
+| Modifique la configuración de Cloud Manager | Sí | No | No 
+
+
+| Consulte y gestione la consola de soporte | Sí | No | No 
+
+
+| Elimine entornos de trabajo de Cloud Manager | Sí | No | No 
+
+
+| Instale un certificado HTTPS | Sí | No | No 
+|===
+.Enlaces relacionados
+* link:task_setting_up_cloud_central_accounts.html["Configuración de espacios de trabajo y usuarios en la cuenta de Cloud Central"^]
+* link:task_managing_cloud_central_accounts.html["Gestión de espacios de trabajo y usuarios en la cuenta de Cloud Central"^]
+

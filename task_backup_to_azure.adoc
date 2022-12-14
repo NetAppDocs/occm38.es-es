@@ -1,0 +1,169 @@
+---
+sidebar: sidebar 
+permalink: task_backup_to_azure.html 
+keywords: backing up, back up, backup, backup cloud volumes ontap, back up cloud volumes ontap, cloud volumes ontap, azure, azure blob, back up volumes, Backup to Cloud, cloud backup service 
+summary: Complete unos pasos para empezar a realizar backups de datos de Cloud Volumes ONTAP a almacenamiento de Azure Blob. 
+---
+= Realizar backups de los datos en almacenamiento de Azure Blob
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Complete unos pasos para empezar a realizar backups de datos de Cloud Volumes ONTAP a almacenamiento de Azure Blob.
+
+
+
+== Inicio rápido
+
+Empiece rápidamente siguiendo estos pasos o desplácese hacia abajo hasta las secciones restantes para obtener todos los detalles.
+
+
+
+==== image:number1.png["Número 1"] Verifique la compatibilidad con la configuración
+
+[role="quick-margin-list"]
+* Utiliza Cloud Volumes ONTAP 9.7 o posterior en Azure.
+* Dispone de una suscripción de proveedor de cloud válida para el espacio de almacenamiento en el que se ubicará los backups.
+* Se ha suscrito a https://azuremarketplace.microsoft.com/en-us/marketplace/apps/netapp.cloud-manager?tab=Overview["Oferta de Cloud Manager Marketplace Backup"^], o usted ha comprado link:task_managing_licenses.html#adding-and-updating-your-backup-byol-license["y activado"^] Una licencia BYOL de backup en cloud de NetApp.
+
+
+
+
+==== image:number2.png["Número 2"] Habilite el backup en cloud en su sistema nuevo o existente
+
+[role="quick-margin-list"]
+* Nuevos sistemas: El backup en el cloud está habilitado de forma predeterminada en el asistente del entorno de trabajo. Asegúrese de mantener la opción habilitada.
+* Sistemas existentes: Seleccione el entorno de trabajo y haga clic en *Activar* junto al servicio copia de seguridad en la nube en el panel derecho y, a continuación, siga el asistente de configuración.
++
+image:screenshot_backup_to_s3_icon.gif["Una captura de pantalla que muestra el botón de activación de copia de seguridad en la nube que está disponible después de seleccionar un entorno de trabajo."]
+
+
+
+
+
+==== image:number3.png["Número 3"] Introduzca los detalles del proveedor
+
+[role="quick-margin-para"]
+Seleccione la suscripción de proveedor y elija si desea crear un nuevo grupo de recursos o usar un grupo de recursos ya existente.
+
+[role="quick-margin-para"]
+image:screenshot_backup_provider_settings_azure.png["Una captura de pantalla que muestra los detalles del proveedor cloud al realizar la copia de seguridad Volúmenes desde un clúster en las instalaciones a un Azure Blob nivel"]
+
+
+
+==== image:number4.png["Número 4"] Defina la política de backup
+
+[role="quick-margin-para"]
+La política predeterminada realiza backups de volúmenes todos los días y conserva las 30 copias de backup más recientes de cada volumen. Cambie a backups semanales o mensuales, o seleccione una de las políticas definidas por el sistema que proporcionan más opciones.
+
+[role="quick-margin-para"]
+image:screenshot_backup_onprem_policy.png["Captura de pantalla que muestra la configuración de copia de seguridad en la nube, en la que puede activar o desactivar la función y, a continuación, elegir la retención de la copia de seguridad."]
+
+
+
+==== image:number5.png["Número 5"] Seleccione los volúmenes de los que desea realizar el backup
+
+[role="quick-margin-para"]
+Identificar los volúmenes de los que se desea realizar backup en la página Select Volumes.
+
+
+
+==== image:number6.png["Número 6"] Restaure sus datos, según sea necesario
+
+[role="quick-margin-para"]
+En la lista de backups, seleccione un volumen, seleccione un backup y, a continuación, restaure datos del backup en un nuevo volumen.
+
+[role="quick-margin-para"]
+image:screenshot_backup_to_s3_restore_icon.gif["Captura de pantalla del icono de restauración de una copia de seguridad después de seleccionar un volumen."]
+
+
+
+== Requisitos
+
+Lea los siguientes requisitos para asegurarse de que tiene una configuración compatible antes de empezar a realizar backups de volúmenes en el almacenamiento de Azure Blob.
+
+Versiones de ONTAP compatibles:: Cloud Volumes ONTAP 9.7 y posteriores.
+Regiones de Azure compatibles:: El backup en cloud es compatible en todas las regiones de Azure https://cloud.netapp.com/cloud-volumes-global-regions["Donde se admite Cloud Volumes ONTAP"^].
+Requisitos de licencia:: Para las licencias de Backup to Cloud PAYGO, es necesario suscribirse a través de Azure Marketplace antes de habilitar Backup en el cloud. La facturación de Backup en Cloud se realiza mediante esta suscripción. link:task_deploying_otc_azure.html["Puede suscribirse desde la página Detalles  Credentials del asistente de entorno de trabajo"^].
++
+--
+Para las licencias de BYOL de backup a cloud, necesita el número de serie de NetApp que le permite usar el servicio durante la duración y la capacidad de la licencia. Consulte link:task_managing_licenses.html#adding-and-updating-your-backup-byol-license["Adición y actualización de su licencia BYOL de copia de seguridad"^].
+
+Además, necesita tener una suscripción a Microsoft Azure para el espacio de almacenamiento en el que se ubicará los backups.
+
+--
+
+
+
+
+== Habilitación de Backup en cloud en un nuevo sistema
+
+De forma predeterminada, el backup en cloud está habilitado en el asistente de entorno de trabajo. Asegúrese de mantener la opción habilitada.
+
+
+NOTE: Si desea elegir el nombre del grupo de recursos, *deshabilite* copia de seguridad en la nube al implementar Cloud Volumes ONTAP. Siga los pasos de <<enabling-backup-to-cloud-on-an-existing-system,habilitar el backup en cloud en un sistema existente>> Para habilitar Backup en cloud y elegir el grupo de recursos.
+
+.Pasos
+. Haga clic en *Crear Cloud Volumes ONTAP*.
+. Seleccione Microsoft Azure como proveedor de cloud y, a continuación, elija un único nodo o sistema de alta disponibilidad.
+. Rellene la página Detalles y credenciales y asegúrese de que haya una suscripción a Azure Marketplace en su lugar.
+. En la página Servicios, deje el servicio activado y haga clic en *continuar*.
++
+image:screenshot_backup_to_azure.gif["Muestra la opción Backup to Cloud en el asistente para entorno de trabajo."]
+
+. Complete las páginas del asistente para implementar el sistema.
+
+
+.Resultado
+El backup en el cloud se habilita en el sistema y realiza backups de volúmenes cada día y retiene las 30 copias de backup más recientes.
+
+.El futuro
+link:task_managing_backups.html["Es posible gestionar backups si se cambia la programación de backup, se restauran los volúmenes, etc."^].
+
+
+
+== Habilitar Backup en el cloud en un sistema existente
+
+Active Backup en el cloud en cualquier momento directamente desde el entorno de trabajo.
+
+.Pasos
+. Seleccione el entorno de trabajo y haga clic en *Activar* junto al servicio copia de seguridad en la nube en el panel derecho.
++
+image:screenshot_backup_to_s3_icon.gif["Una captura de pantalla que muestra el botón Backup to Cloud Settings que está disponible después de seleccionar un entorno de trabajo."]
+
+. Seleccione los detalles del proveedor:
++
+.. La suscripción de Azure utilizada para almacenar los backups.
+.. El grupo de recursos: Es posible crear un nuevo grupo de recursos, o bien seleccionar y existente.
+.. Y, a continuación, haga clic en *continuar*.
++
+image:screenshot_backup_provider_settings_azure.png["Una captura de pantalla que muestra los detalles del proveedor cloud al realizar la copia de seguridad Volúmenes desde un clúster en las instalaciones a un Azure Blob nivel"]
+
++
+Tenga en cuenta que no puede cambiar la suscripción ni el grupo de recursos después de que se hayan iniciado los servicios.
+
+
+
+. En la página _define Policy_, seleccione el programa de copia de seguridad y el valor de retención y haga clic en *continuar*.
++
+image:screenshot_backup_onprem_policy.png["Captura de pantalla que muestra la configuración de copia de seguridad en la nube, en la que puede activar o desactivar la función y, a continuación, elegir la retención de la copia de seguridad."]
+
++
+Consulte link:concept_backup_to_cloud.html#the-schedule-is-daily-weekly-monthly-or-a-combination["la lista de políticas existentes"^].
+
+. Seleccione los volúmenes de los que desea realizar una copia de seguridad y haga clic en *Activar*.
++
+image:screenshot_backup_select_volumes.png["Captura de pantalla de selección de los volúmenes de los que se realizará una copia de seguridad."]
+
+
+
+.Resultado
+Backup a cloud empieza a realizar los backups iniciales de cada volumen seleccionado.
+
+.El futuro
+link:task_managing_backups.html["Es posible gestionar backups si se cambia la programación de backup, se restauran los volúmenes, etc."^].

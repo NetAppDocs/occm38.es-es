@@ -1,0 +1,86 @@
+---
+sidebar: sidebar 
+permalink: reference_azure_support.html 
+keywords: microsoft azure, azure, hot, access tier, cold, regions 
+summary: El almacenamiento en niveles cloud admite el nivel de acceso en caliente y la mayoría de las regiones. 
+---
+= Niveles de acceso de Azure Blob y regiones compatibles
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Tiering admite el nivel de acceso _Hot_ y la mayoría de las regiones.
+
+
+
+== Niveles de acceso de Azure Blob compatibles
+
+Cuando configura la organización en niveles de datos en Azure, Cloud Tiering utiliza automáticamente el nivel de acceso _Hot_ para los datos inactivos.
+
+
+
+== Regiones de Azure compatibles
+
+Cloud Tiering admite las siguientes regiones de Azure.
+
+
+
+=== África
+
+* Sudáfrica Norte
+
+
+
+
+=== Asia-Pacífico
+
+* Australia Oriental
+* Australia Sureste
+* Asia Oriental
+* Japón este
+* Japón Oeste
+* Corea Central
+* Corea del Sur
+* Sudeste asiático
+
+
+
+
+=== Europa
+
+* Francia Central
+* Alemania Central
+* Alemania Noreste
+* Europa del Norte
+* Reino Unido Sur
+* Oeste del Reino Unido
+* Europa Occidental
+
+
+
+
+=== América del Norte
+
+* Canada Central
+* Canadá este
+* Estados Unidos Central
+* Este de Estados Unidos
+* EE.UU. Oriental 2
+* Centro Norte de Estados Unidos
+* Centro Sur de EE. UU
+* Oeste de EE. UU
+* Oeste de EE.UU. 2
+* Centro Oeste de Estados Unidos
+
+
+
+
+=== Sudamérica
+
+* Brasil Sur
+

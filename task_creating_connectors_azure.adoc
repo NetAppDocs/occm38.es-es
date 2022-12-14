@@ -1,0 +1,139 @@
+---
+sidebar: sidebar 
+permalink: task_creating_connectors_azure.html 
+keywords: create connector in Azure, create connector in azure, create connector in gcp, launch connector in Azure, launch connector in azure, launch connector in gcp, deploy connector in Azure, deploy connector in azure, deploy connector in gcp 
+summary: Un administrador de cuentas debe poner en marcha un conector antes de poder utilizar la mayoría de las funciones de Cloud Manager. El conector permite a Cloud Manager gestionar recursos y procesos dentro de su entorno de cloud público. 
+---
+= Crear un conector en Azure desde Cloud Manager
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Un administrador de cuentas debe implementar un _Connector_ antes de poder utilizar la mayoría de las funciones de Cloud Manager. link:concept_connectors.html["Aprender cuando se necesita un conector"]. El conector permite a Cloud Manager gestionar recursos y procesos dentro de su entorno de cloud público.
+
+En esta página se describe cómo crear un conector en Azure directamente desde Cloud Manager. También tiene la opción a. link:task_launching_azure_mktp.html["Cree el conector desde Azure Marketplace"], o. link:task_installing_linux.html["descargue el software e instálelo en su propio host"].
+
+Estos pasos deben ser completados por un usuario que tenga la función de administrador de cuentas. Un administrador de área de trabajo no puede crear un conector.
+
+
+TIP: Al crear su primer entorno de trabajo de Cloud Volumes ONTAP, Cloud Manager le solicitará que cree un conector si aún no lo tiene.
+
+
+
+== Configurar permisos de Azure para crear un conector
+
+Antes de poder implementar un conector desde Cloud Manager, debe asegurarse de que su cuenta de Azure tenga los permisos correctos.
+
+.Pasos
+. Cree un rol personalizado con la política de Azure para Connector:
++
+.. Descargue el https://s3.amazonaws.com/occm-sample-policies/Policy_for_Setup_As_Service_Azure.json["Política de Azure para Connector"^].
++
+
+TIP: Haga clic con el botón derecho del ratón en el enlace y haga clic en *Guardar enlace como...* para descargar el archivo.
+
+.. Modifique el archivo JSON añadiendo su ID de suscripción de Azure al ámbito asignable.
++
+*ejemplo*
+
++
+[source, json]
+----
+"AssignableScopes": [
+"/subscriptions/d333af45-0d07-4154-943d-c25fbzzzzzzz",
+],
+----
+.. Use el archivo JSON para crear una función personalizada en Azure.
++
+El ejemplo siguiente muestra cómo crear una función personalizada con la CLI de Azure 2.0:
+
++
+`az role definition create --role-definition C:\Policy_for_Setup_As_Service_Azure.json`
+
++
+Ahora debería tener una función personalizada denominada _Azure SetupAsService_.
+
+
+
+. Asigne el rol al usuario que implementará Connector desde Cloud Manager:
++
+.. Abra el servicio *Suscripciones* y seleccione la suscripción del usuario.
+.. Haga clic en *Control de acceso (IAM)*.
+.. Haga clic en *Agregar* > *Agregar asignación de rol* y, a continuación, agregue los permisos:
++
+*** Seleccione el rol *Azure SetupAsService*.
++
+
+NOTE: Azure SetupAsService es el nombre predeterminado que se proporciona en https://mysupport.netapp.com/site/info/cloud-manager-policies["Política de implementación de conectores para Azure"^]. Si seleccionó otro nombre para el rol, seleccione ese nombre.
+
+*** Asigne acceso a un usuario, grupo o aplicación *AD de Azure*.
+*** Seleccione la cuenta de usuario.
+*** Haga clic en *Guardar*.
+
+
+
+
+
+
+.Resultado
+El usuario de Azure ahora tiene los permisos necesarios para implementar Connector desde Cloud Manager.
+
+
+
+== Creación de un conector en Azure
+
+Cloud Manager permite crear un conector en Azure directamente desde su interfaz de usuario.
+
+.Lo que necesitará
+* La https://mysupport.netapp.com/site/info/cloud-manager-policies["permisos necesarios"^] Para su cuenta de Azure.
+* Una suscripción a Azure.
+* Una red virtual y una subred en su región de Azure preferida.
+
+
+.Pasos
+. Si está creando su primer entorno de trabajo, haga clic en *Agregar entorno de trabajo* y siga las indicaciones. De lo contrario, haga clic en el menú desplegable *conector* y seleccione *Agregar conector*.
++
+image:screenshot_connector_add.gif["Captura de pantalla que muestra el icono conector en el encabezado y la acción Agregar conector ."]
+
+. Haga clic en *Iniciar*.
+. Elija *Microsoft Azure* como proveedor de cloud.
++
+Recuerde que el conector debe tener una conexión de red al tipo de entorno de trabajo que está creando y a los servicios que está planeando habilitar.
+
++
+link:reference_networking_cloud_manager.html["Obtenga más información sobre los requisitos de red del conector"].
+
+. Revise lo que necesitará y haga clic en *continuar*.
+. Si se le solicita, inicie sesión en su cuenta de Microsoft, que debería tener los permisos necesarios para crear la máquina virtual.
++
+El formulario es propiedad de Microsoft y está alojado en él. Sus credenciales no se proporcionan a NetApp.
+
++
+
+TIP: Si ya ha iniciado sesión en una cuenta de Azure, Cloud Manager utilizará esa cuenta automáticamente. Si tiene varias cuentas, es posible que deba cerrar la sesión primero para asegurarse de utilizar la cuenta correcta.
+
+. Proporcione la información necesaria:
++
+** *autenticación de VM*: Introduzca un nombre para la máquina virtual y un nombre de usuario y contraseña o clave pública.
+** *Configuración básica*: Elija una suscripción a Azure, una región de Azure y si desea crear un nuevo grupo de recursos o utilizar un grupo de recursos existente.
+** *Red*: Elija un vnet y una subred, si desea activar una dirección IP pública y, opcionalmente, especifique una configuración de proxy.
+** *Grupo de seguridad*: Elija si desea crear un nuevo grupo de seguridad o si desea seleccionar un grupo de seguridad existente que permita el acceso entrante HTTP, HTTPS y SSH.
++
+
+NOTE: No hay tráfico entrante en el conector, a menos que lo inicie. HTTP y HTTPS proporcionan acceso al link:concept_connectors.html#the-local-user-interface["Interfaz de usuario local"], que utilizará en raras circunstancias. SSH solo es necesario si necesita conectarse al host para la solución de problemas.
+
+
+
+. Haga clic en *Crear*.
++
+La máquina virtual debe estar lista en unos 7 minutos. Debe permanecer en la página hasta que el proceso se complete.
+
+
+
+.Después de terminar
+Debe asociar un conector a áreas de trabajo para que los administradores del área de trabajo puedan utilizar estos conectores para crear sistemas Cloud Volumes ONTAP. Si sólo tiene Administradores de cuentas, no es necesario asociar el conector a áreas de trabajo. Los administradores de cuentas tienen la posibilidad de acceder a todos los espacios de trabajo de Cloud Manager de forma predeterminada. link:task_setting_up_cloud_central_accounts.html#associating-connectors-with-workspaces["Leer más"].

@@ -1,0 +1,88 @@
+---
+sidebar: sidebar 
+permalink: reference_additional_info.html 
+keywords: community, forums, help, support, videos, policies, json, api, ontap, release notes, bugs, limitations, known issues, permissions, apis, flexcache, common vulnerabilities and exposures, cve, security 
+summary: Puede obtener ayuda y encontrar más información sobre Cloud Manager y Cloud Volumes ONTAP a través de diversos recursos, como vídeos, foros y soporte. 
+---
+= Dónde encontrar ayuda y más información
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Puede obtener ayuda y encontrar más información sobre Cloud Manager y Cloud Volumes ONTAP a través de diversos recursos, como vídeos, foros y soporte.
+
+* https://mysupport.netapp.com/GPS/ECMLS2588181.html["Soporte Cloud Volumes ONTAP de NetApp"^]
++
+Acceda a recursos de soporte para obtener ayuda y solucionar problemas con Cloud Volumes ONTAP.
+
+* https://www.youtube.com/playlist?list=PLdXI3bZJEw7lnoRo8FBKsX1zHbK8AQOoT["Vídeos para Cloud Manager y Cloud Volumes ONTAP"^]
++
+Vea vídeos que le muestran cómo poner en marcha y gestionar Cloud Volumes ONTAP, así como cómo replicar datos en su cloud híbrido.
+
+* https://mysupport.netapp.com/site/info/cloud-manager-policies["Políticas para Cloud Manager"^]
++
+Descargue los archivos JSON que incluyen los permisos que Cloud Manager necesita para realizar acciones en un proveedor de cloud.
+
+* link:api.html["Guía para desarrolladores de API de Cloud Manager"^]
++
+Lea una descripción general de las API, ejemplos de cómo utilizarlas y una referencia de API.
+
+* Formación para Cloud Volumes ONTAP
++
+** https://learningcenter.netapp.com/LC?ObjectType=WBT&ObjectID=00368390["Principios básicos de Cloud Volumes ONTAP"^]
+** https://learningcenter.netapp.com/LC?ObjectType=WBT&ObjectID=00369436["Implementación y gestión de Cloud Volumes ONTAP para Azure"^]
+** https://learningcenter.netapp.com/LC?ObjectType=WBT&ObjectID=00376094["Implementación y gestión de Cloud Volumes ONTAP para AWS"^]
+
+
+* Informes técnicos
++
+** https://www.netapp.com/us/media/tr-4383.pdf["Informe técnico de NetApp 4383: Caracterización del rendimiento de Cloud Volumes ONTAP en Amazon Web Services con cargas de trabajo de las aplicaciones"^]
+** https://www.netapp.com/us/media/tr-4671.pdf["Informe técnico de NetApp 4671: Caracterización del rendimiento de Cloud Volumes ONTAP en Azure con cargas de trabajo de aplicaciones"^]
+** https://www.netapp.com/us/media/tr-4816.pdf["Informe técnico de NetApp 4816: Caracterización del rendimiento de Cloud Volumes ONTAP para Google Cloud"^]
+
+
+* Recuperación ante desastres de SVM
++
+La recuperación ante desastres de SVM es el mirroring asíncrono de los datos de SVM y la configuración de una SVM de origen a una SVM de destino. Puede activar rápidamente una SVM de destino para el acceso a los datos si la SVM de origen ya no está disponible.
+
++
+** https://library.netapp.com/ecm/ecm_get_file/ECMLP2839856["Guía exprés de preparación para la recuperación de desastres de SVM de Cloud Volumes ONTAP 9"^]
++
+Describe cómo configurar rápidamente una SVM de destino con el fin de prepararse para la recuperación de desastres.
+
+** https://library.netapp.com/ecm/ecm_get_file/ECMLP2839857["Guía exprés de recuperación de desastres de SVM de Cloud Volumes ONTAP 9"^]
++
+Describe cómo activar rápidamente una SVM de destino después de un desastre y, a continuación, reactivar la SVM de origen.
+
+
+
+* http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-fc-mgmt/home.html["Guía completa de volúmenes de FlexCache para un acceso más rápido a los datos"^]
++
+Describe cómo crear y gestionar volúmenes de FlexCache en el mismo clúster o en un clúster diferente como volumen de origen para acelerar el acceso a los datos.
+
+* https://security.netapp.com/advisory/["Notificaciones de seguridad"^]
++
+Identifique las vulnerabilidades conocidas (CVE) para los productos de NetApp, incluido ONTAP. Tenga en cuenta que puede subsanar las vulnerabilidades de seguridad de Cloud Volumes ONTAP mediante la siguiente documentación de ONTAP.
+
+* http://docs.netapp.com/ontap-9/index.jsp["Centro de documentación de ONTAP 9"^]
++
+Acceda a documentación de productos para ONTAP, que puede ayudarle cuando utilice Cloud Volumes ONTAP.
+
+* https://community.netapp.com/t5/Cloud-Data-Services/ct-p/CDS["Comunidad de NetApp: Servicios de datos en el cloud"^]
++
+Conéctese con colegas, realice preguntas, intercambie ideas, encuentre recursos y comparta prácticas recomendadas.
+
+* http://cloud.netapp.com/["Cloud Central de NetApp"^]
++
+Encuentre información sobre otros productos y soluciones de NetApp para el cloud.
+
+* http://docs.netapp.com["Documentación de productos de NetApp"^]
++
+Busque en la documentación de productos de NetApp instrucciones, recursos y respuestas.
+
+

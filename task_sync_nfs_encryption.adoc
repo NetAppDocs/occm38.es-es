@@ -1,0 +1,140 @@
+---
+sidebar: sidebar 
+permalink: task_sync_nfs_encryption.html 
+keywords: encryption, in flight, data in flight, in-flight, data-in-flight, nfs, initiator, listener, port 
+summary: Si su empresa tiene políticas de seguridad estrictas, sincronice los datos entre servidores NFS en diferentes redes mediante el cifrado de datos en tránsito. 
+---
+= Sincronizando los datos NFS mediante el cifrado de datos en tránsito
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+Si su negocio tiene políticas de seguridad estrictas, puede sincronizar datos NFS mediante el cifrado de datos en tránsito. Esta función es compatible desde un servidor NFS a otro servidor NFS y de Azure NetApp Files a Azure NetApp Files.
+
+Por ejemplo, se recomienda sincronizar datos entre dos servidores NFS que se encuentran en redes diferentes. O puede que necesite transferir datos de Azure NetApp Files de manera segura en subredes o regiones.
+
+
+
+== Cómo funciona el cifrado de datos en tiempo real
+
+El cifrado en tiempo real de los datos cifra los datos NFS cuando se envían a través de la red entre dos gestores de datos. La siguiente imagen muestra una relación entre dos servidores NFS y dos agentes de datos:
+
+image:diagram_nfs_encryption.gif["«un diagrama que muestra dos servidores NFS y dos agentes de datos. Los datos fluyen desde el servidor NFS de origen hasta un agente de datos de origen en el que se cifran los datos. Los datos se envían, a continuación, al agente de datos de destino y, al servidor NFS de destino»."]
+
+Un agente de datos funciona como el _initiator_. Cuando es hora de sincronizar datos, envía una solicitud de conexión al otro intermediario de datos, que es el _listener_. Ese agente de datos escucha las solicitudes en el puerto 443. Puede utilizar un puerto diferente, si es necesario, pero asegúrese de comprobar que el puerto no está en uso por otro servicio.
+
+Por ejemplo, si sincroniza datos de un servidor NFS local con un servidor NFS basado en cloud, puede elegir el agente de datos que escucha las solicitudes de conexión y que las envía.
+
+Así es como funciona el cifrado en tránsito:
+
+. Después de crear la relación de sincronización, el iniciador inicia una conexión cifrada con el otro agente de datos.
+. El agente de datos de origen cifra los datos del origen mediante TLS 1.3.
+. A continuación, envía los datos a través de la red al agente de datos de destino.
+. El agente de datos de destino descifra los datos antes de enviarlos al destino.
+. Después de la copia inicial, el servicio sincroniza los datos modificados cada 24 horas. Si hay datos que sincronizar, el proceso comienza con el iniciador abriendo una conexión cifrada con el otro agente de datos.
++
+Si prefiere sincronizar datos con mayor frecuencia, link:task_sync_managing_relationships.html#changing-the-settings-for-a-sync-relationship["se puede cambiar la programación después de crear la relación"].
+
+
+
+
+
+== Versiones NFS compatibles
+
+* En los servidores NFS, el cifrado de datos en tránsito es compatible con las versiones 3, 4.0, 4.1 y 4.2 de NFS.
+* En Azure NetApp Files, el cifrado de datos en tiempo real es compatible con las versiones 3 y 4.1 de NFS.
+
+
+
+
+== Lo que necesitará para comenzar
+
+No olvide disponer de lo siguiente:
+
+* Dos servidores NFS que cumplen link:reference_sync_requirements.html#source-and-target-requirements["requisitos de origen y objetivo"] O Azure NetApp Files en dos subredes o regiones.
+* Las direcciones IP o los nombres de dominio completos de los servidores.
+* Ubicaciones de red para dos agentes de datos.
++
+Puede seleccionar un agente de datos existente pero debe funcionar como iniciador. El agente de datos del listener debe ser un agente de datos _new_.
+
++
+Si aún no ha implementado un agente de datos, revise los requisitos de Data Broker. Debido a que tiene directivas de seguridad estrictas, asegúrese de revisar los requisitos de red, que incluyen tráfico saliente desde el puerto 443 y el link:reference_sync_networking.html["puntos finales de internet"] que el agente de datos se pone en contacto con.
+
++
+** link:task_sync_installing_aws.html["Revise la instalación de AWS"]
+** link:task_sync_installing_azure.html["Revise la instalación de Azure"]
+** link:task_sync_installing_gcp.html["Revise la instalación de GCP"]
+** link:task_sync_installing_linux.html["Revise la instalación del host Linux"]
+
+
+
+
+
+
+== Sincronizando los datos NFS mediante el cifrado de datos en tránsito
+
+Cree una nueva relación de sincronización entre dos servidores NFS o entre Azure NetApp Files, habilite la opción de cifrado en curso y siga las indicaciones.
+
+.Pasos
+. Haga clic en *Crear nueva sincronización*.
+. Arrastre y suelte *servidor NFS* a las ubicaciones de origen y destino o *Azure NetApp Files* a las ubicaciones de origen y destino y seleccione *Sí* para activar el cifrado de datos en vuelo.
++
+En la siguiente imagen se muestra lo que seleccionaría para sincronizar datos entre dos servidores NFS:
+
++
+image:screenshot_nfs_encryption.gif["Una captura de pantalla que muestra una relación de sincronización de NFS a NFS con el cifrado de datos en tránsito activado."]
+
++
+La siguiente imagen muestra lo que seleccionaría para sincronizar datos entre Azure NetApp Files:
+
++
+image:screenshot_anf_encryption.gif["Una captura de pantalla que muestra una relación de sincronización de Azure NetApp Files a Azure NetApp Files con el cifrado de datos en tránsito activado."]
+
+. Siga las indicaciones para crear la relación:
++
+.. *NFS Server*/*Azure NetApp Files*: Elija la versión NFS y, a continuación, especifique un nuevo origen NFS o seleccione un servidor existente.
+.. *definir la funcionalidad de Data Broker*: Defina qué intermediario de datos _escucha_ las solicitudes de conexión de un puerto y cuál _inicia_ la conexión. Elija en función de sus requisitos de red.
+.. *Data Broker*: Siga las indicaciones para agregar un nuevo intermediario de datos de origen o seleccionar un intermediario de datos existente.
++
+Si el agente de datos de origen actúa como oyente, debe ser un nuevo agente de datos.
+
++
+Si necesita un nuevo agente de datos, Cloud Sync le pedirá las instrucciones de instalación. Puede desplegar el agente de datos en el cloud o descargar un script de instalación para su propio host Linux.
+
++
+image:screenshot_create_data_broker.gif["Una captura de pantalla que muestra la opción de seleccionar un agente de datos en AWS, Azure, Google Cloud Platform o un host Linux existente"]
+
+.. *directorios*: Elija los directorios que desea sincronizar seleccionando todos los directorios, o taladrando y seleccionando un subdirectorio.
++
+Haga clic en *Filtrar objetos de origen* para modificar la configuración que define cómo se sincronizan y mantienen los archivos y carpetas de origen en la ubicación de destino.
+
++
+image:screenshot_directories.gif["Captura de pantalla que muestra la opción de seleccionar un directorio de nivel superior, examinar y seleccionar la opción Filtrar objetos de origen."]
+
+.. *servidor NFS de destino*/*Azure NetApp Files de destino*: Elija la versión NFS y, a continuación, introduzca un destino NFS nuevo o seleccione un servidor existente.
+.. *Target Data Broker*: Siga las indicaciones para agregar un nuevo intermediario de datos de origen o seleccionar un intermediario de datos existente.
++
+Si el agente de datos de destino actúa como oyente, debe ser un nuevo agente de datos.
+
++
+A continuación se muestra un ejemplo del mensaje en el que el agente de datos de destino funciona como el listener. Observe la opción para especificar el puerto.
+
++
+image:screenshot_nfs_encryption_listener.gif["Captura de pantalla que muestra la opción de especificar un puerto en el agente de datos del listener."]
+
+.. *directorios de destino*: Seleccione un directorio de nivel superior o examine para seleccionar un subdirectorio existente o crear una nueva carpeta dentro de una exportación.
+.. *Configuración*: Defina cómo se sincronizan y mantienen los archivos y carpetas de origen en la ubicación de destino.
+.. *Revisión*: Revise los detalles de la relación de sincronización y haga clic en *Crear relación*.
++
+image:screenshot_nfs_encryption_review.gif["\"Una captura de pantalla que muestra la pantalla de revisión. Muestra los servidores NFS, los agentes de datos y la información de redes sobre cada uno»."]
+
+
+
+
+
+.Resultado
+Cloud Sync comienza a crear la nueva relación de sincronización. Cuando haya terminado, haga clic en *Ver en Panel* para ver detalles sobre la nueva relación.

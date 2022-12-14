@@ -1,0 +1,76 @@
+---
+sidebar: sidebar 
+permalink: concept_cvs_gcp.html 
+keywords: cloud volumes service for gcp, google cloud, cloud volumes, cloud volumes service subscription 
+summary: Cloud Volumes Service de NetApp para Google Cloud le permite agregar rápidamente cargas de trabajo multiprotocolo, así como crear y poner en marcha aplicaciones basadas en Windows y UNIX. 
+---
+= Más información sobre Cloud Volumes Service para Google Cloud
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Volumes Service de NetApp para Google Cloud le permite agregar rápidamente cargas de trabajo multiprotocolo, así como crear y poner en marcha aplicaciones basadas en Windows y UNIX.
+
+
+
+== Características principales:
+
+* Migre datos entre sus instalaciones y Google Cloud.
+* Aprovisione volúmenes de 1 a 100 TIB en segundos.
+* Compatibilidad con varios protocolos (puede crear un volumen NFS o SMB).
+* Proteja los datos con copias snapshot eficientes y automatizadas.
+* Acelere el desarrollo de aplicaciones con un clonado rápido.
+
+
+
+
+== Coste
+
+Los volúmenes creados por Cloud Volumes Service para Google Cloud se cobran a su suscripción al servicio, no a través de Cloud Manager.
+
+link:https://console.cloud.google.com/marketplace/product/endpoints/cloudvolumesgcp-api.netapp.com?q=cloud%20volumes%20service["Ver precios"^]
+
+Cloud Manager no tiene ningún coste para descubrir una región o volumen de Cloud Volumes Service para Google Cloud.
+
+
+
+== Regiones admitidas
+
+link:https://cloud.google.com/solutions/partners/netapp-cloud-volumes/regional-availability["Consulte las regiones de Google Cloud admitidas."^]
+
+
+
+== Antes de empezar
+
+Cloud Manager puede descubrir las suscripciones y volúmenes existentes de Cloud Volumes Service para GCP. Consulte https://cloud.google.com/solutions/partners/netapp-cloud-volumes/["Documentación de NetApp Cloud Volumes Service para Google Cloud"^] si aún no ha configurado su suscripción.
+
+
+
+== Obtener ayuda
+
+Use el chat de Cloud Manager para preguntas generales acerca del funcionamiento de Cloud Volumes Service en Cloud Manager.
+
+Si tiene alguna pregunta general sobre Cloud Volumes Service para Google Cloud, envíe un correo electrónico al equipo de Google Cloud de NetApp en gcinfo@netapp.com.
+
+En el caso de los problemas técnicos asociados con sus volúmenes de cloud, puede crear un caso de soporte técnico desde la consola de Google Cloud. Consulte link:https://cloud.google.com/solutions/partners/netapp-cloud-volumes/support["obtención de soporte"^] para obtener más detalles.
+
+
+
+== Limitaciones
+
+* Cloud Manager no admite la replicación de datos entre entornos de trabajo al usar volúmenes de Cloud Volumes Service.
+* No se admite la eliminación de su suscripción a Cloud Volumes Service para Google Cloud de Cloud Manager. Solo puede hacerlo a través de la consola de Google Cloud.
+
+
+
+
+== Enlaces relacionados
+
+* https://cloud.netapp.com/cloud-volumes-service-for-gcp["NetApp Cloud Central: Cloud Volumes Service para Google Cloud"^]
+* https://cloud.google.com/solutions/partners/netapp-cloud-volumes/["Documentación de NetApp Cloud Volumes Service para Google Cloud"^]
+

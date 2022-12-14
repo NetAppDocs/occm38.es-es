@@ -1,0 +1,103 @@
+---
+sidebar: sidebar 
+permalink: task_setting_up_kms.html 
+keywords: encryption, kms, key management service, cmk, customer master key, master key, key, permissions 
+summary: Si desea usar el cifrado de Amazon con Cloud Volumes ONTAP, debe configurar el servicio de gestión de claves de AWS. 
+---
+= Configuración de AWS KMS
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Si desea usar el cifrado de Amazon con Cloud Volumes ONTAP, debe configurar el servicio de gestión de claves (KMS) de AWS.
+
+.Pasos
+. Asegúrese de que existe una clave maestra de cliente (CMK) activa.
++
+El CMK puede ser un CMK gestionado por AWS o un CMK gestionado por el cliente. Puede encontrarse en la misma cuenta de AWS que Cloud Manager y Cloud Volumes ONTAP, o en una cuenta de AWS diferente.
+
++
+https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#master_keys["Documentación de AWS: Claves maestras de clientes (CMKs)"^]
+
+. Modifique la política de claves de cada CMK añadiendo el rol IAM que proporciona permisos a Cloud Manager como _key user_.
++
+La adición del rol IAM como usuario clave permite a Cloud Manager utilizar el CMK con Cloud Volumes ONTAP.
+
++
+https://docs.aws.amazon.com/kms/latest/developerguide/editing-keys.html["Documentación de AWS: Editar claves"^]
+
+. Si el CMK se encuentra en una cuenta de AWS diferente, realice los pasos siguientes:
++
+.. Vaya a la consola KMS desde la cuenta donde reside el CMK.
+.. Seleccione la tecla.
+.. En el panel *Configuración general*, copie el ARN de la clave.
++
+Deberá proporcionar el ARN al Cloud Manager cuando cree el sistema Cloud Volumes ONTAP.
+
+.. En el panel *otras cuentas de AWS*, agregue la cuenta de AWS que proporciona permisos a Cloud Manager.
++
+En la mayoría de los casos, esta es la cuenta en la que reside Cloud Manager. Si Cloud Manager no se instaló en AWS, sería la cuenta para la que proporcionó las claves de acceso de AWS a Cloud Manager.
+
++
+image:screenshot_cmk_add_accounts.gif["Esta captura de pantalla muestra el botón «Agregar otras cuentas de AWS» de la consola KMS de AWS."]
+
++
+image:screenshot_cmk_add_accounts_dialog.gif["Esta captura de pantalla muestra el cuadro de diálogo \"otras cuentas de AWS\" de la consola de AWS KMS."]
+
+.. Cambie ahora a la cuenta de AWS que proporciona permisos a Cloud Manager y abra la consola IAM.
+.. Cree una política de IAM que incluya los permisos que se indican a continuación.
+.. Asocie la política al rol de IAM o al usuario IAM que proporciona permisos a Cloud Manager.
++
+La siguiente directiva proporciona los permisos que Cloud Manager necesita para utilizar CMK desde la cuenta de AWS externa. Asegúrese de modificar la región y el ID de cuenta en las secciones "Recursos".
+
++
+[source, json]
+----
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowUseOfTheKey",
+            "Effect": "Allow",
+            "Action": [
+                "kms:Encrypt",
+                "kms:Decrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+                "kms:DescribeKey"
+            ],
+            "Resource": [
+                "arn:aws:kms:us-east-1:externalaccountid:key/externalkeyid"
+            ]
+        },
+        {
+            "Sid": "AllowAttachmentOfPersistentResources",
+            "Effect": "Allow",
+            "Action": [
+                "kms:CreateGrant",
+                "kms:ListGrants",
+                "kms:RevokeGrant"
+            ],
+            "Resource": [
+                "arn:aws:kms:us-east-1:externalaccountid:key/externalaccountid"
+            ],
+            "Condition": {
+                "Bool": {
+                    "kms:GrantIsForAWSResource": true
+                }
+            }
+        }
+    ]
+}
+----
++
+Para obtener más información sobre este proceso, consulte https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-modifying.html#key-policy-modifying-external-accounts["Documentación de AWS: Permitir que las cuentas de AWS externas puedan acceder a un CMK"^].
+
+
+
+

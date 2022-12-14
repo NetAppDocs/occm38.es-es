@@ -1,0 +1,141 @@
+---
+sidebar: sidebar 
+permalink: concept_cloud_sync.html 
+keywords: cloud sync, overview, conceptual, how, data broker, service 
+summary: El servicio Cloud Sync de NetApp ofrece una forma sencilla, segura y automatizada de migrar sus datos a cualquier destino, tanto en el cloud como en las instalaciones. 
+---
+= Información general de Cloud Sync
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+El servicio Cloud Sync de NetApp ofrece una forma sencilla, segura y automatizada de migrar sus datos a cualquier destino, tanto en el cloud como en las instalaciones. Tanto si se trata de un conjunto de datos NAS basado en archivos (NFS o SMB), un formato de objeto Amazon simple Storage Service (S3), un dispositivo StorageGRID® de NetApp o cualquier otro almacén de objetos de proveedores de cloud, Cloud Sync puede convertirlo y moverlo por usted.
+
+
+
+== Funciones
+
+Vea el siguiente vídeo para obtener información general sobre Cloud Sync:
+
+video::oZNJtLvgNfQ[youtube,width=848,height=480]
+
+
+== Cómo funciona Cloud Sync
+
+Cloud Sync es una plataforma de software como servicio (SaaS) que consta de un agente de datos, una interfaz basada en cloud disponible a través de Cloud Manager y un origen y un destino.
+
+En la siguiente imagen, se muestra la relación entre los componentes de Cloud Sync:
+
+image:diagram_cloud_sync_overview.gif["Imagen conceptual que muestra los datos que fluyen de un origen a un destino. El software de agente de datos actúa como mediador y sondea el servicio Cloud Sync para realizar tareas."]
+
+El software de agente de datos de NetApp sincroniza los datos de un origen con un destino (lo que se denomina _Sync Relationship_). Puede ejecutar el agente de datos en AWS, Azure, Google Cloud Platform o en sus instalaciones. El agente de datos necesita una conexión a Internet saliente a través del puerto 443 para que pueda comunicarse con el servicio Cloud Sync y ponerse en contacto con otros servicios y repositorios. link:reference_sync_networking.html["Consulte la lista de extremos"].
+
+Después de la copia inicial, el servicio sincroniza los datos modificados con la programación que se haya establecido.
+
+
+
+== Tipos de almacenamiento admitidos
+
+Cloud Sync admite los siguientes tipos de almacenamiento:
+
+* Cualquier servidor NFS
+* Cualquier servidor SMB
+* EFS DE AWS
+* AWS S3
+* Azure Blob
+* Azure NetApp Files
+* Cloud Volumes Service
+* Cloud Volumes ONTAP
+* Google Cloud Storage
+* Almacenamiento de objetos en cloud de IBM
+* Clúster de ONTAP en las instalaciones
+* Almacenamiento ONTAP S3
+* StorageGRID
+
+
+link:reference_sync_requirements.html["Revise las relaciones de sincronización compatibles"].
+
+
+
+== Coste
+
+Existen dos tipos de costes asociados con el uso de Cloud Sync: Cargos por recursos y cargos por servicios.
+
+Cargos por recursos:: Los cargos por recursos están relacionados con los costes de cómputo y almacenamiento para ejecutar el agente de datos en el cloud.
+Cargos por servicio:: Hay dos formas de pagar las relaciones de sincronización después de que termine su prueba gratuita de 14 días. La primera opción es suscribirse a AWS o Azure, lo que permite pagar por horas o anualmente. La segunda opción consiste en comprar licencias directamente a NetApp. Lea las secciones siguientes para obtener más información.
+
+
+
+
+=== Suscripción a Marketplace
+
+Al suscribirse al servicio de Cloud Sync de AWS o Azure, usted podrá pagar por horas o pagar anualmente. link:task_sync_licensing.html["Puede suscribirse a través de AWS o Azure"], en función de dónde desee facturar.
+
+Suscripciones por horas:: Con una suscripción de pago por horas, el servicio Cloud Sync cobra por hora en función del número de relaciones de sincronización que cree.
++
+--
+* https://azuremarketplace.microsoft.com/en-us/marketplace/apps/netapp.cloud-sync-service?tab=PlansAndPrice["Ver los precios en Azure"^]
+* https://aws.amazon.com/marketplace/pp/B01LZV5DUJ["Vea los precios de pago por uso en AWS"^]
+
+
+--
+Suscripciones anuales:: Una suscripción anual proporciona una licencia para 20 relaciones de sincronización que usted paga por adelantado. Si va por encima de 20 relaciones de sincronización y se ha suscrito a Azure, pagará por las relaciones adicionales por horas.
++
+--
+https://aws.amazon.com/marketplace/pp/B06XX5V3M2["Ver precios anuales en AWS"^]
+
+--
+
+
+
+
+=== De NetApp
+
+Otra forma de pagar por las relaciones de sincronización es mediante la compra de licencias directamente a NetApp. Cada licencia permite crear hasta 20 relaciones de sincronización.
+
+Puede usar estas licencias con una suscripción a AWS o Azure. Por ejemplo, si tiene 25 relaciones de sincronización, puede pagar las primeras 20 relaciones de sincronización con una licencia y, a continuación, pagar por el uso desde AWS o Azure con las 5 relaciones de sincronización restantes.
+
+link:task_sync_licensing.html["Aprenda a comprar licencias y a añadirlas a cloud Sincr"].
+
+
+
+=== Términos de licencia
+
+Los clientes que adquieran una licencia propia (BYOL) para el servicio Cloud Sync deben conocer las limitaciones asociadas con el derecho de la licencia.
+
+* Los clientes tienen derecho a aprovechar la licencia BYOL por un período que no supere un año a partir de la fecha de entrega.
+* Los clientes tienen derecho a aprovechar la licencia BYOL para establecer y no superar un total de 20 conexiones individuales entre un origen y un destino (cada una de ellas una “relación de sincronización”).
+* El derecho de un cliente expira al finalizar el plazo de un año para la licencia, independientemente de si el cliente ha alcanzado la limitación de relación de sincronización de 20.
+* En el caso de que el Cliente decida renovar su licencia, las relaciones de sincronización no utilizadas asociadas a la concesión de licencia anterior NO se reviertan a la renovación de la licencia.
+
+
+
+
+== Privacidad de datos
+
+NetApp no tiene acceso a ninguna credencial que proporcione mientras utiliza el servicio Cloud Sync. Las credenciales se almacenan directamente en el equipo de Data broker, que reside en la red.
+
+Según la configuración seleccionada, Cloud Sync puede pedirle credenciales cuando cree una nueva relación. Por ejemplo, cuando se configura una relación que incluye un servidor SMB o cuando se implementa el agente de datos en AWS.
+
+Estas credenciales siempre se guardan directamente en el propio agente de datos. El agente de datos reside en un equipo de su red, ya sea en las instalaciones o en su cuenta de cloud. NetApp nunca pone a disposición de estas credenciales.
+
+Las credenciales se cifran localmente en la máquina de corredores de datos utilizando HashiCorp Vault.
+
+
+
+== Limitaciones
+
+* Cloud Sync no es compatible con China.
+* Además de China, el agente de datos de Cloud Sync no se ofrece en las siguientes regiones:
++
+** AWS GovCloud (EE. UU.)
+** Gobierno de Azure EE. UU
+** DoD de Azure US
+
+
+

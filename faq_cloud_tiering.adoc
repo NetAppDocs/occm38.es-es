@@ -1,0 +1,186 @@
+---
+sidebar: sidebar 
+permalink: faq_cloud_tiering.html 
+keywords: faq, questions, requirements, service connector, object store, object storage, aws, azure, bucket, cluster, aggregate, s3, storage class, standard, inactive data reporting, auto, volume tiering policy, policy, tiering policy, snapshot, cold, inactive, infrequent 
+summary: Estas preguntas frecuentes pueden ser de ayuda si solo está buscando una respuesta rápida a una pregunta. 
+---
+= Preguntas técnicas frecuentes sobre la organización en niveles del cloud
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Estas preguntas frecuentes pueden ser de ayuda si solo está buscando una respuesta rápida a una pregunta.
+
+
+
+== ONTAP
+
+Las siguientes preguntas hacen referencia a ONTAP.
+
+
+
+=== ¿Cuáles son los requisitos del clúster de ONTAP?
+
+Depende del lugar en el que organice los datos inactivos. Consulte lo siguiente:
+
+* link:task_tiering_onprem_aws.html#preparing-your-ontap-clusters["Organización en niveles de los datos de los clústeres ONTAP en las instalaciones a Amazon S3"]
+* link:task_tiering_onprem_azure.html#preparing-your-ontap-clusters["Organización en niveles de los datos de los clústeres de ONTAP en las instalaciones al almacenamiento de Azure Blob"]
+* link:task_tiering_onprem_gcp.html#preparing-your-ontap-clusters["Organización en niveles de los datos de los clústeres de ONTAP en las instalaciones a Google Cloud Storage"]
+* link:task_tiering_onprem_storagegrid.html#preparing-your-ontap-clusters["Organización en niveles de los datos de los clústeres de ONTAP en las instalaciones a StorageGRID"]
+
+
+
+
+=== ¿la organización en niveles del cloud habilita los informes de datos inactivos?
+
+Sí, Cloud Tiering permite la generación de informes de datos inactivos en cada agregado. Este ajuste nos permite identificar la cantidad de datos inactivos que se pueden organizar en niveles en almacenamiento de objetos de bajo coste.
+
+
+
+=== ¿Puedo organizar los datos en niveles desde volúmenes NAS y SAN?
+
+Puede usar Cloud Tiering para organizar datos en niveles desde NAS Volumes en el cloud público y DE SAN Volumes en un cloud privado usando StorageGRID.
+
+
+
+=== ¿y Cloud Volumes ONTAP?
+
+Si tiene sistemas Cloud Volumes ONTAP, los encontrará en la consola de clústeres para que observe una vista completa de la organización en niveles de los datos en su infraestructura de cloud híbrido.
+
+En la consola del clúster, puede ver información de organización en niveles similar a un clúster ONTAP en las instalaciones: Estado operativo, ahorro actual, oportunidades de ahorro, detalles sobre volúmenes y agregados, etc.
+
+Los sistemas Cloud Volumes ONTAP son de solo lectura de la organización en niveles del cloud. No se puede configurar la organización en niveles de datos en Cloud Volumes ONTAP desde la organización en niveles del cloud. De todas formas, configurará la organización en niveles de la misma forma: Desde el entorno de trabajo en Cloud Manager.
+
+
+
+== Almacenamiento de objetos
+
+Las siguientes preguntas están relacionadas con el almacenamiento de objetos.
+
+
+
+=== ¿Qué proveedores de almacenamiento de objetos son compatibles?
+
+Amazon S3, el almacenamiento de Azure Blob, Google Cloud Storage y StorageGRID utilizando el protocolo S3 son compatibles.
+
+
+
+=== ¿Puedo usar mi propio contenedor/cucharón?
+
+Sí, puedes. Cuando configura la organización en niveles de datos, tiene la opción de añadir un nuevo bloque/contenedor o seleccionar un bloque/contenedor existente.
+
+
+
+=== ¿Qué regiones son compatibles?
+
+* link:reference_aws_support.html["Regiones admitidas de AWS"]
+* link:reference_azure_support.html["Regiones de Azure compatibles"]
+* link:reference_google_support.html["Regiones compatibles de Google Cloud"]
+
+
+
+
+=== ¿Qué clases de almacenamiento S3 son compatibles?
+
+La organización en niveles del cloud admite la organización en niveles de los datos en la clase de almacenamiento _Standard_, _Standard-Infrecuente Access_, _One Zone-IA_ o _Intelligent_. Consulte link:reference_aws_support.html["Clases de almacenamiento S3 compatibles"] para obtener más detalles.
+
+
+
+=== ¿Qué niveles de acceso de Azure Blob son compatibles?
+
+La organización en niveles del cloud utiliza automáticamente el nivel de acceso _Hot_ para los datos inactivos.
+
+
+
+=== ¿Qué clases de almacenamiento son compatibles con Google Cloud Storage?
+
+Cloud Tiering utiliza la clase de almacenamiento _Standard_ para los datos inactivos.
+
+
+
+=== ¿Cloud Tiering usa un almacén de objetos para todo el clúster o uno por agregado?
+
+Un almacén de objetos para todo el clúster.
+
+
+
+=== ¿Puedo aplicar políticas en mi almacén de objetos para mover datos independientemente de la organización en niveles?
+
+No, Cloud Tiering no admite reglas de gestión del ciclo de vida de objetos que mueven o eliminan datos de almacenes de objetos.
+
+
+
+== Conectores
+
+Las siguientes preguntas se refieren a conectores.
+
+
+
+=== ¿Dónde se debe instalar el conector?
+
+* Al organizar en niveles los datos en S3, un conector puede residir en un VPC de AWS o en las instalaciones.
+* Al organizar los datos en niveles en un almacenamiento BLOB, un conector debe residir en una red virtual de Azure.
+* Al organizar los datos en niveles en Google Cloud Storage, un conector debe residir en un VPC de Google Cloud Platform.
+* Al organizar los datos en niveles en StorageGRID, un conector debe residir en un host Linux en las instalaciones.
+
+
+
+
+== Redes
+
+Las siguientes preguntas hacen referencia a las redes.
+
+
+
+=== ¿Cuáles son los requisitos de red?
+
+* El clúster de ONTAP inicia una conexión HTTPS a través del puerto 443 al proveedor de almacenamiento de objetos.
++
+ONTAP lee y escribe datos en y desde el almacenamiento de objetos. El almacenamiento de objetos nunca se inicia, solo responde.
+
+* Para StorageGRID, el clúster ONTAP inicia una conexión HTTPS a través de un puerto especificado por el usuario a StorageGRID (el puerto se puede configurar durante la configuración del almacenamiento por niveles).
+* Un conector necesita una conexión HTTPS de salida a través del puerto 443 a los clústeres de ONTAP, al almacén de objetos y al servicio Cloud Tiering.
+
+
+Para obtener información detallada, consulte:
+
+* link:task_tiering_onprem_aws.html["Organización en niveles de los datos de los clústeres ONTAP en las instalaciones a Amazon S3"]
+* link:task_tiering_onprem_azure.html["Organización en niveles de los datos de los clústeres de ONTAP en las instalaciones al almacenamiento de Azure Blob"]
+* link:task_tiering_onprem_gcp.html["Organización en niveles de los datos de los clústeres de ONTAP en las instalaciones a Google Cloud Storage"]
+* link:task_tiering_onprem_storagegrid.html["Organización en niveles de los datos de los clústeres de ONTAP en las instalaciones a StorageGRID"]
+
+
+
+
+== Permisos
+
+Las siguientes preguntas se refieren a los permisos.
+
+
+
+=== ¿Qué permisos se requieren en AWS?
+
+Se requieren permisos link:task_tiering_onprem_aws#preparing-amazon-s3["Para gestionar el bloque de S3"].
+
+
+
+=== ¿Qué permisos se requieren en Azure?
+
+No se necesitan permisos adicionales fuera de los permisos que necesite proporcionar a Cloud Manager.
+
+
+
+=== ¿Qué permisos se requieren en Google Cloud Platform?
+
+Se necesitan permisos de administrador de almacenamiento para una cuenta de servicio que tenga claves de acceso de almacenamiento.
+
+
+
+=== ¿Qué permisos se requieren para StorageGRID?
+
+link:task_tiering_onprem_storagegrid.html#preparing-storagegrid["Se necesitan permisos de S3"].

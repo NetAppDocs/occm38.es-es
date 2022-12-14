@@ -1,0 +1,146 @@
+---
+sidebar: sidebar 
+permalink: task_managing_backups.html 
+keywords: restoring, restore, restore volumes, Backup to Cloud, cloud backup service, backup schedule, change schedule, change backup schedule, modify schedule, modify backup schedule, retention, backup retention, delete, delete backups, deleting, deleting backups, disable, disable backups, turn off backups, disable backup to cloud, turn off backup to cloud 
+summary: Gestione backups para sistemas Cloud Volumes ONTAP y ONTAP en las instalaciones cambiando la programación de backup, restaurar volúmenes, eliminar backups, etc. 
+---
+= Administración de backups para sistemas Cloud Volumes ONTAP y ONTAP en las instalaciones
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Gestione backups para sistemas Cloud Volumes ONTAP y ONTAP en las instalaciones cambiando la programación de backup, restaurar volúmenes, eliminar backups, etc.
+
+
+
+== Cambiar la programación y la retención de backups
+
+La política predeterminada realiza backups de volúmenes todos los días y conserva las 30 copias de backup más recientes de cada volumen. Puede cambiar a los backups semanales o mensuales y puede cambiar la cantidad de copias de backup que desea retener. También se puede seleccionar una de las políticas definidas por el sistema que proporcione backups programados para 3 meses, 1 año y 7 años.
+
+
+TIP: Cambiar la política de backup afecta solo a los volúmenes nuevos creados después de cambiar la programación. No afecta a la programación de ningún volumen existente.
+
+.Pasos
+. Seleccione el entorno de trabajo.
+. Haga clic en image:screenshot_gallery_options.gif["Icono más"] Y seleccione *Configuración de copia de seguridad*.
++
+image:screenshot_backup_settings_button.png["Captura de pantalla que muestra el botón Configuración de copia de seguridad que está disponible después de seleccionar un entorno de trabajo."]
+
+. En la página _Backup Settings_, haga clic en image:screenshot_horizontal_more_button.gif["Icono más"] Para el entorno de trabajo y seleccione *Modificar la política de copia de seguridad*.
++
+image:screenshot_backup_modify_policy.png["Captura de pantalla que muestra el botón Configuración de copia de seguridad que está disponible después de seleccionar un entorno de trabajo."]
+
+. En la página _Modify Backup Policy_, cambie la programación y la retención de copias de seguridad y, a continuación, haga clic en *Guardar*.
++
+image:screenshot_backup_modify_policy_page.png["Captura de pantalla que muestra la configuración de copia de seguridad en la nube en la que puede modificar la programación de copia de seguridad y la configuración de retención de copia de seguridad."]
+
+
+
+
+
+== Iniciar y detener backups de volúmenes
+
+Puede detener el backup de un volumen si no necesita copias de backup de ese volumen, y no quiere pagar por el coste de almacenar los backups. También puede añadir un nuevo volumen a la lista de backups si actualmente no se está realizando un backup.
+
+.Pasos
+. Seleccione el entorno de trabajo.
+. Haga clic en image:screenshot_gallery_options.gif["Icono más"] Y seleccione *Configuración de copia de seguridad*.
++
+image:screenshot_backup_settings_button.png["Captura de pantalla que muestra el botón Configuración de copia de seguridad que está disponible después de seleccionar un entorno de trabajo."]
+
+. En la página _Backup Settings_, haga clic en image:screenshot_horizontal_more_button.gif["Icono más"] Para el entorno de trabajo y seleccione *gestionar volúmenes*.
++
+image:screenshot_backup_manage_volumes.png["Captura de pantalla que muestra el botón gestionar volúmenes de la página Configuración de copia de seguridad."]
+
+. Seleccione la casilla de comprobación para los volúmenes que desea iniciar el backup y anule la selección de la casilla de comprobación para los volúmenes que desea detener el backup.
++
+image:screenshot_backup_manage_volumes_page.png["En la página gestionar volúmenes, donde puede seleccionar o anular la selección de volúmenes."]
+
+
+
+*Nota:* cuando detenga la copia de seguridad de un volumen, lo hará siga cobrándose por su proveedor de cloud por el objeto costes de almacenamiento de la capacidad que utilizan los backups a menos que usted <<Eliminar backups,eliminar los backups>>.
+
+
+
+== Restaurar un volumen a partir de un backup
+
+Al restaurar datos de una copia de seguridad, Cloud Manager crea un volumen _new_ con los datos de la copia de seguridad. Puede restaurar los datos en un volumen del mismo entorno de trabajo o en otro entorno de trabajo ubicado en la misma cuenta de cloud que el entorno de trabajo de origen. Como el backup no contiene ninguna copia de Snapshot, el volumen recién restaurado tampoco.
+
+
+TIP: Los backups creados a partir de sistemas ONTAP en las instalaciones solo se pueden restaurar en sistemas Cloud Volumes ONTAP que utilicen el mismo proveedor de cloud donde reside el backup.
+
+.Pasos
+. Seleccione el entorno de trabajo.
+. Haga clic en image:screenshot_gallery_options.gif["Icono más"] Y seleccione *Ver copias de seguridad*.
++
+image:screenshot_view_backups_selection.png["Captura de pantalla de selección del botón View backups para un entorno de trabajo."]
+
+. Seleccione la fila del volumen que desea restaurar y haga clic en *Ver lista de copias de seguridad*.
++
+image:screenshot_backup_to_s3_volume.gif["Captura de pantalla de la ficha copia de seguridad/restauración que muestra un volumen con copias de seguridad."]
+
+. Busque la copia de seguridad que desea restaurar y haga clic en el icono *Restaurar*.
++
+image:screenshot_backup_to_s3_restore_icon.gif["Captura de pantalla del icono de restauración de una copia de seguridad después de seleccionar un volumen."]
+
+. Rellene la página _Restore Backup to new volume_:
++
+.. Seleccione el entorno de trabajo al que desea restaurar el volumen.
+.. Escriba un nombre para el volumen.
+.. Haga clic en *Restaurar*.
++
+image:screenshot_backup_to_s3_restore_options.gif["Captura de pantalla que muestra las opciones de restauración: Un entorno de trabajo al que restaurar, el nombre del volumen y la información del volumen."]
+
+
+
+
+
+.Resultado
+Cloud Manager crea un nuevo volumen según el backup seleccionado. Puede hacerlo link:task_managing_storage.html#managing-existing-volumes["gestione este nuevo volumen"^] según sea necesario.
+
+
+
+== Eliminar backups
+
+Backup to Cloud le permite eliminar _All_ copias de seguridad de un volumen específico. No puede eliminar copias de seguridad _individual_.
+
+Es posible hacerlo si ya no necesita los backups o si se eliminó el volumen de origen y desea quitar todos los backups.
+
+
+IMPORTANT: Si piensa eliminar un sistema Cloud Volumes ONTAP o ONTAP en las instalaciones que tiene copias de seguridad, debe eliminar las copias de seguridad *antes de* eliminar el sistema. Copia de seguridad en la nube no elimina automáticamente las copias de seguridad cuando elimina un sistema, y no hay compatibilidad actual en la interfaz de usuario para eliminar las copias de seguridad después de que el sistema haya sido eliminado.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *copia de seguridad*.
+. En la lista de volúmenes, busque el volumen y haga clic en *Ver lista de copias de seguridad*.
+. Haga clic en image:screenshot_horizontal_more_button.gif["Icono más"] Y seleccione *Eliminar todas las copias de seguridad*.
++
+image:screenshot_delete_all_backups.png["Una captura de pantalla de selección del botón Delete All backups para eliminar toda la copia de seguridad de un volumen."]
+
+. En el cuadro de diálogo de confirmación, haga clic en *Eliminar*.
+
+
+
+
+== Deshabilitación de Backup to Cloud
+
+Al deshabilitar Backup en Cloud para un entorno de trabajo, se desactivan los backups de cada volumen en el sistema y también se deshabilita la capacidad para restaurar un volumen. No se eliminarán los backups existentes.
+
+Tenga en cuenta que el proveedor de cloud seguirá facturando los costes de almacenamiento de objetos por la capacidad que utilicen sus backups a menos que elimine los backups.
+
+.Pasos
+. Seleccione el entorno de trabajo.
+. Haga clic en image:screenshot_gallery_options.gif["Icono más"] Y seleccione *Configuración de copia de seguridad*.
++
+image:screenshot_backup_settings_button.png["Captura de pantalla que muestra el botón Configuración de copia de seguridad que está disponible después de seleccionar un entorno de trabajo."]
+
+. En la página _Backup Settings_, haga clic en image:screenshot_horizontal_more_button.gif["Icono más"] Para el entorno de trabajo y seleccione *Desactivar copia de seguridad en la nube*.
++
+image:screenshot_disable_backups.png["Captura de pantalla del botón Desactivar copia de seguridad para un entorno de trabajo."]
+
+. En el cuadro de diálogo de confirmación, haga clic en *Desactivar*.
+

@@ -1,0 +1,128 @@
+---
+sidebar: sidebar 
+permalink: task_launching_azure_mktp.html 
+keywords: install, installation, installing, marketplace, azure, deploy, virtual machine, permissions, deploy connector in azure, install connector in azure 
+summary: Es mejor crear un conector directamente desde Cloud Manager, pero si lo prefiere, puede iniciar un conector desde Azure Marketplace. Después de crear y configurar el conector, Cloud Manager lo utilizará automáticamente al crear nuevos entornos de trabajo. 
+---
+= Creación de un conector desde Azure Marketplace
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Es mejor crear un conector directamente desde Cloud Manager, pero si lo prefiere, puede iniciar un conector desde Azure Marketplace. Después de crear y configurar el conector, Cloud Manager lo utilizará automáticamente al crear nuevos entornos de trabajo.
+
+
+
+== Creación de un conector en Azure
+
+Implemente el conector en Azure con la imagen en Azure Marketplace y luego inicie sesión en el conector para especificar su cuenta de Cloud Central.
+
+.Pasos
+. https://azuremarketplace.microsoft.com/en-us/marketplace/apps/netapp.netapp-oncommand-cloud-manager["Vaya a la página de Azure Marketplace para Cloud Manager"^].
+. Haga clic en *Get Now* y, a continuación, haga clic en *Continue*.
+. En el portal de Azure, haga clic en *Crear* y siga los pasos para configurar la máquina virtual.
++
+Tenga en cuenta lo siguiente al configurar la máquina virtual:
+
++
+** Cloud Manager puede ofrecer un rendimiento óptimo tanto con discos HDD como SSD.
+** Elija un tamaño de máquina virtual que cumpla los requisitos de CPU y RAM. Recomendamos DS3 v2.
++
+link:reference_cloud_mgr_reqs.html["Revise los requisitos de las máquinas virtuales"].
+
+** Para el grupo de seguridad de red, el conector requiere conexiones entrantes mediante SSH, HTTP y HTTPS.
++
+link:reference_networking_cloud_manager.html#rules-for-the-connector-in-azure["Obtenga más información sobre las reglas de grupo de seguridad para el conector"].
+
+** En *Gestión*, active *identidad administrada asignada por el sistema* para el conector seleccionando *On*.
++
+Esta configuración es importante porque una identidad administrada permite que la máquina virtual Connector se identifique a sí misma en Azure Active Directory sin proporcionar credenciales. https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview["Obtenga más información sobre las identidades gestionadas para recursos de Azure"^].
+
+
+
+. En la página *revisar + crear*, revise las selecciones y haga clic en *Crear* para iniciar la implementación.
++
+Azure implementa la máquina virtual con los ajustes especificados. El software de la máquina virtual y el conector debe estar funcionando en aproximadamente cinco minutos.
+
+. Abra un explorador Web desde un host que tenga una conexión con la máquina virtual Connector e introduzca la siguiente URL:
++
+http://_ipaddress_:80[]
+
+. Después de iniciar sesión, configure el conector:
++
+.. Especifique la cuenta de Cloud Central que desea asociar con el conector.
++
+link:concept_cloud_central_accounts.html["Obtenga más información acerca de las cuentas de Cloud Central"].
+
+.. Escriba un nombre para el sistema.
++
+image:screenshot_set_up_cloud_manager.gif["Una captura de pantalla que muestra la pantalla Configurar Cloud Manager que permite seleccionar una cuenta de Cloud Central y dar nombre al sistema."]
+
+
+
+
+
+.Resultado
+El conector ahora está instalado y configurado. Debe conceder permisos de Azure para que los usuarios puedan poner en marcha Cloud Volumes ONTAP en Azure.
+
+
+
+== Concesión de permisos de Azure
+
+Cuando implementó Connector en Azure, debería haber habilitado un https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview["identidad administrada asignada por el sistema"^]. Ahora debe conceder los permisos de Azure necesarios creando una función personalizada y, a continuación, asignando la función a la máquina virtual Connector para una o más suscripciones.
+
+.Pasos
+. Cree un rol personalizado mediante la política de Cloud Manager:
++
+.. Descargue el https://mysupport.netapp.com/site/info/cloud-manager-policies["Política de Azure de Cloud Manager"^].
+.. Modifique el archivo JSON agregando ID de suscripción de Azure al ámbito asignable.
++
+Debe añadir el ID para cada suscripción de Azure desde la cual los usuarios crearán sistemas Cloud Volumes ONTAP.
+
++
+*ejemplo*
+
++
+"AssignableScopes": [ "/subscripciones/d333af45-0d07-4154-943d-c25fbzzzzzzz", "/subscripciones/54b91999-b3e6-4599-908e-416e0zzzzzzz", "/subscripciones/398e471c-3bzb6b6b6b3b6bbb3bzb6b6b3b6b3bb6b3b6x-b6b6b3bb
+
+.. Use el archivo JSON para crear una función personalizada en Azure.
++
+El ejemplo siguiente muestra cómo crear una función personalizada con la CLI de Azure 2.0:
+
++
+`az role definition create --role-definition C:\Policy_for_cloud_Manager_Azure_3.8.7.json`
+
++
+Ahora debe tener un rol personalizado denominado operador de Cloud Manager que puede asignar a la máquina virtual conector.
+
+
+
+. Asigne el rol a la máquina virtual conector para una o más suscripciones:
++
+.. Abra el servicio *Suscripciones* y seleccione la suscripción en la que desea implementar sistemas Cloud Volumes ONTAP.
+.. Haga clic en *Control de acceso (IAM)*.
+.. Haga clic en *Agregar* > *Agregar asignación de rol* y, a continuación, agregue los permisos:
++
+*** Seleccione el rol *operador de Cloud Manager*.
++
+
+NOTE: Es el nombre predeterminado que se proporciona en la https://mysupport.netapp.com/site/info/cloud-manager-policies["Política de Cloud Manager"]. Si seleccionó otro nombre para el rol, seleccione ese nombre.
+
+*** Asigne acceso a una *máquina virtual*.
+*** Seleccione la suscripción en la que se creó la máquina virtual Connector.
+*** Seleccione la máquina virtual conector.
+*** Haga clic en *Guardar*.
+
+
+.. Si desea implementar Cloud Volumes ONTAP desde suscripciones adicionales, cambie a esa suscripción y repita estos pasos.
+
+
+
+
+.Resultado
+Connector ahora tiene los permisos que necesita para gestionar recursos y procesos en su entorno de cloud público. Cloud Manager utilizará automáticamente este conector cuando cree nuevos entornos de trabajo. Pero si tiene más de un conector, necesitará link:task_managing_connectors.html["alterne entre ellos"].

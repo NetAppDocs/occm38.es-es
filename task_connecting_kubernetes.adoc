@@ -1,0 +1,292 @@
+---
+sidebar: sidebar 
+permalink: task_connecting_kubernetes.html 
+keywords: kubernetes, persistent volumes, containers, persistent storage, kubeconfig, trident, kubernetes cluster, storage classes, classes, cvo-single, cvo-ha, thick provisioning, trident_trident, connect, disconnect, provision 
+summary: Cloud Manager puede automatizar la puesta en marcha de Trident de NetApp en clústeres de Kubernetes para que pueda usar Cloud Volumes ONTAP como almacenamiento persistente para contenedores. 
+---
+= Use Cloud Volumes ONTAP como almacenamiento persistente para Kubernetes
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Manager puede automatizar la puesta en marcha de Trident de NetApp en clústeres de Kubernetes para que pueda usar Cloud Volumes ONTAP como almacenamiento persistente para contenedores.
+
+Trident es un proyecto de código abierto totalmente compatible y mantenido por NetApp. Trident se integra de forma nativa con Kubernetes y su marco de trabajo de volumen persistente para aprovisionar y gestionar volúmenes desde sistemas que ejecutan cualquier combinación de plataformas de almacenamiento de NetApp. https://netapp-trident.readthedocs.io/en/latest/introduction.html["Más información sobre Trident"^].
+
+
+NOTE: La función Kubernetes no es compatible con los clústeres de ONTAP en las instalaciones. Solo es compatible con Cloud Volumes ONTAP.
+
+
+
+== Inicio rápido
+
+Empiece rápidamente siguiendo estos pasos o desplácese hacia abajo hasta las secciones restantes para obtener todos los detalles.
+
+
+
+==== image:number1.png["Número 1"] Revise los requisitos previos
+
+[role="quick-margin-para"]
+Compruebe que el entorno pueda cumplir con los requisitos previos, que incluyen conectividad entre los clústeres de Kubernetes y Cloud Volumes ONTAP, conectividad entre los clústeres de Kubernetes y un conector, una versión mínima de Kubernetes de 1.14, al menos un nodo de trabajo de un clúster y varios. <<Revisión de requisitos previos,Vea la lista completa>>.
+
+
+
+==== image:number2.png["Número 2"] Añada los clústeres de Kubernetes a Cloud Manager
+
+[role="quick-margin-para"]
+En Cloud Manager, haga clic en *Kubernetes* y descubra los clústeres directamente desde el servicio gestionado de su proveedor de cloud o importe un clúster proporcionando un archivo kubeconfig.
+
+
+
+==== image:number3.png["Número 3"] Conecte los clústeres a Cloud Volumes ONTAP
+
+[role="quick-margin-para"]
+Después de agregar un clúster de Kubernetes, haga clic en *conectar al entorno de trabajo* para conectar el clúster a uno o más sistemas Cloud Volumes ONTAP.
+
+
+
+==== image:number4.png["Número 4"] Inicie el aprovisionamiento de volúmenes persistentes
+
+[role="quick-margin-para"]
+Solicite y gestione volúmenes persistentes mediante construcciones e interfaces de Kubernetes nativas. Cloud Manager crea clases de almacenamiento NFS e iSCSI que se pueden usar cuando se aprovisionan volúmenes persistentes.
+
+[role="quick-margin-para"]
+https://netapp-trident.readthedocs.io/["Más información sobre el aprovisionamiento de su primer volumen con Trident para Kubernetes"^].
+
+
+
+== Revisión de requisitos previos
+
+Antes de empezar, compruebe que el conector y los clústeres de Kubernetes cumplen con los requisitos específicos.
+
+
+
+=== Requisitos del clúster de Kubernetes
+
+* Se requiere conectividad de red entre un clúster de Kubernetes y el conector, y entre un clúster de Kubernetes y Cloud Volumes ONTAP.
++
+Tanto el conector como el Cloud Volumes ONTAP necesitan una conexión con el extremo de la API de Kubernetes:
+
++
+** En el caso de clústeres gestionados, configure una ruta entre el VPC de un clúster y el VPC donde residen el conector y Cloud Volumes ONTAP.
+** Para otros clústeres, el conector y Cloud Volumes ONTAP deben tener acceso a la dirección IP del nodo maestro o del equilibrador de carga (como se indica en el archivo kubeconfig) y debe presentar un certificado TLS válido.
+
+
+* Un clúster de Kubernetes puede estar en cualquier ubicación que tenga la conectividad de red indicada anteriormente.
+* Un clúster de Kubernetes debe ejecutar la versión 1.14 como mínimo.
++
+La versión máxima admitida es definida por Trident. https://netapp-trident.readthedocs.io/en/stable-v20.07/support/requirements.html#supported-frontends-orchestrators["Haga clic aquí para ver la versión de Kubernetes máxima admitida"^].
+
+* Un clúster de Kubernetes debe tener al menos un nodo de trabajo.
+* En el caso de clústeres que se ejecutan en Amazon Elastic Kubernetes Service (Amazon EKS), cada clúster necesita un rol de IAM añadido para poder resolver un error de permiso. Después de agregar el clúster, Cloud Manager le pedirá el comando eksctl exacto que resuelve el error.
++
+https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html["Obtenga información acerca de los límites de permisos de IAM"^].
+
+* Para los clústeres que se ejecutan en Azure Kubernetes Service (AKS), esos clústeres deben tener asignado el rol _Azure Kubernetes Service RBAC Cluster Admin_. Esto es necesario para que Cloud Manager pueda instalar Trident y configurar las clases de almacenamiento en el clúster.
+* Para los clústeres que se ejecutan en Google Kubernetes Engine (GKE), esos clústeres no deben usar el sistema operativo Container Optimized predeterminado. Debe cambiarlos para usar Ubuntu.
++
+De forma predeterminada, GKE utiliza Google https://cloud.google.com/container-optimized-os["imagen optimizada para contenedor"^], que no tiene las utilidades que Trident necesita para montar volúmenes.
+
+
+
+
+
+=== Requisitos del conector
+
+Asegúrese de que se han establecido las siguientes redes y permisos para el conector.
+
+
+
+==== Redes
+
+* El conector necesita una conexión a Internet de salida para acceder a los siguientes extremos al instalar Trident:
++
+\https://packages.cloud.google.com/yum \https://github.com/NetApp/trident/releases/download/
+
++
+Cloud Manager instala Trident en un clúster de Kubernetes cuando se conecta un entorno de trabajo al clúster.
+
+
+
+
+
+==== Permisos necesarios para detectar y gestionar clústeres EKS
+
+El conector necesita permisos de administrador para detectar y gestionar clústeres de Kubernetes que se ejecutan en Amazon Elastic Kubernetes Service (EKS):
+
+[source, json]
+----
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "eks:*",
+            "Resource": "*"
+       }
+    ]
+}
+----
+
+
+==== Permisos necesarios para detectar y gestionar clústeres GKE
+
+El conector necesita los siguientes permisos para detectar y gestionar clústeres de Kubernetes que se ejecutan en Google Kubernetes Engine (GKE):
+
+[source, yaml]
+----
+container.*
+----
+
+
+=== Configuración de ejemplo
+
+En la siguiente imagen, se muestra un ejemplo de un clúster de Kubernetes que se ejecuta en Amazon Elastic Kubernetes Service (Amazon EKS) y sus conexiones a Connector y Cloud Volumes ONTAP.
+
+image:diagram_kubernetes.png["Un diagrama arquitectónico de un clúster de Kubernetes que se ejecuta en AWS y su conexión con un conectador y un Cloud Volumes ONTAP que también se ejecutan en AWS."]
+
+
+
+== Añadir clústeres de Kubernetes
+
+Añada clústeres de Kubernetes a Cloud Manager detectando los clústeres que se ejecutan en el servicio Kubernetes gestionado por el proveedor de cloud o importando el archivo kubeconfig de un clúster.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Kubernetes*.
+. Haga clic en *Agregar clúster*.
+. Elija una de las opciones disponibles:
++
+** Haga clic en *detectar clústeres* para descubrir los clústeres administrados a los que Cloud Manager tiene acceso en función de los permisos que proporcionó al conector.
++
+Por ejemplo, si su conector se ejecuta en Google Cloud, Cloud Manager utiliza los permisos de la cuenta de servicio del conector para detectar clústeres que se ejecutan en Google Kubernetes Engine (GKE).
+
+** Haga clic en *Importar clúster* para importar un clúster mediante un archivo kubeconfig.
++
+Después de cargar el archivo, Cloud Manager verifica la conectividad al clúster y guarda una copia cifrada del archivo kubeconfig.
+
+
+
+
+
+.Resultado
+Cloud Manager agrega el clúster de Kubernetes. Ahora puede conectar el clúster a Cloud Volumes ONTAP.
+
+
+
+== Conectar un clúster a Cloud Volumes ONTAP
+
+Conecte un clúster de Kubernetes a Cloud Volumes ONTAP para que pueda usar Cloud Volumes ONTAP como almacenamiento persistente para contenedores.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Kubernetes*.
+. Haga clic en *conectar al entorno de trabajo* para el clúster que acaba de agregar.
++
+image:screenshot_kubernetes_connect.gif["Una captura de pantalla de la lista de clústeres Kubernetes, donde puede hacer clic en Connect to Working Environment."]
+
+. Seleccione un entorno de trabajo y haga clic en *continuar*.
+. Elija la clase de almacenamiento de NetApp que se utilizará como clase de almacenamiento predeterminada para el clúster de Kubernetes y haga clic en *continuar*.
++
+Cuando un usuario crea un volumen persistente, el clúster de Kubernetes puede utilizar esta clase de almacenamiento como almacenamiento back-end de forma predeterminada.
+
+. Elija si desea utilizar directivas de exportación automática predeterminadas o si desea añadir un bloque CIDR personalizado.
++
+image:screenshot_kubernetes_confirm.gif["Captura de pantalla de la página de confirmación en la que se revisan las opciones y se configura una política de exportación."]
+
+. Haga clic en *Agregar entorno de trabajo*.
+
+
+.Resultado
+Cloud Manager conecta el entorno de trabajo al clúster, que puede tardar hasta 15 minutos.
+
+
+
+== Gestione los clústeres
+
+Cloud Manager le permite gestionar los clústeres de Kubernetes cambiando el tipo de almacenamiento predeterminado, actualizando Trident, etc.
+
+
+
+=== Cambiando la clase de almacenamiento predeterminada
+
+Asegúrese de haber establecido una clase de almacenamiento Cloud Volumes ONTAP como la clase de almacenamiento predeterminada para que los clústeres utilicen Cloud Volumes ONTAP como almacenamiento back-end.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Kubernetes*.
+. Haga clic en el nombre del clúster de Kubernetes.
+. En la tabla *clases de almacenamiento*, haga clic en el menú acciones situado en el extremo derecho de la clase de almacenamiento que desea establecer como predeterminada.
++
+image:screenshot_kubernetes_storage_class.gif["Captura de pantalla de la tabla Storage Classes, en la que puede hacer clic en el menú de acciones y seleccionar Set as Default."]
+
+. Haga clic en *establecer como predeterminado*.
+
+
+
+
+=== Actualización de Trident
+
+Es posible actualizar Trident desde Cloud Manager cuando hay una nueva versión de Trident disponible.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Kubernetes*.
+. Haga clic en el nombre del clúster de Kubernetes.
+. Si hay una nueva versión disponible, haga clic en *Actualizar* junto a la versión Trident.
++
+image:screenshot_kubernetes_upgrade.gif["Captura de pantalla de la página Cluster Details, donde aparece el botón Upgrade junto a la versión Trident."]
+
+
+
+
+
+=== Actualizando el archivo kubeconfig
+
+Si agregó el clúster a Cloud Manager importando el archivo kubeconfig, puede cargar el archivo más reciente kubeconfig en Cloud Manager en cualquier momento. Puede hacer esto si actualizó las credenciales, si ha cambiado usuarios o roles, o si algo cambió que afecta el clúster, el usuario, los espacios de nombres o la autenticación.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Kubernetes*.
+. Haga clic en el nombre del clúster de Kubernetes.
+. Haga clic en *Actualizar Kubeconfig*.
+. Cuando se le solicite a través del explorador Web, seleccione el archivo kubeconfig actualizado y haga clic en *Abrir*.
+
+
+.Resultado
+Cloud Manager actualiza la información sobre el clúster de Kubernetes en función del archivo más reciente kubeconfig.
+
+
+
+=== Desconectar un clúster
+
+Cuando se desconecta un clúster de Cloud Volumes ONTAP, ya no se puede usar ese sistema Cloud Volumes ONTAP como almacenamiento persistente para contenedores. No se eliminan los volúmenes persistentes existentes.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Kubernetes*.
+. Haga clic en el nombre del clúster de Kubernetes.
+. En la tabla *entornos de trabajo*, haga clic en el menú acciones situado en el extremo derecho del entorno de trabajo que desea desconectar.
++
+image:screenshot_kubernetes_disconnect.gif["Una captura de pantalla de la tabla entornos de trabajo donde aparece la acción desconectar después de hacer clic en el menú situado en el extremo derecho de la tabla."]
+
+. Haga clic en *desconectar*.
+
+
+.Resultado
+Cloud Manager desconecta el clúster del sistema Cloud Volumes ONTAP.
+
+
+
+=== Quitar un clúster
+
+Quite los clústeres retirados del servicio de Cloud Manager después de desconectar todos los entornos de trabajo del clúster.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Kubernetes*.
+. Haga clic en el nombre del clúster de Kubernetes.
+. Haga clic en *Quitar clúster*.
++
+image:screenshot_kubernetes_remove.gif["Una captura de pantalla del botón Remove Cluster que aparece en la parte superior de la página de detalles del clúster."]
+
+

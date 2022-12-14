@@ -1,0 +1,149 @@
+---
+sidebar: sidebar 
+permalink: faq_saas.html 
+keywords: faq, frequently asked questions, questions 
+summary: Estas preguntas frecuentes responden a preguntas clave asociadas con la nueva versión SaaS de Cloud Manager. 
+---
+= Preguntas frecuentes sobre Cloud Manager SaaS
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Estas preguntas frecuentes responden a preguntas clave asociadas con la nueva versión SaaS de Cloud Manager.
+
+
+
+== ¿Qué funcionalidades se introdujeron con el lanzamiento de SaaS de Cloud Manager el 3 de agosto de 2020?
+
+* *una API e UI* unificadas
++
+Un plano de control de API centralizado y unificado para todas las soluciones de almacenamiento basadas en ONTAP de NetApp, que proporciona a los clientes gestión y control de lo siguiente:
+
++
+** Azure NetApp Files
+** Cloud Volumes Service para AWS
+** Cloud Volumes Service para Google Cloud
+** Cloud Volumes ONTAP
+
+
+* *integración perfecta con los servicios de datos de NetApp*
++
+Para una integración sin problemas, las soluciones de almacenamiento incorporan servicios de datos que se pueden integrar fácilmente.
+
+* *Gestión centralizada de varios entornos*
++
+Ahora se simplifica la puesta en marcha y gestión de varios entornos. Con el lanzamiento anterior, un cliente tenía que poner en marcha instancias de Cloud Manager en todas las ubicaciones deseadas. Con la nueva versión, el nombre del agente de Cloud Manager cambia a _Connector_.
+
++
+Los usuarios con múltiples conectores o cuentas centrales de cloud de NetApp pueden cambiar fácilmente entre diferentes cuentas y entornos.
+
+* *Public Endpoint para API e UI*
++
+Con la versión nueva, puede acceder a la API y. GUI para su Cloud Manager de forma segura mediante  https://cloudmanager.netapp.com[].
+
+
+
+
+
+== ¿Qué ocurrirá con la instancia de Cloud Manager que se ponga en marcha en mi VPC/vnet?
+
+Como ya se ha mencionado, la instancia de Cloud Manager implementada en la red de un cliente se denomina ahora _Connector_.
+
+La función del conector no ha cambiado. Tiene el mismo propósito que antes: Administrar recursos y procesos dentro de la red de nube pública del cliente.
+
+
+
+== ¿Puedo quitar el conector ahora que estoy utilizando la plataforma SaaS?
+
+No, no debería. Este conector es el mismo software que se utilizó para gestionar recursos y procesos en sus entornos de cloud público, como la puesta en marcha y la gestión de Cloud Volumes ONTAP, el uso de Cloud Backup Service, la puesta en marcha de Cloud Compliance y mucho más.
+
+
+
+== ¿Puedo seguir usando mi Cloud Manager del mismo modo que antes (localmente por la instancia puesta en marcha en mi VPC)?
+
+Sí, puede hacerlo haciendo clic en el menú *conector* y haciendo clic en *Ir a la interfaz de usuario local* o introduciendo la dirección IP del conector directamente en su navegador web.
+
+
+
+== ¿se requiere una migración o alguna acción específica para realizar la transición a SaaS de Cloud Manager?
+
+No se necesita nada. Sólo tienes que navegar a. https://cloudmanager.netapp.com[] y empezar a trabajar. Obviamente, el acceso a Cloud Manager solo se concede a usuarios autorizados.
+
+
+
+== ¿han cambiado o se mueven Cloud Volumes ONTAP o los datos que almacena en algún lugar?
+
+No Es donde siempre lo ha estado, en su VPC o vnet, bajo su dirección.
+
+
+
+== ¿Dónde está el extremo de la plataforma SaaS de Cloud Manager?
+
+NetApp utiliza el cloud público con seguridad.
+
+
+
+== ¿Qué tipo de datos o metadatos se almacenan en la capa de servicio SaaS de Cloud Manager?
+
+No se almacenan datos en la capa de servicio SaaS de Cloud Manager.
+
+La plataforma SaaS se utiliza como canalización segura para las llamadas API (HTTPS con un certificado firmado por NetApp) entre el explorador web del usuario y el conector local o los distintos servicios de NetApp integrados en Cloud Manager.
+
+
+
+== ¿Qué datos o metadatos almacena el conector implementado en VPC/vnet?
+
+El conector/Cloud Manager no ha cambiado. Almacena los mismos datos que en la versión anterior. Solo contiene los metadatos necesarios para gestionar recursos y procesos dentro de los entornos de cloud público, como la puesta en marcha y gestión de Cloud Volumes ONTAP, habilitar Cloud Backup Service, poner en marcha y usar Cloud Compliance, etc. (consulte la link:concept_connectors.html["Más información sobre conectores"] para obtener la lista completa de servicios).
+
+
+
+== ¿Cuáles son las rutas de datos y metadatos?
+
+Los datos del conector al cliente se transfieren mediante HTTPS, se cifran y firman con un certificado de NetApp. La interfaz de usuario basada en SaaS actúa como una canalización segura entre el explorador web del cliente y el conector. Esto significa que sólo los usuarios autorizados pueden acceder a los datos del conector.
+
+Para los clientes que utilizan el servicio Cloud Compliance, ahora se cifra de extremo a extremo El intercambio de claves se produce entre el navegador web y el conector, por lo que NetApp no puede leer ninguno de los datos. https://cloud.netapp.com/cloud-compliance["Más información sobre Cloud Compliance"^].
+
+
+
+== ¿existe algún impacto sobre el GDPR al usar el servicio Cloud Compliance a través del extremo de SaaS?
+
+Los datos se cifran de extremo a extremo El intercambio de claves se produce entre el navegador web y el conector, por lo que NetApp no puede leer ninguno de los datos.
+
+
+
+== ¿Qué tipo de acceso a la dirección de red se utiliza para la interfaz de usuario y la API basadas en SaaS para acceder al conector?
+
+* La comunicación del VPC/vnet del cliente a la interfaz de usuario basada en SaaS es sólo _outbound_, lo que significa que sólo lo inicia el conector.
+* El conector busca actualizaciones del nivel de servicio basado en SaaS en un canal seguro.
+* Todas las llamadas API utilizan autenticación y autorización para garantizar la seguridad del acceso.
++
+Esto significa que no es necesario abrir ningún puerto o punto final adicional en la red.
+
+* La comunicación entre el cliente de explorador del usuario y la interfaz de usuario basada en SaaS utiliza HTTPS con un certificado firmado por NetApp.
+
+
+
+
+== ¿ha cambiado el flujo de inicio de sesión?
+
+No, el flujo de inicio de sesión ha permanecido igual que la versión anterior. Cuando un usuario inicia sesión (SSO o credenciales), se autentican contra Auth0, igual que antes.
+
+Tenga en cuenta lo siguiente:
+
+* Si SSO o Federación están en vigor, los mismos procedimientos de seguridad que se estaban utilizando siguen vigentes. El acceso es federación en las instalaciones de su empresa. Al utilizar el acceso federado, puede agregar MFA (a discreción de su compañía) para una mayor seguridad.
+* No hay cambios en los roles o permisos. Solo los usuarios registrados con la cuenta de Cloud Central pueden acceder a los extremos basados en SaaS.
+* El uso del modo Incoñito o una configuración en la que no se permiten cookies de terceros en el navegador del cliente actualmente no es compatible.
+
+
+
+
+== ¿cumple la normativa Cloud Manager basada en SaaS (SOC2, FedRAMP, etc.)?
+
+Cloud Manager está en proceso de obtener la certificación SOC2.
+
+Para cumplir con la certificación FedRAMP, la interfaz de usuario basada en SaaS no está habilitada para clientes que requieran FedRAMP.

@@ -1,0 +1,260 @@
+---
+sidebar: sidebar 
+permalink: reference_networking_aws.html 
+keywords: networking, network, requirements, connection, connections, vpc, security group, security groups, subnets, vpn, internet, nat, s3, dns, ad, active directory, az, availability zone, floating IP, floating, SVM, management LIF, route, route tables, proxy, HTTP, private, tier, s3 endpoint, tiering, storage tier, storage tiering, proxy server, nat device, vpn, snapmanager, snapcenter, iscsi, nfs, cifs, nas, san, outbound, inbound, connections, autosupport, ha, ha pair, high availability 
+summary: Configurar las redes de AWS para que los sistemas Cloud Volumes ONTAP funcionen correctamente. 
+---
+= Requisitos de red para Cloud Volumes ONTAP en AWS
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Configurar las redes de AWS para que los sistemas Cloud Volumes ONTAP funcionen correctamente.
+
+
+
+== Requisitos generales para Cloud Volumes ONTAP
+
+Los siguientes requisitos deben satisfacerse en AWS.
+
+Acceso a Internet saliente para nodos Cloud Volumes ONTAP:: Los nodos Cloud Volumes ONTAP requieren acceso saliente a Internet para enviar mensajes a NetApp AutoSupport, que supervisa proactivamente el estado del almacenamiento.
++
+--
+Las políticas de enrutamiento y firewall deben permitir el tráfico HTTP/HTTPS de AWS a los siguientes extremos para que Cloud Volumes ONTAP pueda enviar mensajes de AutoSupport:
+
+* \https://support.netapp.com/aods/asupmessage
+* \https://support.netapp.com/asupprod/post/1.0/postAsup
++
+Si tiene una instancia NAT, debe definir una regla de grupo de seguridad entrante que permita el tráfico HTTPS desde la subred privada hasta Internet.
+
++
+link:task_setting_up_ontap_cloud.html["Aprenda a configurar AutoSupport"].
+
+
+
+--
+Acceso saliente a Internet para el mediador de alta disponibilidad:: La instancia del mediador de alta disponibilidad debe tener una conexión saliente al servicio EC2 de AWS para que pueda ayudar a recuperarse de la recuperación tras fallos del almacenamiento. Para proporcionar la conexión, puede agregar una dirección IP pública, especificar un servidor proxy o utilizar una opción manual.
++
+--
+La opción manual puede ser una puerta de enlace NAT o un extremo de la interfaz VPC desde la subred de destino al servicio AWS EC2. Para obtener más detalles sobre los extremos VPC, consulte http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpce-interface.html["Documentación de AWS: Extremos de VPC de la interfaz (AWS PrivateLink)"^].
+
+--
+Número de direcciones IP:: Cloud Manager asigna el siguiente número de direcciones IP a Cloud Volumes ONTAP en AWS:
++
+--
+* Nodo único: Direcciones IP de 6
+* Pares DE ALTA DISPONIBILIDAD en AZs individuales: 15 direcciones
+* Pares DE ALTA DISPONIBILIDAD en varios AZs: Direcciones IP 15 o 16
++
+Tenga en cuenta que Cloud Manager crea un LIF de gestión de SVM en sistemas de un solo nodo, pero no en pares de alta disponibilidad en una única zona de disponibilidad. Puede elegir si desea crear una LIF de gestión de SVM en parejas de alta disponibilidad en múltiples AZs.
+
++
+
+TIP: Una LIF es una dirección IP asociada con un puerto físico. Se requiere una LIF de gestión de SVM para herramientas de gestión como SnapCenter.
+
+
+
+--
+Grupos de seguridad:: No necesita crear grupos de seguridad porque Cloud Manager lo hace por usted. Si necesita utilizar el suyo propio, consulte link:reference_security_groups.html["Reglas de grupo de seguridad"].
+Conexión de Cloud Volumes ONTAP a AWS S3 para los datos organización en niveles:: Si desea usar EBS como nivel de rendimiento y AWS S3 como nivel de capacidad, debe asegurarse de que Cloud Volumes ONTAP tenga una conexión con S3. La mejor forma de proporcionar esa conexión es crear un extremo de VPC con el servicio S3. Para ver instrucciones, consulte https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpce-gateway.html#create-gateway-endpoint["Documentación de AWS: Crear un extremo de puerta de enlace"^].
++
+--
+Al crear el extremo VPC, asegúrese de seleccionar la región, VPC y tabla de rutas que correspondan a la instancia de Cloud Volumes ONTAP. También debe modificar el grupo de seguridad para añadir una regla de HTTPS de salida que habilite el tráfico hacia el extremo de S3. De lo contrario, Cloud Volumes ONTAP no puede conectarse con el servicio S3.
+
+Si experimenta algún problema, consulte https://aws.amazon.com/premiumsupport/knowledge-center/connect-s3-vpc-endpoint/["Centro de conocimientos de soporte de AWS: ¿por qué no puedo conectarme a un bloque de S3 mediante un extremo de VPC de puerta de enlace?"^]
+
+--
+Conexiones a sistemas ONTAP en otras redes:: Para replicar datos entre un sistema Cloud Volumes ONTAP en AWS y sistemas ONTAP en otras redes, debe tener una conexión VPN entre el VPC de AWS y la otra red, por ejemplo, un vnet de Azure o una red corporativa. Para ver instrucciones, consulte https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/SetUpVPNConnections.html["Documentación de AWS: Configuración de una conexión VPN de AWS"^].
+DNS y Active Directory para CIFS:: Si desea aprovisionar almacenamiento CIFS, debe configurar DNS y Active Directory en AWS o ampliar la configuración de sus instalaciones a AWS.
++
+--
+El servidor DNS debe proporcionar servicios de resolución de nombres para el entorno de Active Directory. Puede configurar los conjuntos de opciones DHCP para que utilicen el servidor DNS EC2 predeterminado, que no debe ser el servidor DNS utilizado por el entorno de Active Directory.
+
+Para obtener instrucciones, consulte https://docs.aws.amazon.com/quickstart/latest/active-directory-ds/welcome.html["Documentación de AWS: Active Directory Domain Services en AWS Cloud: Implementación de referencia de inicio rápido"^].
+
+--
+
+
+
+
+== Requisitos para pares de alta disponibilidad en varios AZs
+
+Los requisitos de red adicionales de AWS se aplican a configuraciones de alta disponibilidad de Cloud Volumes ONTAP que utilizan varias zonas de disponibilidad (AZs). Debe revisar estos requisitos antes de iniciar una pareja de ha porque debe introducir los detalles de redes en Cloud Manager.
+
+Para comprender cómo funcionan los pares de alta disponibilidad, consulte link:concept_ha.html["Pares de alta disponibilidad"].
+
+Zonas de disponibilidad:: Este modelo de puesta en marcha de alta disponibilidad utiliza varios AZs para garantizar una alta disponibilidad de sus datos. Debería utilizar una zona de disponibilidad dedicada para cada instancia de Cloud Volumes ONTAP y la instancia de mediador, que proporciona un canal de comunicación entre el par de alta disponibilidad.
+Direcciones IP flotantes para datos de NAS y gestión de clústeres/SVM:: Las configuraciones de ALTA DISPONIBILIDAD de varios AZs utilizan direcciones IP flotantes que migran entre nodos en caso de que se produzcan fallos. No se puede acceder a ellos de forma nativa desde fuera del VPC, a menos que usted link:task_setting_up_transit_gateway.html["Configure una puerta de enlace de tránsito de AWS"].
++
+--
+Una dirección IP flotante es para la gestión del clúster, otra para los datos NFS/CIFS del nodo 1 y otra para los datos NFS/CIFS del nodo 2. Una cuarta dirección IP flotante para la gestión de SVM es opcional.
+
+
+NOTE: Se requiere una dirección IP flotante para el LIF de gestión de SVM si se usa SnapDrive para Windows o SnapCenter con el par de alta disponibilidad. Si no especifica la dirección IP al implementar el sistema, puede crear la LIF más adelante. Para obtener más información, consulte link:task_setting_up_ontap_cloud.html["Configurar Cloud Volumes ONTAP"].
+
+Debe introducir las direcciones IP flotantes en Cloud Manager cuando crea un entorno de trabajo de alta disponibilidad de Cloud Volumes ONTAP. Cloud Manager asigna las direcciones IP a la pareja de alta disponibilidad cuando arranca el sistema.
+
+Las direcciones IP flotantes deben estar fuera de los bloques CIDR para todas las VPC de la región AWS en la que se implemente la configuración de alta disponibilidad. Piense en las direcciones IP flotantes como una subred lógica que está fuera de las VPC en su región.
+
+En el siguiente ejemplo se muestra la relación entre las direcciones IP flotantes y las VPC en una región de AWS. Mientras las direcciones IP flotantes están fuera de los bloques CIDR para todos los VPC, se pueden enrutar a subredes a través de tablas de ruta.
+
+image:diagram_ha_floating_ips.png["Imagen conceptual que muestra los bloques CIDR para cinco VPC en una región AWS y tres direcciones IP flotantes que están fuera de los bloques CIDR de las VPC."]
+
+
+NOTE: Cloud Manager crea automáticamente direcciones IP estáticas para el acceso iSCSI y para el acceso NAS desde clientes fuera de VPC. No es necesario cumplir ningún requisito para estos tipos de direcciones IP.
+
+--
+Puerta de enlace de tránsito para habilitar el acceso de IP flotante desde fuera del VPC:: link:task_setting_up_transit_gateway.html["Configure una puerta de enlace de tránsito de AWS"] Para habilitar el acceso a las direcciones IP flotantes de una pareja de alta disponibilidad desde fuera del VPC, donde reside el par de alta disponibilidad.
+Tablas de rutas:: Después de especificar las direcciones IP flotantes en Cloud Manager, debe seleccionar las tablas de rutas que deberían incluir rutas a las direcciones IP flotantes. Esto permite el acceso de los clientes al par de alta disponibilidad.
++
+--
+Si sólo tiene una tabla de rutas para las subredes en el VPC (la tabla de rutas principal), Cloud Manager agrega automáticamente las direcciones IP flotantes a esa tabla de rutas. Si dispone de más de una tabla de rutas, es muy importante seleccionar las tablas de rutas correctas al iniciar el par ha. De lo contrario, es posible que algunos clientes no tengan acceso a Cloud Volumes ONTAP.
+
+Por ejemplo, puede tener dos subredes asociadas a diferentes tablas de rutas. Si selecciona la tabla DE rutas A, pero no la tabla de rutas B, los clientes de la subred asociada a la tabla DE rutas A pueden acceder al par de alta disponibilidad, pero los clientes de la subred asociada a la tabla de rutas B no pueden.
+
+Para obtener más información sobre las tablas de rutas, consulte http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Route_Tables.html["Documentación de AWS: Tablas de rutas"^].
+
+--
+Conexión a herramientas de gestión de NetApp:: Para utilizar las herramientas de gestión de NetApp con configuraciones de alta disponibilidad que se encuentran en múltiples AZs, tiene dos opciones de conexión:
++
+--
+. Puesta en marcha de las herramientas de gestión de NetApp en otro VPC y otras link:task_setting_up_transit_gateway.html["Configure una puerta de enlace de tránsito de AWS"]. La puerta de enlace permite el acceso a la dirección IP flotante para la interfaz de gestión del clúster desde fuera del VPC.
+. Ponga en marcha las herramientas de gestión de NetApp en el mismo VPC con una configuración de enrutamiento similar a las de los clientes NAS.
+
+
+--
+
+
+
+
+=== Ejemplo de configuración de alta disponibilidad
+
+En la siguiente imagen, se muestra una configuración de alta disponibilidad óptima en AWS que funciona como una configuración activo-pasivo:
+
+image:diagram_ha_networking.png["«imagen conceptual que muestra los componentes en una arquitectura de alta disponibilidad de Cloud Volumes ONTAP: Dos nodos de Cloud Volumes ONTAP y un mediador instancia, cada uno en zonas de disponibilidad independientes»."]
+
+
+
+== Requisitos para el conector
+
+Configure su red de modo que el conector pueda gestionar recursos y procesos en su entorno de cloud público. El paso más importante es garantizar el acceso saliente a Internet a varios puntos finales.
+
+
+TIP: Si la red utiliza un servidor proxy para toda la comunicación a Internet, puede especificar el servidor proxy en la página Configuración. Consulte link:task_configuring_proxy.html["Configuración del conector para utilizar un servidor proxy"].
+
+
+
+=== Conexión a redes de destino
+
+Un conector requiere una conexión de red a los VPC y VNets en los que desea implementar Cloud Volumes ONTAP.
+
+Por ejemplo, si instala un conector en la red corporativa, debe configurar una conexión VPN al VPC o a vnet en el que inicie Cloud Volumes ONTAP.
+
+
+
+=== Acceso a Internet de salida
+
+El conector requiere acceso saliente a Internet para gestionar recursos y procesos dentro de su entorno de nube pública. Un conector se pone en contacto con los siguientes extremos cuando se gestionan recursos en AWS:
+
+[cols="43,57"]
+|===
+| Puntos finales | Específico 
+
+
+ a| 
+Servicios de AWS (amazonaws.com):
+
+* Formación CloudFormation
+* Cloud computing elástico (EC2)
+* Servicio de gestión de claves (KMS)
+* Servicio de token de seguridad (STS)
+* Simple Storage Service (S3)
+
+
+El extremo exacto depende de la región en la que se implemente Cloud Volumes ONTAP. https://docs.aws.amazon.com/general/latest/gr/rande.html["Consulte la documentación de AWS para obtener más detalles."^]
+| Permite que Cloud Manager ponga en marcha y gestione Cloud Volumes ONTAP en AWS. 
+
+
+| \https://api.services.cloud.netapp.com:443 | Solicitudes de API a Cloud Central de NetApp. 
+
+
+| \https://cloud.support.netapp.com.s3.us-west-1.amazonaws.com | Proporciona acceso a imágenes, manifiestos y plantillas de software. 
+
+
+| \https://repo.cloud.support.netapp.com | Se utiliza para descargar las dependencias de Cloud Manager. 
+
+
+| \http://repo.mysql.com/ | Se utiliza para descargar MySQL. 
+
+
+| \https://cognito-idp.us-east-1.amazonaws.com \https://cognito-identity.us-east-1.amazonaws.com \https://sts.amazonaws.com \https://cloud-support-netapp-com-accelerated.s3.amazonaws.com | Permite a Cloud Manager acceder y descargar manifiestos, plantillas e imágenes de actualización de Cloud Volumes ONTAP. 
+
+
+| \https://cloudmanagerinfraprod.azurecr.io | Acceso a imágenes de software de componentes de contenedor para una infraestructura que ejecuta Docker y proporciona una solución para las integraciones de servicios con Cloud Manager. 
+
+
+| \https://kinesis.us-east-1.amazonaws.com | Permite a NetApp transmitir datos desde registros de auditoría. 
+
+
+| \https://cloudmanager.cloud.netapp.com | Comunicación con el servicio Cloud Manager, que incluye cuentas de Cloud Central. 
+
+
+| \https://netapp-cloud-account.auth0.com | Comunicación con Cloud Central de NetApp para la autenticación de usuario centralizada. 
+
+
+| \https://w86yt021u5.execute-api.us-east-1.amazonaws.com/production/whitelist | Se utiliza para añadir su ID de cuenta de AWS a la lista de usuarios permitidos para Backup en S3. 
+
+
+| \https://support.netapp.com/aods/asupmessage \https://support.netapp.com/asupprod/post/1.0/postAsup | Comunicación con AutoSupport de NetApp. 
+
+
+| \https://support.netapp.com/svcgw \https://support.netapp.com/ServiceGW/entitlement \https://eval.lic.netapp.com.s3.us-west-1.amazonaws.com \https://cloud-support-netapp-com.s3.us-west-1.amazonaws.com | Comunicación con NetApp para la licencia del sistema y el registro de soporte. 
+
+
+| \https://ipa-signer.cloudmanager.netapp.com | Permite que Cloud Manager genere licencias (por ejemplo, una licencia de FlexCache para Cloud Volumes ONTAP). 
+
+
+| \https://packages.cloud.google.com/yum \https://github.com/NetApp/trident/releases/download/ | Necesario para conectar los sistemas Cloud Volumes ONTAP con un clúster de Kubernetes. Los extremos permiten la instalación de Trident de NetApp. 
+
+
+ a| 
+Diversas ubicaciones de terceros, por ejemplo:
+
+* \https://repo1.maven.org/maven2
+* \https://oss.sonatype.org/content/repositories
+* \https://repo.typesafe.org
+
+
+Las ubicaciones de terceros están sujetas a cambios.
+| Durante las actualizaciones, Cloud Manager descarga los paquetes más recientes para dependencias de terceros. 
+|===
+Aunque debe realizar casi todas las tareas desde la interfaz de usuario de SaaS, todavía hay disponible una interfaz de usuario local en el conector. La máquina que ejecuta el explorador Web debe tener conexiones con los siguientes puntos finales:
+
+[cols="43,57"]
+|===
+| Puntos finales | Específico 
+
+
+| El host del conector  a| 
+Debe introducir la dirección IP del host desde un explorador web para cargar la consola de Cloud Manager.
+
+Según su conectividad con el proveedor de cloud, puede usar la IP privada o una IP pública asignada al host:
+
+* Una IP privada funciona si dispone de una VPN y. acceso directo a la red virtual
+* Una IP pública funciona en cualquier situación de red
+
+
+En cualquier caso, debe proteger el acceso a la red garantizando que las reglas de grupo de seguridad permiten el acceso sólo desde IP o subredes autorizadas.
+
+
+
+| \https://auth0.com \https://cdn.auth0.com \https://netapp-cloud-account.auth0.com \https://services.cloud.netapp.com | El explorador web se conecta con estos extremos para conseguir una autenticación de usuario centralizada mediante NetApp Cloud Central. 
+
+
+| \https://widget.intercom.io | Si busca un chat integrado en los productos que le permita hablar con expertos en cloud de NetApp. 
+|===

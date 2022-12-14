@@ -1,0 +1,75 @@
+---
+sidebar: sidebar 
+permalink: task_getting_started_aws.html 
+keywords: amazon web services, aws, netapp, data fabric, hybrid cloud, cloud, public cloud, networking, vpc, quick, getting started, install, installing, deploy, deploying, setup, setting up, launching, requirements, prerequisites, cloud central, get started, network, vpn, multi-cloud, tier, tiering, storage tier, data tier, vpc endpoint, endpoint, S3, subscribe, subscribing, marketplace, granting, permissions, policy, iam policy, ec2 console, ami, mediator, connectivity, internet, outbound, endpoint, connection, networks, replicating, ec2 service, policies, attach, iam user, access key, secret key, keys, sign up, cloud manager, cloud volumes ontap, cloud ontap, create 
+summary: Empiece a usar Cloud Volumes ONTAP para AWS en unos pasos. 
+---
+= Introducción a Cloud Volumes ONTAP para AWS
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Empiece a usar Cloud Volumes ONTAP para AWS en unos pasos.
+
+
+
+==== image:number1.png["Número 1"] Cree un conector
+
+[role="quick-margin-para"]
+Si usted no tiene un link:concept_connectors.html["Conector"] Sin embargo, un administrador de cuentas necesita crear uno. link:task_creating_connectors_aws.html["Aprenda a crear un conector en AWS"].
+
+[role="quick-margin-para"]
+Al crear el primer entorno de trabajo de Cloud Volumes ONTAP, Cloud Manager le solicitará que implemente un conector si aún no lo tiene.
+
+
+
+==== image:number2.png["Número 2"] Planificación de la configuración
+
+[role="quick-margin-para"]
+Cloud Manager ofrece paquetes preconfigurados que se ajustan a sus requisitos de carga de trabajo, o bien puede crear su propia configuración. Si elige su propia configuración, debe conocer las opciones disponibles. link:task_planning_your_config.html["Leer más"].
+
+
+
+==== image:number3.png["Número 3"] Configure su red
+
+[role="quick-margin-list"]
+. Asegúrese de que VPC y las subredes admitan la conectividad entre el conector y Cloud Volumes ONTAP.
+. Habilite el acceso a Internet de salida desde el VPC de destino para que el conector y Cloud Volumes ONTAP puedan ponerse en contacto con varios extremos.
++
+Este paso es importante porque el conector no puede administrar Cloud Volumes ONTAP sin acceso saliente a Internet. Si necesita limitar la conectividad saliente, consulte la lista de puntos finales para link:reference_networking_aws.html["El conector y Cloud Volumes ONTAP"].
+
+. Configure un extremo de VPC con el servicio S3.
++
+Se requiere un extremo de VPC si desea organizar en niveles los datos inactivos de Cloud Volumes ONTAP en el almacenamiento de objetos de bajo coste.
+
+
+
+[role="quick-margin-para"]
+link:reference_networking_aws.html["Obtenga más información sobre los requisitos de red"].
+
+
+
+==== image:number4.png["Número 4"] Configure el KMS de AWS
+
+[role="quick-margin-para"]
+Si desea utilizar el cifrado de Amazon con Cloud Volumes ONTAP, debe asegurarse de que existe una clave maestra de cliente (CMK) activa. También debe modificar la política de claves para cada CMK agregando la función IAM que proporciona permisos al conector como _Key user_. link:task_setting_up_kms.html["Leer más"].
+
+
+
+==== image:number5.png["Número 5"] Inicie Cloud Volumes ONTAP mediante Cloud Manager
+
+[role="quick-margin-para"]
+Haga clic en *Agregar entorno de trabajo*, seleccione el tipo de sistema que desea implementar y complete los pasos del asistente. link:task_deploying_otc_aws.html["Lea las instrucciones paso a paso"].
+
+.Enlaces relacionados
+* link:concept_evaluating.html["Evaluación"]
+* link:task_creating_connectors_aws.html["Creación de un conector desde Cloud Manager"]
+* link:task_launching_aws_mktp.html["Inicio de un conector desde AWS Marketplace"]
+* link:task_installing_linux.html["Instalar el software del conector en un host Linux"]
+* link:reference_permissions.html#what-cloud-manager-does-with-aws-permissions["Qué hace Cloud Manager con los permisos de AWS"]
+

@@ -1,0 +1,252 @@
+---
+sidebar: sidebar 
+permalink: task_scanning_s3.html 
+keywords: cloud compliance, amazon s3, s3 buckets, amazon s3 buckets, scan s3 buckets, scan amazon s3 buckets, enable compliance s3, enable compliance on s3, s3 working environment 
+summary: Cloud Compliance puede analizar sus buckets de Amazon S3 para identificar los datos personales y confidenciales que se encuentran en el almacenamiento de objetos S3. Cloud Compliance puede analizar cualquier bloque de la cuenta, independientemente de si se ha creado para una solución de NetApp. 
+---
+= Introducción a Cloud Compliance para Amazon S3
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Compliance puede analizar sus buckets de Amazon S3 para identificar los datos personales y confidenciales que se encuentran en el almacenamiento de objetos S3. Cloud Compliance puede analizar cualquier bloque de la cuenta, independientemente de si se ha creado para una solución de NetApp.
+
+
+
+== Inicio rápido
+
+Empiece rápidamente siguiendo estos pasos o desplácese hacia abajo hasta las secciones restantes para obtener todos los detalles.
+
+
+
+==== image:number1.png["Número 1"] Configure los requisitos de S3 en su entorno de cloud
+
+[role="quick-margin-para"]
+Asegúrese de que su entorno cloud pueda cumplir los requisitos de Cloud Compliance, incluida la preparación de un rol IAM y la configuración de conectividad de Cloud Compliance a S3. <<Revisión de los requisitos previos de S3,Vea la lista completa>>.
+
+
+
+==== image:number2.png["Número 2"] Implemente la instancia de Cloud Compliance
+
+[role="quick-margin-para"]
+link:task_deploy_cloud_compliance.html["Ponga en marcha Cloud Compliance en Cloud Manager"^] si aún no hay una instancia implementada.
+
+
+
+==== image:number3.png["Número 3"] Active Compliance en su entorno de trabajo de S3
+
+[role="quick-margin-para"]
+Seleccione el entorno de trabajo de Amazon S3, haga clic en *Activar cumplimiento* y seleccione una función de IAM que incluya los permisos necesarios.
+
+
+
+==== image:number4.png["Número 4"] Seleccione los cucharones que desea escanear
+
+[role="quick-margin-para"]
+Seleccione los cubos que desea analizar y Cloud Compliance empezará a analizarlos.
+
+
+
+== Revisión de los requisitos previos de S3
+
+Los siguientes requisitos son específicos para el análisis de bloques de S3.
+
+[[policy-requirements]]
+Configurar un rol de IAM para la instancia de Cloud Compliance:: Cloud Compliance necesita permisos para conectarse a los bloques de S3 de su cuenta y para analizarlos. Configure un rol de IAM que incluya los permisos que se indican a continuación. Cloud Manager le solicita que seleccione un rol de IAM cuando se habilita Cloud Compliance en el entorno de trabajo de Amazon S3.
++
+--
+[source, json]
+----
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Effect": "Allow",
+          "Action": [
+              "s3:Get*",
+              "s3:List*",
+              "s3:HeadBucket"
+          ],
+          "Resource": "*"
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "iam:GetPolicyVersion",
+              "iam:GetPolicy",
+              "iam:ListAttachedRolePolicies"
+          ],
+          "Resource": [
+              "arn:aws:iam::*:policy/*",
+              "arn:aws:iam::*:role/*"
+          ]
+      }
+  ]
+}
+----
+--
+Proporcione conectividad desde Cloud Compliance a Amazon S3:: Cloud Compliance necesita una conexión con Amazon S3. La mejor forma de proporcionar esa conexión es mediante un extremo VPC con el servicio S3. Para ver instrucciones, consulte https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpce-gateway.html#create-gateway-endpoint["Documentación de AWS: Crear un extremo de puerta de enlace"^].
++
+--
+Al crear el extremo VPC, asegúrese de seleccionar la región, VPC y tabla de rutas que correspondan a la instancia de Cloud Compliance. También debe modificar el grupo de seguridad para añadir una regla de HTTPS de salida que habilite el tráfico hacia el extremo de S3. De lo contrario, Cloud Compliance no se puede conectar con el servicio S3.
+
+Si experimenta algún problema, consulte https://aws.amazon.com/premiumsupport/knowledge-center/connect-s3-vpc-endpoint/["Centro de conocimientos de soporte de AWS: ¿por qué no puedo conectarme a un bloque de S3 mediante un extremo de VPC de puerta de enlace?"^]
+
+Una alternativa es proporcionar la conexión utilizando una puerta de enlace NAT.
+
+
+NOTE: No se puede usar un proxy para acceder a S3 a través de Internet.
+
+--
+
+
+
+
+== Implementación de la instancia de Cloud Compliance
+
+link:task_deploy_cloud_compliance.html["Ponga en marcha Cloud Compliance en Cloud Manager"^] si aún no hay una instancia implementada.
+
+Debe implementar la instancia en un conector de AWS para que Cloud Manager detecte automáticamente los bloques S3 en esta cuenta de AWS y los muestre en un entorno de trabajo Amazon S3.
+
+
+
+== Activar el cumplimiento de normativas en el entorno de trabajo de S3
+
+Habilite Cloud Compliance en Amazon S3 después de comprobar los requisitos previos.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *entornos de trabajo*.
+. Seleccione el entorno de trabajo de Amazon S3.
++
+image:screenshot_s3_we.gif["Una captura de pantalla de un icono de entorno de trabajo de Amazon S3"]
+
+. En el panel de la derecha, haga clic en *Activar cumplimiento*.
++
+image:screenshot_s3_enable_compliance.gif["Una captura de pantalla de cómo habilitar el servicio Cloud Compliance desde la Panel de servicios"]
+
+. Cuando se le solicite, asigne una función IAM a la instancia de Cloud Compliance que tiene <<Requirements specific to S3,los permisos necesarios>>.
++
+image:screenshot_s3_compliance_iam_role.gif["Una captura de pantalla de introducción del rol de IAM de AWS para el cloud Cumplimiento de normativas"]
+
+. Haga clic en *Activar cumplimiento*.
+
+
+
+TIP: También puede habilitar análisis de cumplimiento para un entorno de trabajo En la página Scan Configuration (Configuración de exploración), haga clic en image:screenshot_gallery_options.gif[""] Y seleccione *Activar cumplimiento*.
+
+.Resultado
+Cloud Manager asigna el rol IAM a la instancia.
+
+
+
+== Habilitar y deshabilitar los análisis de cumplimiento de normativas en bloques S3
+
+Después de que Cloud Manager habilita Cloud Compliance en Amazon S3, el paso siguiente es configurar los bloques que desea analizar.
+
+Cuando Cloud Manager se ejecuta en la cuenta de AWS que tiene los bloques de S3 que desea analizar, detecta esos bloques y los muestra en un entorno de trabajo de Amazon S3.
+
+Cloud Compliance también puede <<Escaneando bloques de cuentas de AWS adicionales,Escanee bloques de S3 que se encuentran en diferentes cuentas de AWS>>.
+
+.Pasos
+. Seleccione el entorno de trabajo de Amazon S3.
+. En el panel de la derecha, haga clic en *Configurar cucharones*.
++
+image:screenshot_s3_configure_buckets.gif["Una captura de pantalla de cómo hacer clic en Configure Buckets para elegir S3 cubos que desea escanear"]
+
+. Habilite el cumplimiento de normativas en los cucharones que desee analizar.
++
+image:screenshot_s3_select_buckets.gif["Una captura de pantalla de la selección de los bloques de S3 que desea exploración"]
+
+
+
+.Resultado
+Cloud Compliance comienza a analizar los bloques de S3 que ha habilitado. Si hay algún error, aparecerán en la columna Estado, junto con la acción necesaria para corregir el error.
+
+
+
+== Escaneando bloques de cuentas de AWS adicionales
+
+Puede analizar bloques de S3 que se encuentran en una cuenta de AWS diferente asignando un rol de esa cuenta para poder acceder a la instancia existente de Cloud Compliance.
+
+.Pasos
+. Vaya a la cuenta AWS de destino donde desee explorar bloques S3 y crear un rol IAM seleccionando *otra cuenta de AWS*.
++
+image:screenshot_iam_create_role.gif[""]
+
++
+No olvide hacer lo siguiente:
+
++
+** Introduzca el ID de la cuenta en la que reside la instancia de Cloud Compliance.
+** Cambie la duración máxima de la sesión de *CLI/API* de 1 hora a 12 horas y guarde dicho cambio.
+** Asociar la política de IAM de cumplimiento de normativas de cloud. Asegúrese de que tiene los permisos necesarios.
++
+[source, json]
+----
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Effect": "Allow",
+          "Action": [
+              "s3:Get*",
+              "s3:List*",
+              "s3:HeadBucket"
+          ],
+          "Resource": "*"
+      },
+  ]
+}
+----
+
+
+. Vaya a la cuenta de AWS de origen donde reside la instancia de Cloud Compliance y seleccione la función IAM que se adjunta a la instancia.
++
+.. Cambie la duración máxima de la sesión de *CLI/API* de 1 hora a 12 horas y guarde dicho cambio.
+.. Haga clic en *Adjuntar directivas* y, a continuación, en *Crear directiva*.
+.. Cree una directiva que incluya la acción "sts:AssumeRole" y el ARN del rol que creó en la cuenta de destino.
++
+[source, json]
+----
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "sts:AssumeRole",
+            "Resource": "arn:aws:iam::<ADDITIONAL-ACCOUNT-ID>:role/<ADDITIONAL_ROLE_NAME>"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetPolicyVersion",
+                "iam:GetPolicy",
+                "iam:ListAttachedRolePolicies"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:policy/*",
+                "arn:aws:iam::*:role/*"
+            ]
+        }
+    ]
+}
+----
++
+La cuenta del perfil de instancia de Cloud Compliance ahora tiene acceso a la cuenta de AWS adicional.
+
+
+
+. Vaya a la página *Configuración de análisis de Amazon S3* y aparecerá la nueva cuenta de AWS. Tenga en cuenta que Cloud Compliance puede tardar unos minutos en sincronizar el entorno de trabajo de la nueva cuenta y mostrar esta información.
++
+image:screenshot_activate_and_select_buckets.png[""]
+
+. Haga clic en *Activar cumplimiento y Seleccionar cucharones* y seleccione los cucharones que desea escanear.
+
+
+.Resultado
+Cloud Compliance comienza a analizar los nuevos bloques de S3 que ha habilitado.

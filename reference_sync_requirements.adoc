@@ -1,0 +1,509 @@
+---
+sidebar: sidebar 
+permalink: reference_sync_requirements.html 
+keywords: networking, nfs, cifs, smb, version, connection, google, gcp, azure, blob, service account, resource, permissions, networking, version, ntp, network, protocol, aws efs requirements, efs requirements, s3 requirements, azure blob requirements, blob requirements, azure netapp files, cifs requirements, smb requirements, cloud volumes service, google cloud storage, gcp, ibm cloud object storage, storagegrid, storage tier, blob storage tier, storage class, s3 storage class, nfs versions, smb versions 
+summary: Prepárese para sincronizar los datos mediante la verificación de que el origen y el destino son compatibles y la configuración. 
+---
+= Preparación del origen y del destino
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Prepárese para sincronizar los datos mediante la verificación de que el origen y el destino son compatibles y la configuración.
+
+
+
+== Relaciones de sincronización compatibles
+
+Cloud Sync le permite sincronizar datos de un origen a un destino (esto se denomina _SYNC Relationship_). Debe comprender las relaciones admitidas antes de comenzar.
+
+[cols="20,25"]
+|===
+| Ubicación de origen | Ubicaciones de destino compatibles 
+
+
+| EFS DE AWS  a| 
+* EFS DE AWS
+* AWS S3
+* Azure Blob
+* Azure NetApp Files (NFS)
+* Cloud Volumes ONTAP (NFS)
+* Cloud Volumes Service (NFS)
+* Almacenamiento de objetos en cloud de IBM
+* Google Cloud Storage
+* Servidor NFS
+* Clúster de ONTAP en las instalaciones
+* StorageGRID
+
+
+
+
+| AWS S3  a| 
+* EFS DE AWS
+* AWS S3
+* Azure Blob
+* Azure NetApp Files
+* Cloud Volumes ONTAP
+* Cloud Volumes Service
+* Almacenamiento de objetos en cloud de IBM
+* Google Cloud Storage
+* Servidor NFS
+* Clúster de ONTAP en las instalaciones
+* Servidor SMB
+* StorageGRID
+
+
+
+
+| Azure Blob  a| 
+* EFS DE AWS
+* AWS S3
+* Azure Blob
+* Azure NetApp Files
+* Cloud Volumes ONTAP
+* Cloud Volumes Service
+* Google Cloud Storage
+* Almacenamiento de objetos en cloud de IBM
+* Servidor NFS
+* Clúster de ONTAP en las instalaciones
+* Servidor SMB
+* StorageGRID
+
+
+
+
+| Azure NetApp Files (NFS)  a| 
+* EFS DE AWS
+* AWS S3
+* Azure Blob
+* Azure NetApp Files (NFS)
+* Cloud Volumes ONTAP (NFS)
+* Cloud Volumes Service (NFS)
+* Almacenamiento de objetos en cloud de IBM
+* Google Cloud Storage
+* Servidor NFS
+* Clúster de ONTAP en las instalaciones
+* StorageGRID
+
+
+
+
+| Azure NetApp Files (SMB)  a| 
+* AWS S3
+* Azure Blob
+* Azure NetApp Files (SMB)
+* Cloud Volumes ONTAP (SMB)
+* Cloud Volumes Service (SMB)
+* Google Cloud Storage
+* Almacenamiento de objetos en cloud de IBM
+* Clúster de ONTAP en las instalaciones
+* Servidor SMB
+* StorageGRID
+
+
+
+
+| Cloud Volumes ONTAP (NFS)  a| 
+* EFS DE AWS
+* AWS S3
+* Azure Blob
+* Azure NetApp Files (NFS)
+* Cloud Volumes ONTAP (NFS)
+* Cloud Volumes Service (NFS)
+* Almacenamiento de objetos en cloud de IBM
+* Google Cloud Storage
+* Servidor NFS
+* Clúster de ONTAP en las instalaciones
+* StorageGRID
+
+
+
+
+| Cloud Volumes ONTAP (SMB)  a| 
+* AWS S3
+* Azure Blob
+* Azure NetApp Files (SMB)
+* Cloud Volumes ONTAP (SMB)
+* Cloud Volumes Service (SMB)
+* Google Cloud Storage
+* Almacenamiento de objetos en cloud de IBM
+* Clúster de ONTAP en las instalaciones
+* Servidor SMB
+* StorageGRID
+
+
+
+
+| Cloud Volumes Service (NFS)  a| 
+* EFS DE AWS
+* AWS S3
+* Azure Blob
+* Azure NetApp Files (NFS)
+* Cloud Volumes ONTAP (NFS)
+* Cloud Volumes Service (NFS)
+* Almacenamiento de objetos en cloud de IBM
+* Google Cloud Storage
+* Servidor NFS
+* Clúster de ONTAP en las instalaciones
+* StorageGRID
+
+
+
+
+| Cloud Volumes Service (SMB)  a| 
+* AWS S3
+* Azure Blob
+* Azure NetApp Files (SMB)
+* Cloud Volumes ONTAP (SMB)
+* Cloud Volumes Service (SMB)
+* Google Cloud Storage
+* Almacenamiento de objetos en cloud de IBM
+* Clúster de ONTAP en las instalaciones
+* Servidor SMB
+* StorageGRID
+
+
+
+
+| Google Cloud Storage  a| 
+* EFS DE AWS
+* AWS S3
+* Azure Blob
+* Azure NetApp Files
+* Cloud Volumes ONTAP
+* Cloud Volumes Service
+* Google Cloud Storage
+* Almacenamiento de objetos en cloud de IBM
+* Servidor NFS
+* Clúster de ONTAP en las instalaciones
+* Servidor SMB
+* StorageGRID
+
+
+
+
+| Almacenamiento de objetos en cloud de IBM  a| 
+* EFS DE AWS
+* AWS S3
+* Azure Blob
+* Azure NetApp Files
+* Cloud Volumes ONTAP
+* Cloud Volumes Service
+* Google Cloud Storage
+* Almacenamiento de objetos en cloud de IBM
+* Servidor NFS
+* Clúster de ONTAP en las instalaciones
+* Servidor SMB
+* StorageGRID
+
+
+
+
+| Servidor NFS  a| 
+* EFS DE AWS
+* AWS S3
+* Azure Blob
+* Azure NetApp Files (NFS)
+* Cloud Volumes ONTAP (NFS)
+* Cloud Volumes Service (NFS)
+* Almacenamiento de objetos en cloud de IBM
+* Google Cloud Storage
+* Servidor NFS
+* Clúster de ONTAP en las instalaciones
+* StorageGRID
+
+
+
+
+| Clúster de ONTAP en las instalaciones (NFS)  a| 
+* EFS DE AWS
+* AWS S3
+* Azure Blob
+* Azure NetApp Files (NFS)
+* Cloud Volumes ONTAP (NFS)
+* Cloud Volumes Service (NFS)
+* Almacenamiento de objetos en cloud de IBM
+* Google Cloud Storage
+* Servidor NFS
+* Clúster de ONTAP en las instalaciones
+* StorageGRID
+
+
+
+
+| Clúster de ONTAP en las instalaciones (SMB)  a| 
+* AWS S3
+* Azure Blob
+* Azure NetApp Files (SMB)
+* Cloud Volumes ONTAP (SMB)
+* Cloud Volumes Service (SMB)
+* Google Cloud Storage
+* Almacenamiento de objetos en cloud de IBM
+* Clúster de ONTAP en las instalaciones
+* Servidor SMB
+* StorageGRID
+
+
+
+
+| Almacenamiento ONTAP S3  a| 
+* StorageGRID
+
+
+
+
+| Servidor SMB  a| 
+* AWS S3
+* Azure Blob
+* Azure NetApp Files (SMB)
+* Cloud Volumes ONTAP (NFS)
+* Cloud Volumes Service (NFS)
+* Almacenamiento de objetos en cloud de IBM
+* Google Cloud Storage
+* Clúster de ONTAP en las instalaciones
+* Servidor SMB
+* StorageGRID
+
+
+
+
+| StorageGRID  a| 
+* EFS DE AWS
+* AWS S3
+* Azure Blob
+* Azure NetApp Files
+* Cloud Volumes ONTAP
+* Cloud Volumes Service
+* Almacenamiento de objetos en cloud de IBM
+* Google Cloud Storage
+* Servidor NFS
+* Clúster de ONTAP en las instalaciones
+* Almacenamiento ONTAP S3
+* Servidor SMB
+* StorageGRID
+
+
+|===
+Notas:
+
+. Puede elegir un nivel de almacenamiento específico de Azure Blob cuando un contenedor Blob es el destino:
++
+** Almacenamiento en caliente
+** Almacenamiento en frío
+
+
+. [[Storage-class]]puede elegir un tipo de almacenamiento S3 específico cuando AWS S3 es el destino:
++
+** Estándar (esta es la clase predeterminada)
+** Organización en niveles inteligente
+** Acceso Estándar-poco frecuente
+** Una Zona de acceso poco frecuente
+** Glaciar
+** Glacier Deep Archive
+
+
+
+
+
+
+== Redes para el origen y el destino
+
+* El origen y el destino deben tener una conexión de red con el agente de datos.
++
+Por ejemplo, si un servidor NFS se encuentra en su centro de datos y el agente de datos se encuentra en AWS, necesitará una conexión de red (VPN o Direct Connect) desde su red hasta el VPC.
+
+* NetApp recomienda configurar el origen, el destino y el intermediario de datos para utilizar un servicio de protocolo de tiempo de redes (NTP). La diferencia de tiempo entre los tres componentes no debe superar los 5 minutos.
+
+
+
+
+== Requisitos de origen y objetivo
+
+Compruebe que el origen y los objetivos cumplen los siguientes requisitos.
+
+
+
+=== [[s3]]requisitos de bloque de AWS S3
+
+Asegúrese de que su bloque de AWS S3 cumpla con los siguientes requisitos.
+
+
+
+==== Ubicaciones de agentes de datos compatibles para AWS S3
+
+Las relaciones de sincronización que incluyen el almacenamiento S3 requieren un agente de datos implementado en AWS o en sus instalaciones. En cualquier caso, Cloud Sync le solicita que asocie el agente de datos con una cuenta de AWS durante la instalación.
+
+* link:task_sync_installing_aws.html["Descubra cómo implementar el agente de datos de AWS"]
+* link:task_sync_installing_linux.html["Descubra cómo instalar el agente de datos en un Linux host"]
+
+
+
+
+==== Regiones admitidas de AWS
+
+Todas las regiones están soportadas excepto las regiones China y GovCloud (EE.UU.).
+
+
+
+==== Permisos necesarios para bloques de S3 en otras cuentas de AWS
+
+Al configurar una relación de sincronización, puede especificar un bloque de S3 que resida en una cuenta de AWS que no esté asociado al agente de datos.
+
+link:media/aws_iam_policy_s3_bucket.json["Los permisos incluidos en este archivo JSON"^] Debe aplicarse a ese bloque de S3 para que el agente de datos pueda acceder a él. Estos permisos permiten al agente de datos copiar datos desde y hacia el bloque y enumerar los objetos del bloque.
+
+Tenga en cuenta lo siguiente acerca de los permisos incluidos en el archivo JSON:
+
+. _<BucketName>_ es el nombre del bloque que reside en la cuenta de AWS que no está asociada con el agente de datos.
+. _<RoleARN>_ debe sustituirse por uno de los siguientes:
++
+** Si el agente de datos se instaló manualmente en un host Linux, _RoleARN_ debería ser el ARN del usuario de AWS para el que ha proporcionado credenciales de AWS al implementar el agente de datos.
+** Si el agente de datos se implementó en AWS mediante la plantilla CloudFormation, _RoleARN_ debería ser el ARN de la función IAM creada por la plantilla.
++
+Para encontrar el rol ARN, vaya a la consola EC2, seleccione la instancia de Data broker y haga clic en el rol IAM en la pestaña Descripción. A continuación, debería ver la página Resumen de la consola del IAM que contiene el rol ARN.
+
++
+image:screenshot_iam_role_arn.gif["Captura de pantalla de la consola AWS IAM con una función ARN."]
+
+
+
+
+
+
+
+=== [[blob]]requisitos de almacenamiento de Azure Blob
+
+Asegúrese de que su almacenamiento de Azure Blob cumpla los siguientes requisitos.
+
+
+
+==== Ubicaciones de agentes de datos compatibles para Azure Blob
+
+El agente de datos puede residir en cualquier ubicación cuando una relación de sincronización incluye el almacenamiento de Azure Blob.
+
+
+
+==== Regiones de Azure compatibles
+
+Todas las regiones cuentan con el apoyo de las regiones de China, la gobernadora de los Estados Unidos y el Departamento de Defensa de los Estados Unidos.
+
+
+
+==== Se requiere una cadena de conexión para relaciones que incluyen Azure Blob y. NFS/SMB
+
+A la hora de crear una relación de sincronización entre un contenedor de Azure Blob y un servidor NFS o SMB, debe proporcionar a Cloud Sync la cadena de conexión de la cuenta de almacenamiento:
+
+image:screenshot_connection_string.gif["Muestra una cadena de conexión, que está disponible en el portal de Azure. Para ello, seleccione una cuenta de almacenamiento y haga clic en claves de acceso."]
+
+Si desea sincronizar datos entre dos contenedores de Azure Blob, la cadena de conexión debe incluir un https://docs.microsoft.com/en-us/azure/storage/common/storage-dotnet-shared-access-signature-part-1["firma de acceso compartido"^] (SAS). También tiene la opción de utilizar un SAS al sincronizar entre un contenedor Blob y un servidor NFS o SMB.
+
+El SAS debe permitir el acceso al servicio Blob y todos los tipos de recursos (Servicio, contenedor y objeto). El SAS también debe incluir los siguientes permisos:
+
+* Para el contenedor de fuente Blob: Leer y enumerar
+* Para el contenedor de blob de destino: Leer, escribir, Lista, Agregar y Crear
+
+
+image:screenshot_connection_string_sas.gif["Muestra una firma de acceso compartido, que está disponible en el portal de Azure. Para ello, seleccione una cuenta de almacenamiento y, a continuación, haga clic en firma de acceso compartido."]
+
+
+
+=== Requisito de Azure NetApp Files
+
+Utilice el nivel de servicio Premium o Ultra cuando sincronice datos con o desde Azure NetApp Files. Es posible que experimente errores y problemas de rendimiento si el nivel de servicio del disco es estándar.
+
+
+TIP: Consulte a un arquitecto de soluciones si necesita ayuda para determinar el nivel de servicio adecuado. El tamaño del volumen y el nivel de volumen determinan el rendimiento que se puede obtener.
+
+https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-service-levels#throughput-limits["Obtenga más información acerca de los niveles de servicio y el rendimiento de Azure NetApp Files"].
+
+
+
+=== Requisitos de bucket de Google Cloud Storage
+
+Asegúrese de que su bloque de Google Cloud Storage cumpla con los siguientes requisitos.
+
+
+
+==== Ubicaciones de agentes de datos compatibles para Google Cloud Storage
+
+Las relaciones de sincronización que incluyen Google Cloud Storage requieren que un agente de datos se ponga en marcha en GCP o en sus instalaciones. Cloud Sync le guía por el proceso de instalación de Data broker cuando crea una relación de sincronización.
+
+* link:task_sync_installing_gcp.html["Descubra cómo implementar el agente de datos para GCP"]
+* link:task_sync_installing_linux.html["Descubra cómo instalar el agente de datos en un Linux host"]
+
+
+
+
+==== Regiones compatibles de GCP
+
+Se admiten todas las regiones.
+
+
+
+=== Requisitos del servidor NFS
+
+* El servidor NFS puede ser un sistema de NetApp o un sistema que no sea de NetApp.
+* El servidor de archivos debe permitir que el host de Data broker acceda a las exportaciones.
+* Se admiten las versiones 3, 4.0, 4.1 y 4.2 de NFS.
++
+La versión deseada debe estar activada en el servidor.
+
+* Si desea sincronizar datos NFS desde un sistema ONTAP, asegúrese de que el acceso a la lista de exportación NFS de una SVM esté habilitado (vserver nfs modify -vserver _svm_name_ -showmount habilitado).
++
+
+NOTE: La configuración predeterminada para showmount es _Enabled_ a partir de ONTAP 9.2.
+
+
+
+
+
+=== Requisitos de almacenamiento de S3 de ONTAP
+
+ONTAP 9.7 admite Amazon simple Storage Service (Amazon S3) como vista previa pública. link:https://www.netapp.com/us/media/tr-4814.pdf["Obtenga más información sobre la compatibilidad de ONTAP para Amazon S3"^].
+
+Al configurar una relación de sincronización que incluya el almacenamiento de ONTAP S3, tendrá que proporcionar lo siguiente:
+
+* La dirección IP de la LIF conectada a ONTAP S3
+* La clave de acceso y la clave secreta configurada por ONTAP para usar
+
+
+
+
+=== Requisitos del servidor SMB
+
+* El servidor SMB puede ser un sistema de NetApp o un sistema distinto de NetApp.
+* El servidor de archivos debe permitir que el host de Data broker acceda a las exportaciones.
+* Se admiten las versiones 1.0, 2.0, 2.1, 3.0 y 3.11 de SMB.
+* Conceda el grupo "Administradores" con permisos "Control total" a las carpetas de origen y destino.
++
+Si no otorga este permiso, es posible que el agente de datos no tenga permisos suficientes para obtener las ACL en un archivo o directorio. Si esto ocurre, recibirá el siguiente error: "Getxattr error 95"
+
+
+
+
+
+==== Limitación de SMB para directorios y archivos ocultos
+
+Una limitación de SMB afecta a directorios y archivos ocultos al sincronizar datos entre servidores SMB. Si alguno de los directorios o archivos del servidor SMB de origen se ocultó a través de Windows, el atributo oculto no se copiará al servidor SMB de destino.
+
+
+
+==== Comportamiento de sincronización de SMB por limitación de falta de sensibilidad en caso
+
+El protocolo SMB no distingue mayúsculas y minúsculas, lo que significa que las letras mayúsculas y minúsculas se tratan como las mismas. Este comportamiento puede provocar errores de copia de directorio y archivos sobrescritos si una relación de sincronización incluye un servidor SMB y los datos ya existen en el destino.
+
+Por ejemplo, digamos que hay un archivo llamado "a" en el origen y un archivo llamado "A" en el destino. Cuando Cloud Sync copia el archivo denominado "a" en el destino, el archivo "A" se sobrescribe con el archivo "a" del origen.
+
+En el caso de los directorios, digamos que hay un directorio llamado "b" en el origen y un directorio llamado "B" en el destino. Cuando Cloud Sync intenta copiar el directorio llamado "b" en el destino, Cloud Sync recibe un error que dice que el directorio ya existe. Como resultado, Cloud Sync siempre falla al copiar el directorio llamado “b.”.
+
+La mejor manera de evitar esta limitación es asegurarse de que sincroniza los datos con un directorio vacío.
+
+
+
+== Permisos para un destino de SnapMirror
+
+Si el origen de una relación de sincronización es un destino de SnapMirror (que es de solo lectura), los permisos de "lectura/lista" son suficientes para sincronizar los datos del origen en un destino.

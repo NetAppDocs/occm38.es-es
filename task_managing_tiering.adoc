@@ -1,0 +1,131 @@
+---
+sidebar: sidebar 
+permalink: task_managing_tiering.html 
+keywords: discover, volumes, report, hot, cold, inactive, active, capacity, used capacity, savings, health, failed 
+summary: Ahora que ya ha detectado y organizado por niveles los datos de su primer clúster ONTAP, podrá ordenar datos de volúmenes adicionales, detectar clústeres adicionales y mucho más. 
+---
+= Gestionar la organización en niveles de datos desde los clústeres
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Ahora que ha configurado la organización en niveles de datos desde sus clústeres de ONTAP, puede organizar los datos en niveles desde volúmenes adicionales, cambiar la política de organización en niveles de un volumen y mucho más.
+
+
+
+== Organización en niveles de datos de volúmenes adicionales
+
+Configure la organización en niveles de datos para volúmenes adicionales en cualquier momento, por ejemplo, después de crear un nuevo volumen.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *segmentación*.
+. En *Cluster Dashboard*, haga clic en *Tier Volumes* para el clúster.
+. Para cada volumen, haga clic en la image:screenshot_edit_icon.gif["Captura de pantalla del icono de edición que aparece en la final de cada fila de la tabla para organizar en niveles los volúmenes"] Seleccione una política de organización en niveles, ajuste opcionalmente los días de refrigeración y haga clic en *aplicar*.
++
+link:concept_cloud_tiering.html#volume-tiering-policies["Más información acerca de las políticas de organización en niveles de volúmenes"].
+
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_volumes_select.gif["Captura de pantalla que muestra los volúmenes seleccionados en la página Seleccionar volúmenes de origen."]
+
++
+
+TIP: No es necesario configurar el almacenamiento de objetos porque ya se ha configurado al configurar inicialmente la organización en niveles para el clúster. ONTAP organiza en niveles los datos inactivos de estos volúmenes en el mismo almacén de objetos.
+
+. Cuando haya terminado, haga clic en *Cerrar*.
+
+
+
+
+== Cambio de la política de organización en niveles de un volumen
+
+Cambiar la política de organización en niveles de un volumen cambia la forma en que ONTAP organiza los datos inactivos en almacenamiento de objetos. El cambio empieza desde el momento en que cambia la política: Solo cambia el comportamiento de organización en niveles posterior del volumen.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *segmentación*.
+. En *Cluster Dashboard*, haga clic en *Tier Volumes* para el clúster.
+. Haga clic en la image:screenshot_edit_icon.gif["Captura de pantalla del icono de edición que aparece en la final de cada fila de la tabla para organizar en niveles los volúmenes"] Seleccione una política de organización en niveles, ajuste opcionalmente los días de refrigeración y haga clic en *aplicar*.
++
+link:concept_cloud_tiering.html#volume-tiering-policies["Más información acerca de las políticas de organización en niveles de volúmenes"].
+
+
+
+
+
+== Gestión de la configuración de organización en niveles en agregados
+
+Cada agregado tiene dos configuraciones que puede ajustar: El umbral de ocupación de la organización en niveles y si la generación de informes de datos inactivos está habilitada.
+
+Umbral de ocupación de la organización en niveles:: Si se establece el umbral en un número menor, se reduce la cantidad de datos necesarios para almacenar en el nivel de rendimiento antes de que se lleve a cabo la organización en niveles. Esto puede ser útil para agregados de gran tamaño que contienen pocos datos activos.
++
+--
+Si se establece el umbral en un número mayor, se aumenta la cantidad de datos necesarios para almacenar en el nivel de rendimiento antes de que se lleve a cabo la organización en niveles. Esto puede resultar útil para soluciones diseñadas para realizar niveles solo cuando los agregados están cerca de la capacidad máxima.
+
+--
+Generación de informes de datos inactivos:: La generación de informes de datos inactivos (IDR) utiliza un periodo de enfriamiento de 31 días para determinar qué datos se consideran inactivos. La cantidad de datos inactivos organizados en niveles depende de las políticas de organización en niveles establecidas en volúmenes. Esta cantidad puede ser diferente de la cantidad de datos fríos detectados por IDR utilizando un período de enfriamiento de 31 días.
++
+--
+
+TIP: Es mejor mantener activado IDR porque ayuda a identificar sus oportunidades de ahorro y datos inactivos. El IDR debe seguir activado si se habilitó la organización en niveles de datos en un agregado.
+
+--
+
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *segmentación*.
+. En la página *Cloud Tiering*, haga clic en el icono de menú de un clúster y seleccione *gestionar agregados*.
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_manage_aggregates.gif["Una captura de pantalla del panel de clúster que muestra ampliado un clúster y el menú de acción."]
+
+. En la página *Administrar agregados*, haga clic en image:screenshot_edit_icon.gif["Captura de pantalla del icono de edición que aparece en la final de cada fila de la tabla para administrar agregados"] icono de un agregado de la tabla.
+. Modifique el umbral de llenado y elija si desea habilitar o deshabilitar los informes de datos inactivos.
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_edit_aggregate.gif["Captura de pantalla que muestra un control deslizante para modificar el umbral de ocupación de la organización en niveles y un botón para activar o desactivar la creación de informes de datos inactivos."]
+
+. Haga clic en *aplicar*.
+
+
+
+
+== Revisión de la información de organización en niveles de un clúster
+
+Puede que desee ver cuántos datos hay en el nivel de cloud y cuántos datos hay en los discos. O bien, puede que desee ver la cantidad de datos activos y inactivos en los discos del clúster. La organización en niveles de cloud proporciona esta información para cada clúster.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *segmentación*.
+. En *Panel de clústeres*, haga clic en *más información* para un clúster.
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_more_info.gif["Una captura de pantalla que muestra el botón más información, que está disponible en la Consola del clúster para cada clúster"]
+
+. Revise los detalles sobre el clúster.
++
+Veamos un ejemplo:
+
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_cluster_info.gif["Una captura de pantalla que muestra el informe del clúster, donde se detalla la capacidad total utilizada, la capacidad utilizada del clúster, la información del clúster y la información sobre el almacenamiento de objetos"]
+
+
+
+
+
+== Reparación de la salud operativa
+
+Los fallos pueden producirse. Cuando lo hacen, Cloud Tiering muestra un estado de estado operativo que no se ha podido completar en la consola del clúster. El estado refleja el estado del sistema ONTAP y de Cloud Manager.
+
+.Pasos
+. Identifique los clústeres con un estado operativo de "error".
++
+image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_tiering_health.gif["Captura de pantalla que muestra el estado de la organización en niveles fallida de un clúster."]
+
+. Pase el ratón sobre image:https://docs.netapp.com/us-en/cloud-tiering/media/screenshot_info_icon.gif["Captura de pantalla del icono i que muestra el fallo razón"] para ver el motivo del fallo.
+. Corrija el problema:
++
+.. Compruebe que el clúster de ONTAP esté operativo y que tenga una conexión entrante y saliente con el proveedor de almacenamiento de objetos.
+.. Compruebe que Cloud Manager tiene conexiones salientes al servicio Cloud Tiering, al almacén de objetos y a los clústeres de ONTAP que detecta.
+
+
+

@@ -1,0 +1,87 @@
+---
+sidebar: sidebar 
+permalink: task_getting_started_compute.html 
+keywords: compute, cloud insights, cloud analyzer, connect cloud analyzer, connect master payer account, connect payer account, aws payer account 
+summary: Complete algunos pasos para obtener un análisis en profundidad de los costes de la tecnología cloud de Spot Cloud Analyzer. 
+---
+= Empiece a optimizar sus costes de cloud computing
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Conecte su cuenta de AWS y, a continuación, vea el análisis para empezar a optimizar sus costes de tecnología cloud.
+
+
+
+== Conecte Cloud Analyzer a su cuenta de AWS
+
+Haga clic en *calcular* y conecte su cuenta de pagador de AWS.
+
+.Pasos
+. Haga clic en *calcular*.
+. Haga clic en *Agregar credenciales de AWS a Inicio*.
+. Siga los pasos que aparecen en la página para conectar su cuenta de AWS:
++
+.. Inicie sesión en su cuenta de pagador maestro de AWS.
+.. Configure informes de costes y uso en la cuenta de AWS.
+.. Ejecute la plantilla CloudFormation.
+.. Pegue el RoleARN del punto.
++
+https://help.spot.io/cloud-analyzer/connect-your-aws-account-2/["Vea más detalles sobre estos pasos"^].
+
++
+image:screenshot_compute_add_account.gif["Captura de pantalla que muestra cada campo disponible en la página de conexión."]
+
+
+
+
+
+.Resultado
+Cloud Analyzer comienza a procesar los datos de sus cuentas de AWS. Si tiene varias cuentas, Cloud Analyzer comienza con capacidades de sólo lectura para todas las cuentas vinculadas de la cuenta de pagador principal. Si desea obtener más información sobre el ahorro potencial de esas cuentas, tendrá que conectarlos también. Puede encontrar más información sobre ese proceso en la sección siguiente.
+
+
+
+== Analice sus costes informáticos
+
+Después de que Cloud Analyzer procese sus datos de cuenta, la pestaña Compute muestra información sobre los costes del cloud pasados, actuales y futuros.
+
+image:screenshot_compute_dashboard.gif["Captura de pantalla que muestra la página Análisis de costes en Cloud Manager. Esta página incluye la información descrita en el texto siguiente."]
+
+Coste del mes hasta la fecha:: El coste total de las cargas de trabajo desde el principio del mes actual hasta la actualidad.
+Costos proyectados:: El coste previsto al final del mes basado en el análisis de su patrón de uso.
+Ahorros que faltó la semana pasada:: Ahorros que podrían haberse logrado en los siete días anteriores gracias a la optimización de instancias puntuales y reservas.
+Principales niveles de eficiencia del gasto en cuentas de AWS:: Las 10 cuentas principales según la mayor cantidad de ahorro adicional estimado.
++
+--
+A cada cuenta se le asigna una puntuación de eficiencia en función del ahorro potencial actual y adicional. El ahorro adicional estimado indica cuánto se puede ahorrar aún más aprovechando el uso de instancias puntuales y reservadas.
+
+Puede realizar las siguientes acciones para optimizar aún más sus cuentas:
+
+* *Ver detalles*: Vea sus oportunidades de optimización de costos en Spot's Cloud Analyzer.
+* *Connect*: Conecte una cuenta que aún no se haya administrado. Se le dirigirá al asistente que conecta la cuenta.
+
+
+--
+Principales cuentas de AWS:: Este es un gráfico de barras que muestra sus diez cuentas principales por coste. El gráfico se basa en los últimos 30 días de actividad de gasto.
+
+
+https://help.spot.io/cloud-analyzer/cost-analysis/["Obtenga más información acerca de la página Análisis de costes disponible en Spot's Cloud Analyzer"^].
+
+
+
+== Visite Cloud Analyzer para obtener más análisis y recomendaciones
+
+Haga clic en *obtener análisis completo* en cualquier momento para acceder a más gráficos y análisis, recomendaciones en profundidad, un desglose de optimización de casos de uso (contenedores, aplicaciones elástica y reservas) y mucho más.
+
+He aquí un ejemplo de lo que verá en Cloud Analyzer:
+
+image:screenshot_compute_dashboard_spot.gif["Captura de pantalla que muestra la página Análisis de costes en Cloud Analyzer de Spot."]
+
+* https://spot.io/products/cloud-analyzer/["Vea la página de Cloud Analyzer para obtener más información acerca de sus funcionalidades"^].
+* https://help.spot.io/cloud-analyzer/["Consulte la documentación de Spot para obtener ayuda sobre el uso de Cloud Analizador"^].
+

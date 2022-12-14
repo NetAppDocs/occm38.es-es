@@ -1,0 +1,106 @@
+---
+sidebar: sidebar 
+permalink: task_managing_connectors.html 
+keywords: managing connectors, uninstall connector, switch connectors, switch between connectors, go to local UI, local interface, local connector, local cloud manager 
+summary: Después de crear uno o más conectores, puede gestionarlos cambiando entre conectores, conectándose a la interfaz de usuario local que se ejecuta en un conector, entre otros. 
+---
+= Gestión de conectores existentes
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Después de crear uno o más conectores, puede gestionarlos cambiando entre conectores, conectándose a la interfaz de usuario local que se ejecuta en un conector, entre otros.
+
+
+
+== Cambio entre conectores
+
+Si tiene varios conectores, puede alternar entre ellos para ver los entornos de trabajo asociados a un conector específico.
+
+Por ejemplo, digamos que trabaja en un entorno multicloud. Es posible que tenga un conector en AWS y otro en Google Cloud. Tendría que cambiar entre estos conectores para gestionar los sistemas Cloud Volumes ONTAP que se ejecutan en esas nubes.
+
+.Paso
+. Haga clic en el menú desplegable *conector*, seleccione otro conector y, a continuación, haga clic en *conmutador*.
++
+image:screenshot_connector_switch.gif["Captura de pantalla que muestra el icono conector en el cabezal y la acción Switch."]
+
++
+Cloud Manager actualiza y muestra los entornos de trabajo asociados con el conector seleccionado.
+
+
+
+
+
+== Obtener acceso a la interfaz de usuario local
+
+Aunque debe realizar casi todas las tareas desde la interfaz de usuario de SaaS, todavía hay disponible una interfaz de usuario local en el conector. Esta interfaz es necesaria para algunas tareas que se deben realizar desde el propio conector:
+
+* link:task_configuring_proxy.html["Establecimiento de un servidor proxy"]
+* Instalación de un parche (Normalmente, trabajará con el personal de NetApp para instalar un parche).
+* Descargando mensajes de AutoSupport (Normalmente dirigido por el personal de NetApp cuando tiene problemas)
+
+
+.Pasos
+. https://docs.netapp.com/us-en/occm/task_logging_in.html["Inicie sesión en la interfaz del SaaS de Cloud Manager"^] Desde un equipo que tiene una conexión de red a la instancia de conector.
++
+Si el conector no tiene una dirección IP pública, necesitará una conexión VPN o deberá conectarse desde un host de salto que esté en la misma red que el conector.
+
+. Haga clic en el menú desplegable *conector*, haga clic en el menú de acción de un conector y, a continuación, haga clic en *Ir a interfaz de usuario local*.
++
+image:screenshot_connector_local_ui.gif["Captura de pantalla que muestra el icono conector en el encabezado y la acción Ir a la interfaz de usuario local."]
+
++
+La interfaz de Cloud Manager que se ejecuta en el conector se carga en una nueva pestaña del navegador.
+
+
+
+
+
+== Quitando conectores de Cloud Manager
+
+Si un conector está inactivo, puede quitarlo de la lista de conectores de Cloud Manager. Puede hacerlo si ha eliminado la máquina virtual conector o si ha desinstalado el software conector.
+
+Tenga en cuenta lo siguiente sobre la extracción de un conector:
+
+* Esta acción no elimina la máquina virtual.
+* No se puede revertir esta acción. Una vez que se quita un conector de Cloud Manager, no se puede volver a añadir a Cloud Manager.
+
+
+.Pasos
+. Haga clic en el menú desplegable conector del encabezado Cloud Manager.
+. Haga clic en el menú de acción de un conector inactivo y haga clic en *Quitar conector*.
++
+image:screenshot_connector_remove.gif["Captura de pantalla del widget conector en la que puede eliminar un conector inactivo."]
+
+. Introduzca el nombre del conector que desea confirmar y, a continuación, haga clic en Quitar.
+
+
+.Resultado
+Cloud Manager quita el conector de sus registros.
+
+
+
+== Desinstalación del software del conector
+
+El conector incluye una secuencia de comandos de desinstalación que puede utilizar para desinstalar el software para solucionar problemas o para quitar permanentemente el software del host.
+
+.Paso
+. Desde el host Linux, ejecute el script de desinstalación:
++
+*/opt/application/netapp/cloudmanager/bin/uninstall.sh [silent]*
+
++
+_silent_ ejecuta la secuencia de comandos sin que se le solicite confirmación.
+
+
+
+.¿y las actualizaciones de software?
+****
+El conector actualiza automáticamente su software a la última versión, siempre que lo haya hecho link:reference_networking_cloud_manager.html["acceso a internet de salida"] para obtener la actualización de software.
+
+****

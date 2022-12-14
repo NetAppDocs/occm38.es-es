@@ -1,0 +1,255 @@
+---
+sidebar: sidebar 
+permalink: reference_permissions.html 
+keywords: permissions, actions, API, aws, azure, json, gcp, aws permissions, azure permissions, gcp permissions 
+summary: Cloud Manager requiere permisos para realizar acciones en su proveedor de cloud. Estos permisos se incluyen en las políticas que proporciona NetApp. Tal vez desee entender qué hace Cloud Manager con estos permisos. 
+---
+= Cómo Cloud Manager utiliza los permisos de proveedores de cloud
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Manager requiere permisos para realizar acciones en su proveedor de cloud. Estos permisos se incluyen en https://mysupport.netapp.com/site/info/cloud-manager-policies["Las políticas proporcionadas por NetApp"^]. Tal vez desee entender qué hace Cloud Manager con estos permisos.
+
+
+
+== Qué hace Cloud Manager con los permisos de AWS
+
+Cloud Manager utiliza una cuenta de AWS para realizar llamadas API a varios servicios de AWS, incluidos EC2, S3, CloudFormation, IAM, Security Token Service (STS) y el servicio de gestión de claves (KMS).
+
+[cols="50,50"]
+|===
+| Acciones | Específico 
+
+
+| "ec2:StartInstances", "ec2:StopInstances", "ec2:DescribeInstances", "ec2:DescribeInstanceStatus", "ec2:RunInstances", "ec2:TerminateInstances", "ec2:ModificyAttribute", | Inicia una instancia de Cloud Volumes ONTAP y detiene, inicia y supervisa la instancia. 
+
+
+| "ec2:DescribeInstanceAttribute", | Verifica que las redes mejoradas están habilitadas para los tipos de instancia admitidos. 
+
+
+| "ec2:DescribeRouteTables", "ec2:DescribeImages", | Inicia una configuración de alta disponibilidad de Cloud Volumes ONTAP. 
+
+
+| "ec2:CreateTags", | Etiqueta todos los recursos que Cloud Manager crea con las etiquetas "WorkingEnvironment" y "WorkingEnvironmentId". Cloud Manager utiliza estas etiquetas para tareas de mantenimiento y asignación de costes. 
+
+
+| "ec2:CreateVolume", "ec2:DescribeVolumes", "ec2:ModifyVolumeAttribute", "ec2:AttachVolume", "ec2:DeleteVolume", "ec2:DetachVolume", | Gestiona los volúmenes de EBS que Cloud Volumes ONTAP utiliza como almacenamiento back-end. 
+
+
+| "ec2:CreateSecurityGroup", "ec2:DeleteSecurityGroup", "ec2:DescribeSecurityGroups", "ec2:RevokeSecurityGroupEgress", "ec2:AuthorizeSecurityGroupEgress", "ec2:AuthorizeGroupSecurityGroupIngress", "ec2:RevokeSecurityGroupIngress", | Crea grupos de seguridad predefinidos para Cloud Volumes ONTAP. 
+
+
+| "ec2:CreateNetworkInterface", "ec2:DescribeNetworkInterface", "ec2:DeleteNetworkInterface", "ec2:ModifyNetworkInterfaceAttribute", | Crea y administra interfaces de red para Cloud Volumes ONTAP en la subred de destino. 
+
+
+| "ec2:DescribeSubnets", "ec2:DescribeVpcs", | Obtiene la lista de subredes de destino y grupos de seguridad, que se necesita al crear un nuevo entorno de trabajo para Cloud Volumes ONTAP. 
+
+
+| "ec2:DescribDhcpOptions", | Determina los servidores DNS y el nombre de dominio predeterminado al iniciar instancias de Cloud Volumes ONTAP. 
+
+
+| "ec2:CreateSnapshot", "ec2:DeleteSnapshot", "ec2:DescribeSnapshots", | Toma snapshots de volúmenes de EBS durante la configuración inicial y cada vez que se detiene una instancia de Cloud Volumes ONTAP. 
+
+
+| "ec2:GetConsoleOutput", | Captura la consola de Cloud Volumes ONTAP, que está conectada a mensajes de AutoSupport. 
+
+
+| "ec2:DescribeKeyPairs", | Obtiene la lista de pares de claves disponibles al iniciar instancias. 
+
+
+| "ec2:regiones describidas", | Obtiene una lista de las regiones disponibles de AWS. 
+
+
+| "ec2:DeleteTags", "ec2:DescribeTags", | Gestiona etiquetas de los recursos asociados a instancias de Cloud Volumes ONTAP. 
+
+
+| "Cloudformation:CreateStack", "cloudformation:DeleteStack", "cloudformation:Describestacks", "cloudformation:DescribeStackEvents", "cloudformation:ValidateTemplate", | Inicia instancias de Cloud Volumes ONTAP. 
+
+
+| "iam:PassRole", "iam:CreateRole", "iam:DeleteRole", "iam:PutRolePolicy", "iam:CreateInstanceProfile", "iam:DeleteRololePolicy", "iam:AddRoleToInstanceProfile", "iam:RemoveRoleFromInstanceProfile", "DeleteInstanceProfile" | Inicia una configuración de alta disponibilidad de Cloud Volumes ONTAP. 
+
+
+| "iam:ListInstanceProfiles", "sts:DecodeAuthorizationMessage", "ec2:AssociateIamInstanceProfile", "ec2:DescribeIamInstanceProfileAssociations", "ec2:DisasociateIamanceProfile", | Administra perfiles de instancia para instancias de Cloud Volumes ONTAP. 
+
+
+| "s3:GetBucketTagging", "s3:GetBucketLocation", "s3:ListAllMyBuckets", "s3:ListBucket" | Obtiene información sobre cubos de AWS S3 para que Cloud Manager pueda integrarse con el servicio Data Fabric Cloud Sync de NetApp. 
+
+
+| "s3:CreateBucket", "s3:DeleteBucket", "s3:GetLifecycleConfiguration", "s3:PutLifecycleConfiguration", "s3:PutBucketTagging", "s3:ListBucketVersions", "bucs3:GetBucketPolicyStatus", "s3:GetBucketAccessBlock", "PublicGetS3:GetPutketPolicy", "buckets3", "buckets3:AccessPolicy" | Gestiona el bloque de S3 que un sistema Cloud Volumes ONTAP utiliza como nivel de capacidad para la organización de datos en niveles. 
+
+
+| "Kms:List*", "kms:Recifrar*", "kms:describir*", "kms:CreateGrant", | Habilita el cifrado de datos de Cloud Volumes ONTAP mediante el Servicio de gestión de claves (KMS) de AWS. 
+
+
+| "ce:GetReservationUtilization", "CE:GetDimensionValues", "CE:GetCostAndUsage", "CE:getTags" | Obtiene los datos de costes de AWS para Cloud Volumes ONTAP. 
+
+
+| "ec2:CreatePlacementGroup", "ec2:DeletePlacementGroup" | Al poner en marcha una configuración de alta disponibilidad en una única zona de disponibilidad de AWS, Cloud Manager lanza los dos nodos de alta disponibilidad y el mediador en un grupo de colocación extendido de AWS. 
+
+
+| "ec2:DescribeReservedInstancesOfferings" | Cloud Manager utiliza el permiso como parte de la implementación de Cloud Compliance para elegir el tipo de instancia que desea utilizar. 
+
+
+| "s3:DeleteBucket", "s3:GetLifecycleConfiguration", "s3:PutLifecycleConfiguration", "s3:PutketPolicyTaging", "s3:ListBucketVersions", "s3:BucketBucketBucket", "s3:ListAccessAllAccessMyBuckets", "s3:GetBucketPolicyPolicy", "getbuckets3", "BucketS3:GetBucketBucketBucketBucketBlock", "BucketS3", "BucketS3:GetBucketS3", "BucketBucketS3", "GetBucketBucketBucketBucketBucketBucketBucketBucketBucketBlock",", " | Cloud Manager utiliza estos permisos cuando se habilita el servicio Backup en S3. 
+|===
+
+
+== Qué hace Cloud Manager con permisos de Azure
+
+La política de Cloud Manager para Azure incluye los permisos que necesita Cloud Manager para implementar y gestionar Cloud Volumes ONTAP en Azure.
+
+[cols="50,50"]
+|===
+| Acciones | Específico 
+
+
+| "Microsoft.Compute/locations/operations/read", "Microsoft.Compute/locations/vmSizes/read", "Microsoft.Compute/operations/read", "Microsoft.Compute/virtualMachines/instanceView/read", "Microsoft.Compute/virtualMachines/powerOff/action", "Microsoft.Compute/virtualMachines/read", "Microsoft.Compute/virtualMachines/restart/action", "Microsoft.Compute/virtualMachines/start/action", "Microsoft.Compute/virtualMachines/deallocate/action", "Microsoft.Compute/virtualMachines/vmSizes/read", "Microsoft.Compute/virtualMachines/write", | Crea Cloud Volumes ONTAP y detiene, inicia, elimina y obtiene el estado del sistema. 
+
+
+| "Microsoft.Compute/images/write", "Microsoft.Compute/images/read", | Permite la puesta en marcha de Cloud Volumes ONTAP desde un disco duro virtual. 
+
+
+| "Microsoft.Compute/disks/delete", "Microsoft.Compute/disks/read", "Microsoft.Compute/disks/write", "Microsoft.Storage/checknameAvailability/read", "Microsoft.Storage/opers/read", "Microsoft.Storage/storageAccounts/listkeys/action", "Microsoft.Storage/Accounts/read", "Microsoft.Storage/storageAccounts/regeneratekey/action", "Microsoft.Storage/Storage Accounts/write", "Storage.files/Storage/Storage/Storage Accounts", " | Gestiona cuentas de almacenamiento y discos de Azure y conecta los discos a Cloud Volumes ONTAP. 
+
+
+| "Microsoft.Network/networkInterfaces/read", "Microsoft.Network/networkInterfaces/write", "Microsoft.Network/networkInterfaces/join/action", | Crea y administra interfaces de red para Cloud Volumes ONTAP en la subred de destino. 
+
+
+| "Microsoft.Network/networkSecurityGroups/read", "Microsoft.Network/networkSecurityGroups/write", "Microsoft.Network/networkSecurityGroups/join/action", | Crea grupos de seguridad de red predefinidos para Cloud Volumes ONTAP. 
+
+
+| "Microsoft.Resources/subscripciones/ubicaciones/lecturas", "Microsoft.Network/locations/operationResults/read", "Microsoft.Network/locations/operations/read", "Microsoft.Network/virtualNetworks/read", "Microsoft.Network/virtualNetworks/checkIpAddressAvailability/read", "Microsoft.Network/virtualNetworks/subnets/read", "Microsoft.Network/virtualNetworks/subnets/virtualMachines/read", "Microsoft.Network/virtualNetworks/virtualMachines/read", "Microsoft.Network/virtualNetworks/subnets/join/action", | Obtiene información de red acerca de las regiones, la red virtual de destino y la subred, y agrega Cloud Volumes ONTAP a las redes virtuales. 
+
+
+| "Microsoft.Network/virtualNetworks/subnets/write", "Microsoft.Network/routeTables/join/action", | Habilita extremos de servicio vnet para organizar los datos en niveles. 
+
+
+| "Microsoft.Resources/despliegues/operaciones/lectura", "Microsoft.Resources/despliegues/read", "Microsoft.Resources/despliegues/write", | Implementa Cloud Volumes ONTAP a partir de una plantilla. 
+
+
+| "Microsoft.Resources/despliegues/operacions/read", "Microsoft.Resources/despliegues/read", "Microsoft.Resources/despliegues/write", "Microsoft.Resources/resources/read", "Microsoft.Resources/Resources/operationResults/read", "Microsoft.Resources/subscripciones/ResourceGroups/delete", "Microsoft.Resources/subscripciones/Groups/read/resources", "ResourceGroups/subscripciones"/resources/Microsoft.Resources/subscriptions/Microsoft","/resources/subscripciones"/resources/Microsoft.Microsoft/resources/resources/Microsoft.read/subscriptions/resources | Crea y gestiona grupos de recursos para Cloud Volumes ONTAP. 
+
+
+| "Microsoft.Compute/snapshots/write", "Microsoft.Compute/snapshots/read", "Microsoft.Compute/disks/beginGetAccess/action" | Crea y gestiona copias Snapshot gestionadas de Azure. 
+
+
+| "Microsoft.Compute/availabilitySets/write", "Microsoft.Compute/availabilitySets/read", | Crea y administra conjuntos de disponibilidad para Cloud Volumes ONTAP. 
+
+
+| "Microsoft.MarketPlaceorders/offertypes/editoriales/Ofertas/planes/acuerdos/leídos", "Microsoft.MarketPlaceoring/offertypes/editoriales/Ofertas/planes/acuerdos/escribir" | Permite puestas en marcha mediante programación desde Azure Marketplace. 
+
+
+| "Microsoft.Network/loadBalancers/read", "Microsoft.Network/loadBalancers/write", "Microsoft.Network/loadBalancers/delete", "Microsoft.Network/loadBalancers/backendAddressPools/read", "Microsoft.Network/loadBalancers/backendAddressPools/join/action", "Microsoft.Network/loadBalancers/frontendIPConfigurations/read", "Microsoft.Network/loadBalancers/loadBalancingRules/read", "Microsoft.Network/loadBalancers/probes/read", "Microsoft.Network/loadBalancers/probes/join/action", | Gestiona un equilibrador de carga de Azure para pares de alta disponibilidad. 
+
+
+| "Microsoft.Autorizaciones/bloqueos/*" | Permite la gestión de bloqueos en discos de Azure. 
+
+
+| "Microsoft.Authorization/roleDefinitions/write", "Microsoft.Authorization/roleAssignments/write", "Microsoft.Web/sites/*" | Gestiona la conmutación por error para pares de alta disponibilidad. 
+
+
+| "Microsoft.Network/privateEndpoints/write", "Microsoft.Storage/storageAccounts/PrivateEndpointConnectionsApproval/action", "Microsoft.Storage/storageAccounts/privateEndpointConnections/read", "Microsoft.Network/privateEndpoints/read", "Microsoft.Network/privateDnsZones/write", "Microsoft.Network/privateDnsZones/virtualNetworkLinks/write", "Microsoft.Network/virtualNetworks/join/action", "Microsoft.Network/privateDnsZones/A/write", "Microsoft.Network/privateDnsZones/read", "Microsoft.Network/privateDnsZones/virtualNetworkLinks/read", | Permite la gestión de extremos privados. Los extremos privados se utilizan cuando no se proporciona conectividad fuera de la subred. Cloud Manager crea la cuenta de almacenamiento para alta disponibilidad con solo conectividad interna en la subred. 
+
+
+| "Microsoft.NetApp/netAppAccounts/capacityPools/volumes/delete", | Permite a Cloud Manager eliminar volúmenes para Azure NetApp Files. 
+
+
+| "Microsoft.Resources/despliegues/operationStatuses/Read" | Azure requiere este permiso para algunas implementaciones de máquinas virtuales (depende del hardware físico subyacente que se haya utilizado durante la implementación). 
+
+
+| "Microsoft.Resources/despliegues/operationStatuses/read", "Microsoft.Insights/Metrics/Read", "Microsoft.Compute/virtualMachines/extensions/write", "Microsoft.Compute/virtualMachines/extensions/read", "Microsoft.Compute/virtualMachines/extensions/delete", "Microsoft.Compute/virtualMachines/delete", "Microsoft.Network/networkInterfaces/delete", "Microsoft.Network/networkSecurityGroups/delete", "Microsoft.Resources/despliegues/delete", | Permite usar la caché de archivos global. 
+
+
+| "Microsoft.Compute/diskEncryptionSets/read" | Permite a Cloud Manager cifrar discos gestionados de Azure en sistemas Cloud Volumes ONTAP de un solo nodo mediante claves externas de otra cuenta. Esta función es compatible con el uso de API. 
+|===
+
+
+== Qué hace Cloud Manager con los permisos de GCP
+
+La política de Cloud Manager para GCP incluye los permisos que Cloud Manager necesita para implementar y gestionar Cloud Volumes ONTAP.
+
+[cols="50,50"]
+|===
+| Acciones | Específico 
+
+
+| - Compute.disks.create - compute.disks.createSnapshot - compute.disks.delete - compute.disks.get - compute.disks.list - compute.disks.setLabels - compute.disks.use | Para crear y gestionar discos para Cloud Volumes ONTAP. 
+
+
+| - computar.firewalls.create - compute.firewalls.delete - computar.firewalls.get - computar.firewalls.list | Para crear reglas de firewall para Cloud Volumes ONTAP. 
+
+
+| - Compute.globalOperations.get | Para obtener el estado de las operaciones. 
+
+
+| - compute.images.get - compute.images.getFromFamily - compute.images.list - compute.images.useReadOnly | Para obtener imágenes para instancias de equipos virtuales. 
+
+
+| - compute.instances.attachDisk - compute.instances.detachDisk | Para conectar y desconectar discos en Cloud Volumes ONTAP. 
+
+
+| - compute.instances.create - compute.instances.delete | Para crear y eliminar instancias de Cloud Volumes ONTAP VM. 
+
+
+| - compute.instances.get | Para mostrar instancias de máquina virtual. 
+
+
+| - compute.instances.getSerialPortOutput | Para obtener los registros de la consola. 
+
+
+| - compute.instances.list | Para recuperar la lista de instancias de una zona. 
+
+
+| - compute.instances.setDeletionProtection | Para establecer la protección de eliminación en la instancia. 
+
+
+| - compute.instances.setLabels | Para agregar etiquetas. 
+
+
+| - compute.instances.setMachineType | Para cambiar el tipo de máquina para Cloud Volumes ONTAP. 
+
+
+| - compute.instances.setMetadata | Para añadir metadatos. 
+
+
+| - compute.instances.setTags | Para agregar etiquetas para reglas de firewall. 
+
+
+| - compute.instances.start - compute.instances.stop - compute.instances.updateDisplayDevice | Para iniciar y detener Cloud Volumes ONTAP. 
+
+
+| - computar.machineTypes.get | Para obtener el número de núcleos para comprobar qoutras. 
+
+
+| - compute.projects.get | Para dar soporte a proyectos múltiples. 
+
+
+| - Compute.snapshots.create - compute.snapshots.delete - compute.snapshots.get - compute.snapshots.list - compute.snapshots.setLabels | Para crear y gestionar instantáneas de disco persistentes. 
+
+
+| - compute.networks.get - compute.networks.list - compute.regions.get - compute.regises.list - compute.subnetworks.get - Compute.subNetworks.list - Compute.zoneOperations.get - Compute.zones.get - Compute.zones.list | Para obtener la información de red necesaria para crear una nueva instancia de máquina virtual de Cloud Volumes ONTAP. 
+
+
+| - deploymentmanager.compositeTypes.get - deploymentmanager.compositeTypes.list - deploymentmanager.deployments.create - deploymentmanager.deployments.delete - deploymentmanager.deployments.get - deploymentmanager.deployments.list - deploymentmanager.manifests.get - deploymentmanager.manifest.list - deploymentmanager.opers.get - deploymentmanager.opers.list - deploymentmanager.resources.get - deploymentmanager.resources.list - deploymentmanager.typeProviders.get - deploymentmanager.typeProviders.list - deploymentmanager.Types.get - deploymentmanager.types.list | Para poner en marcha la instancia de máquina virtual de Cloud Volumes ONTAP mediante Google Cloud Deployment Manager. 
+
+
+| - logEntries.list - logging.privateLogEntries.list | Para obtener unidades de registro de pila. 
+
+
+| - resourcemanager.projects.get | Para dar soporte a proyectos múltiples. 
+
+
+| - storage.buckets.create - storage.buckets.delete - storage.buckets.get - storage.buckets.list - storage.buckets.update | Para crear y gestionar un bucket de Google Cloud Storage para la organización de datos en niveles. 
+
+
+| - cloudkms.cryptoKeyVersions.useToEncrypt - cloudKMS.cryptoKeys.get - cloudKMS.cryptoKeys.list - cloudKMS.Keyring.list | Para utilizar claves de cifrado gestionadas por el cliente desde el Servicio de gestión de claves cloud con Cloud Volumes ONTAP. 
+
+
+| - compute.instances.setServiceAccount - iam.serviceAccounts.getIamPolicy - iam.serviceAccounts.list | Para establecer una cuenta de servicio en la instancia de Cloud Volumes ONTAP. Esta cuenta de servicio proporciona permisos para organizar los datos en niveles en un bloque de Google Cloud Storage. 
+|===

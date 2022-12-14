@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: task_managing_compliance.html 
+keywords: remove, delete, stop, stop scans, stop scanning, cloud compliance, stop cloud compliance, delete cloud compliance, terminate, deactivate, deactivating cloud compliance 
+summary: Si lo necesita, puede detener Cloud Compliance de analizar uno o más entornos de trabajo. También puede eliminar la instancia de Cloud Compliance si ya no desea utilizar Cloud Compliance con sus entornos de trabajo. 
+---
+= Desactivación de Cloud Compliance
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Si lo necesita, puede detener Cloud Compliance de analizar uno o más entornos de trabajo o bases de datos. También puede eliminar la instancia de Cloud Compliance si ya no desea utilizar Cloud Compliance con sus entornos de trabajo.
+
+
+
+== Desactivar los análisis de cumplimiento de normativas en un entorno de trabajo
+
+Al desactivar los análisis, Cloud Compliance ya no analiza los datos del sistema y elimina la información de cumplimiento indexada de la instancia de Cloud Compliance (los datos del entorno de trabajo o de la base de datos en sí no se eliminan).
+
+.Pasos
+En la página _Scan Configuration_, haga clic en image:screenshot_gallery_options.gif["Botón más"] En la fila del entorno de trabajo y, a continuación, haga clic en *Desactivar conformidad*.
+
+image:screenshot_deactivate_compliance_scan.png["Una captura de pantalla del icono de acción en la que puede seleccionar Desactivar exploración. Esta opción está disponible después de seleccionar un entorno de trabajo en la página entornos de trabajo."]
+
+
+TIP: También puede desactivar los análisis de cumplimiento de un entorno de trabajo desde el panel Servicios cuando seleccione el entorno de trabajo.
+
+
+
+== Eliminación de la instancia de Cloud Compliance
+
+Puede eliminar la instancia de Cloud Compliance si ya no desea utilizar Cloud Compliance. Al eliminar la instancia también se eliminan los discos asociados en los que residen los datos indexados.
+
+.Paso
+. Vaya a la consola de su proveedor de cloud y elimine la instancia de Cloud Compliance.
++
+La instancia se denomina _CloudCompliance_ con un hash generado (UUID) concatenado. Por ejemplo: _CloudCompliance-16bb6564-38ad-4080-9a92-36f5fd2f71c7_
+
+

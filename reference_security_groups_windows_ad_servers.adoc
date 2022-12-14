@@ -1,0 +1,235 @@
+---
+sidebar: sidebar 
+permalink: reference_security_groups_windows_ad_servers.html 
+keywords: Cloud Volumes Service for AWS, security groups, ports, protocols, Windows, Active Directory, AD 
+summary: 'Si utiliza servidores de Windows Active Directory (AD) con volúmenes de cloud, debe familiarizarse con la guía de la configuración del grupo de seguridad de AWS. Los ajustes permiten que los volúmenes de cloud se integren correctamente con AD.' 
+---
+= Configuración del grupo de seguridad de AWS para servidores Windows AD
+:toc: macro
+:hardbreaks:
+:allow-uri-read: 
+:toc: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+Si utiliza servidores de Windows Active Directory (AD) con volúmenes de cloud, debe familiarizarse con la guía de la configuración del grupo de seguridad de AWS. Los ajustes permiten que los volúmenes de cloud se integren correctamente con AD.
+
+De forma predeterminada, el grupo de seguridad de AWS aplicado a una instancia de EC2 Windows no contiene reglas entrantes para ningún protocolo excepto RDP. Debe agregar reglas a los grupos de seguridad asociados a cada instancia de Windows AD para habilitar la comunicación entrante desde Cloud Volumes Service. Los puertos necesarios son los siguientes:
+
+[cols="40,30,30"]
+|===
+| Servicio | Puerto | Protocolo 
+
+
+| Servicios web DE ANUNCIOS | 9389 | TCP 
+
+
+| DNS | 53 | TCP 
+
+
+| DNS | 53 | UDP 
+
+
+| ICMPv4 | N.A. | Respuesta de eco 
+
+
+| Kerberos | 464 | TCP 
+
+
+| Kerberos | 464 | UDP 
+
+
+| Kerberos | 88 | TCP 
+
+
+| Kerberos | 88 | UDP 
+
+
+| LDAP | 389 | TCP 
+
+
+| LDAP | 389 | UDP 
+
+
+| LDAP | 3268 | TCP 
+
+
+| Nombre NetBIOS | 138 | UDP 
+
+
+| SAM/LSA | 445 | TCP 
+
+
+| SAM/LSA | 445 | UDP 
+
+
+| LDAP seguro | 636 | TCP 
+
+
+| LDAP seguro | 3269 | TCP 
+
+
+| w32time | 123 | UDP 
+|===
+Si va a implementar y administrar los controladores de dominio de instalación de AD y los servidores miembro en una instancia de AWS EC2, necesitará varias reglas de grupo de seguridad para permitir el tráfico de Cloud Volumes Service. A continuación se muestra un ejemplo de cómo implementar estas reglas para aplicaciones AD como parte de la plantilla AWS CloudFormation.
+
+[source, json]
+----
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description" : "Security Group for AD",
+    "Parameters" :
+    {
+    	"VPC" :
+    	{
+    		"Type" : "AWS::EC2::VPC::Id",
+    		"Description" : "VPC where the Security Group will belong:"
+    	},
+    	"Name" :
+    	{
+    		"Type" : "String",
+    		"Description" : "Name Tag of the Security Group:"
+    	},
+    	"Description" :
+    	{
+    		"Type" : "String",
+    		"Description" : "Description Tag of the Security Group:",
+            "Default" : "Security Group for Active Directory for CVS "
+    	},
+        "CIDRrangeforTCPandUDP" :
+    	{
+    		"Type" : "String",
+    		"Description" : "CIDR Range for the UDP ports 445,138,464,389,53,123 and for the TCP ports 464,339,3389,3268,88,636,9389,445 and 0-65535: *CIDR range format: 10.0.0.0/24"
+    	}
+    },
+    "Resources" :
+    {
+    	"ADSGWest" :
+    	{
+    		"Type" : "AWS::EC2::SecurityGroup",
+    		"Properties" :
+    		{
+    			"GroupDescription" : {"Ref" : "Description"},
+    			"VpcId" : { "Ref" : "VPC" },
+                "SecurityGroupIngress" : [
+                    {
+                        "IpProtocol" : "udp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "445",
+                        "ToPort" : "445"
+                    },
+                    {
+                        "IpProtocol" : "udp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "138",
+                        "ToPort" : "138"
+                    },
+                    {
+                        "IpProtocol" : "udp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "464",
+                        "ToPort" : "464"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "464",
+                        "ToPort" : "464"
+                    },
+                    {
+                        "IpProtocol" : "udp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "389",
+                        "ToPort" : "389"
+                    },
+                    {
+                        "IpProtocol" : "udp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "53",
+                        "ToPort" : "53"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "339",
+                        "ToPort" : "339"
+                    },
+                    {
+                        "IpProtocol" : "udp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "123",
+                        "ToPort" : "123"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "3389",
+                        "ToPort" : "3389"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "3268",
+                        "ToPort" : "3268"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "88",
+                        "ToPort" : "88"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "636",
+                        "ToPort" : "636"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "3269",
+                        "ToPort" : "3269"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "53",
+                        "ToPort" : "53"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "0",
+                        "ToPort" : "65535"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "9389",
+                        "ToPort" : "9389"
+                    },
+                    {
+                        "IpProtocol" : "tcp",
+                        "CidrIp" : {"Ref" : "CIDRrangeforTCPandUDP"},
+                        "FromPort" : "445",
+                        "ToPort" : "445"
+                    }
+                ]
+    		}
+    	}
+    },
+    "Outputs" :
+    {
+        "SecurityGroupID" :
+        {
+            "Description" : "Security Group ID",
+            "Value" : { "Ref" : "ADSGWest" }
+        }
+    }
+}
+----

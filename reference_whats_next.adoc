@@ -1,0 +1,33 @@
+---
+sidebar: sidebar 
+permalink: reference_whats_next.html 
+keywords: get started, create working environments, manage settings 
+summary: Ahora que ha iniciado sesión y configurado Cloud Manager, los usuarios pueden comenzar a crear y detectar entornos de trabajo. 
+---
+= A continuación, ¿dónde ir
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Ahora que ha iniciado sesión y configurado Cloud Manager, los usuarios pueden comenzar a crear y detectar entornos de trabajo.
+
+* link:task_getting_started_aws.html["Empiece a usar Cloud Volumes ONTAP para AWS"]
+* link:task_getting_started_azure.html["Empiece a usar Cloud Volumes ONTAP para Azure"]
+* link:task_getting_started_gcp.html["Empiece a usar Cloud Volumes ONTAP para Google Cloud"]
+* link:task_manage_anf.html["Configure Azure NetApp Files"]
+* link:task_manage_cvs_aws.html["Configure Cloud Volumes Service para AWS"]
+* link:task_discovering_ontap.html["Detectar un clúster de ONTAP en las instalaciones"]
+* link:task_viewing_amazon_s3.html["Descubra sus buckets de Amazon S3"]
+
+
+Si es administrador, puede gestionar la configuración de Cloud Manager después de crear el primer conector.
+
+* link:concept_connectors.html["Más información sobre conectores"]
+* link:task_installing_https_cert.html["Gestione un certificado HTTPS para un acceso seguro"]
+* link:task_configuring_proxy.html["Configure los ajustes de proxy"]
+

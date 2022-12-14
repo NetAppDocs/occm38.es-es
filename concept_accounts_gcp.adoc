@@ -1,0 +1,62 @@
+---
+sidebar: sidebar 
+permalink: concept_accounts_gcp.html 
+keywords: cloud provider accounts, gcp, gcp accounts, google cloud platform, google accounts, google cloud platform accounts, permissions, tiering, data tiering, account for data tiering, account for tiering, project, projects, add project, select new project, gcp project, google project, google cloud project 
+summary: Se utiliza una cuenta de Google Cloud para implementar Cloud Manager en un proyecto. Posteriormente, puede poner en marcha Cloud Volumes ONTAP en el mismo proyecto o en otro distinto. Las cuentas de Google Cloud que añada a Cloud Manager utilizan para habilitar la organización en niveles de los datos. 
+---
+= Proyectos, permisos y cuentas de Google Cloud
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Una cuenta de servicio proporciona a Cloud Manager permisos para implementar y gestionar sistemas de Cloud Volumes ONTAP en el mismo proyecto que Cloud Manager o en diferentes proyectos.
+
+
+
+== Proyecto y permisos para Cloud Manager
+
+Antes de poder poner en marcha Cloud Volumes ONTAP en Google Cloud, primero debe poner en marcha un conector en un proyecto de Google Cloud. El conector no puede ejecutarse en sus instalaciones ni en un proveedor de cloud diferente.
+
+Debe haber dos conjuntos de permisos antes de implementar un conector directamente desde Cloud Manager:
+
+. Necesita implementar un conector con una cuenta de Google que tenga permisos para iniciar la instancia de Connector VM desde Cloud Manager.
+. Al desplegar el conector, se le pedirá que seleccione un https://cloud.google.com/iam/docs/service-accounts["cuenta de servicio"^] Para la instancia de máquina virtual. Cloud Manager obtiene permisos de la cuenta de servicio para crear y gestionar sistemas de Cloud Volumes ONTAP en su nombre. Los permisos se proporcionan asociando una función personalizada a la cuenta de servicio.
+
+
+Hemos configurado dos archivos YAML que incluyen los permisos necesarios para el usuario y la cuenta de servicio. link:task_creating_connectors_gcp.html["Aprenda a usar los archivos YAML para configurar permisos"].
+
+La siguiente imagen muestra los requisitos de permisos descritos en los números 1 y 2 anteriores:
+
+image:diagram_permissions_gcp.png["explicación"]
+
+
+
+== Proyecto para Cloud Volumes ONTAP
+
+Cloud Volumes ONTAP puede residir en el mismo proyecto que el conector o en un proyecto diferente. Para implementar Cloud Volumes ONTAP en un proyecto diferente, primero debe agregar la cuenta de servicio del conector y la función a ese proyecto.
+
+* link:task_creating_connectors_gcp.html#setting-up-gcp-permissions-to-create-a-connector["Aprenda a configurar una cuenta de servicio (consulte el paso 2)."].
+* link:task_deploying_gcp.html["Descubra cómo implementar Cloud Volumes ONTAP en GCP y seleccione un proyecto"].
+
+
+
+
+== Responsables de la organización en niveles de los datos
+
+
+TIP: Cloud Manager requiere una cuenta de GCP para Cloud Volumes ONTAP 9.6, pero no para la versión 9.7 ni para las posteriores. Si desea utilizar la organización en niveles de datos con Cloud Volumes ONTAP 9.7, siga el paso 4 en link:task_getting_started_gcp.html["Introducción a Cloud Volumes ONTAP en Google Cloud Platform"].
+
+Es necesario añadir una cuenta de Google Cloud a Cloud Manager para habilitar la organización en niveles de datos en un sistema Cloud Volumes ONTAP 9.6. Organización en niveles de datos organiza automáticamente en niveles los datos fríos en un almacenamiento de objetos de bajo coste, lo que le permite recuperar espacio en el almacenamiento principal y reducir el almacenamiento secundario.
+
+Al añadir la cuenta, necesita proporcionar a Cloud Manager una clave de acceso al almacenamiento para una cuenta de servicio con permisos de administrador de almacenamiento. Cloud Manager utiliza las claves de acceso para configurar y gestionar un bucket de Cloud Storage para la organización de datos en niveles.
+
+Después de añadir una cuenta de Google Cloud, podrá habilitar la organización en niveles de los datos en volúmenes individuales al crearlos, modificarlos o replicarlos.
+
+* link:task_adding_gcp_accounts.html["Aprenda a configurar y añadir cuentas de GCP a. Cloud Manager"].
+* link:task_tiering.html["Aprenda a organizar en niveles los datos inactivos en almacenamiento de objetos de bajo coste"].
+

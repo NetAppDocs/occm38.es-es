@@ -1,0 +1,41 @@
+---
+sidebar: sidebar 
+permalink: task_viewing_amazon_s3.html 
+keywords: s3 buckets, s3 storage, s3 working environment, amazon s3 buckets, amazon s3 working environment 
+summary: Después de instalar un conector en AWS, Cloud Manager puede detectar automáticamente información sobre los bloques de Amazon S3 que residen en la cuenta de AWS en la que está instalado. 
+---
+= Ver los bloques de Amazon S3
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Después de instalar un conector en AWS, Cloud Manager puede detectar automáticamente información sobre los bloques de Amazon S3 que residen en la cuenta de AWS en la que está instalado.
+
+Puede ver detalles sobre sus bloques de S3, incluida la región, el nivel de acceso, la clase de almacenamiento y si el bloque se utiliza con Cloud Volumes ONTAP para backups o la organización en niveles de datos. Además, puede analizar los cubos de S3 con Cloud Compliance.
+
+.Pasos
+. link:task_creating_connectors_aws.html["Instale un conector"] En la cuenta de AWS, donde desea ver sus bloques de Amazon S3.
++
+Verá automáticamente un entorno de trabajo de Amazon S3 poco después.
+
++
+image:screenshot_s3_we.gif["Captura de pantalla de un entorno de trabajo Amazon S3."]
+
+. Haga clic en el entorno de trabajo y seleccione una acción en el panel derecho.
++
+image:screenshot_s3_actions.gif["Captura de pantalla que muestra el panel acciones después de seleccionar un entorno de trabajo de Amazon S3. El panel muestra información sobre S3: El número de bloques y regiones. El panel también tiene dos acciones: Activar cumplimiento y Ver cucharones."]
+
+. Haga clic en *Activar cumplimiento* para analizar los bloques S3 en busca de datos personales y confidenciales.
++
+Para obtener información detallada, consulte link:task_scanning_s3.html["Introducción a Cloud Compliance para Amazon S3"].
+
+. Haga clic en *Ver cucharones* para ver detalles sobre los bloques S3 de su cuenta de AWS.
++
+image:screenshot_amazon_s3.gif["Una captura de pantalla que muestra los detalles de un entorno de trabajo Amazon S3: El número total de bloques y el número total de regiones, el número de bloques con servicios activos y, a continuación, una tabla que muestra los detalles de cada bloque de S3."]
+
+

@@ -1,0 +1,60 @@
+---
+sidebar: sidebar 
+permalink: task_discovering_ontap.html 
+keywords: ontap, cluster, discover, manage, discovering, fas, aff, discover onprem, discover aff cluster, discover cluster, add cluster 
+summary: Cloud Manager puede detectar los clústeres de ONTAP en su entorno local, en una configuración de almacenamiento privado de NetApp y en IBM Cloud. Al detectar un clúster de ONTAP le permite aprovisionar almacenamiento, replicar datos y organizar los datos inactivos de un clúster en las instalaciones en el cloud. 
+---
+= Detección de clústeres de ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+Cloud Manager puede detectar los clústeres de ONTAP en su entorno local, en una configuración de almacenamiento privado de NetApp y en IBM Cloud. Al detectar un clúster de ONTAP le permite aprovisionar almacenamiento, replicar datos, realizar backups de datos y organizar en niveles datos inactivos de un clúster en las instalaciones al cloud.
+
+.Lo que necesitará
+* Un conector instalado en un proveedor de cloud o en sus instalaciones.
++
+Si desea organizar en niveles datos inactivos en el cloud, debe revisar los requisitos del conector en función de dónde tenga pensado organizar los datos inactivos.
+
++
+** link:concept_connectors.html["Más información sobre conectores"]
+** link:task_managing_connectors.html["Cambio entre conectores"]
+** link:concept_cloud_tiering.html["Más información acerca de Cloud Tiering"]
+
+
+* La dirección IP de administración del clúster y la contraseña de la cuenta de usuario administrador para añadir el clúster a Cloud Manager.
++
+Cloud Manager detecta los clústeres de ONTAP mediante HTTPS. Si utiliza directivas de firewall personalizadas, deben cumplir los siguientes requisitos:
+
++
+** El host del conector debe permitir el acceso HTTPS de salida a través del puerto 443.
++
+Si el conector está en la nube, el grupo de seguridad predefinido permite todas las comunicaciones salientes.
+
+** El clúster ONTAP debe permitir el acceso HTTPS de entrada a través del puerto 443.
++
+La política de firewall "mgmt" predeterminada permite el acceso HTTPS entrante desde todas las direcciones IP. Si ha modificado esta directiva predeterminada o si ha creado su propia directiva de firewall, debe asociar el protocolo HTTPS con esa directiva y habilitar el acceso desde el host de Connector.
+
+
+
+
+
+.Pasos
+. En la página entornos de trabajo, haga clic en *Agregar entorno de trabajo* y seleccione *ONTAP* en las instalaciones.
+. Si se le solicita, cree un conector.
++
+Consulte los enlaces anteriores para obtener más información.
+
+. En la página *Detalles del clúster ONTAP*, introduzca la dirección IP de administración del clúster, la contraseña de la cuenta de usuario administrador y la ubicación del clúster.
++
+image:screenshot_discover_ontap.gif["Una captura de pantalla que muestra un ejemplo de la página Detalles del clúster de ONTAP: La dirección IP de administración del clúster, el nombre de usuario y la contraseña, así como en las instalaciones seleccionadas como la ubicación del clúster."]
+
+. En la página Detalles, introduzca un nombre y una descripción para el entorno de trabajo y, a continuación, haga clic en *Ir*.
+
+
+.Resultado
+Cloud Manager detecta el clúster. Ahora puede crear volúmenes, replicar datos en el clúster y desde él, configurar la organización en niveles de datos en el cloud, realizar backups de volúmenes en el cloud e iniciar System Manager para realizar tareas avanzadas.

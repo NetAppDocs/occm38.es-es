@@ -1,0 +1,183 @@
+---
+sidebar: sidebar 
+permalink: task_manage_anf.html 
+keywords: azure netapp files, create volumes, delete volumes, create nfs volumes, delete nfs volumes, netapp account, capacity pool, create capacity pool, azure netapp files permissions, azure permissions, mount path, get mount path, find mount path, mount volume 
+summary: Cree un entorno de trabajo de Azure NetApp Files en Cloud Manager para crear y gestionar cuentas, pools de capacidad, volúmenes y snapshots de NetApp. 
+---
+= Configurar Azure NetApp Files
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cree un entorno de trabajo de Azure NetApp Files en Cloud Manager para crear y gestionar cuentas, pools de capacidad, volúmenes y snapshots de NetApp.
+
+
+
+== Inicio rápido
+
+Empiece rápidamente siguiendo estos pasos o desplácese hacia abajo hasta las secciones restantes para obtener todos los detalles.
+
+
+
+==== image:number1.png["Número 1"] Solicitar acceso
+
+[role="quick-margin-para"]
+https://aka.ms/azurenetappfiles["Enviar una solicitud en línea"^] Para que se le conceda acceso a Azure NetApp Files.
+
+
+
+==== image:number2.png["Número 2"] Configure una aplicación de Azure AD
+
+[role="quick-margin-para"]
+En Azure, conceda permisos a una aplicación Azure AD y copie el ID de la aplicación (cliente), el ID de directorio (inquilino) y el valor de un secreto de cliente.
+
+
+
+==== image:number3.png["Número 3"] Crear un entorno de trabajo de Azure NetApp Files
+
+[role="quick-margin-para"]
+En Cloud Manager, haga clic en *Agregar entorno de trabajo* > *Microsoft Azure* > *Azure NetApp Files* y, a continuación, proporcione detalles sobre la aplicación AD.
+
+
+
+== Solicitando acceso
+
+Debe tener acceso a Azure NetApp Files por https://aka.ms/azurenetappfiles["envío de una solicitud en línea"^]. Tendrá que esperar la aprobación del equipo de Azure NetApp Files para poder continuar.
+
+
+
+== Configuración de una aplicación Azure AD
+
+Cloud Manager necesita permisos para configurar y gestionar Azure NetApp Files. Puede otorgar los permisos requeridos a una cuenta de Azure mediante la creación y configuración de una aplicación de Azure AD, así como la obtención de las credenciales de Azure que Cloud Manager necesita.
+
+
+
+=== Creación de la aplicación AD
+
+Cree una aplicación de Azure Active Directory (AD) y una entidad de servicio que Cloud Manager pueda usar para el control de acceso basado en roles.
+
+.Antes de empezar
+Debe tener los permisos adecuados en Azure para crear una aplicación de Active Directory y asignar la aplicación a un rol. Para obtener más información, consulte https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#required-permissions/["Documentación de Microsoft Azure: Permisos necesarios"^].
+
+.Pasos
+. Desde el portal de Azure, abra el servicio *Azure Active Directory*.
++
+image:screenshot_azure_ad.gif["Muestra el servicio de Active Directory en Microsoft Azure."]
+
+. En el menú, haga clic en *App registrs*.
+. Cree la aplicación:
++
+.. Haga clic en *Nuevo registro*.
+.. Especificar detalles acerca de la aplicación:
++
+*** *Nombre*: Introduzca un nombre para la aplicación.
+*** *Tipo de cuenta*: Seleccione un tipo de cuenta (cualquiera funcionará con Cloud Manager).
+*** *Redirigir URI*: Puede dejar este espacio en blanco.
+
+
+.. Haga clic en *Registrar*.
+
+
+. Copie el *ID de aplicación (cliente)* y el *ID de directorio (inquilino)*.
++
+image:screenshot_anf_app_ids.gif["Captura de pantalla que muestra el ID de la aplicación (cliente) y el ID del directorio (inquilino) de una aplicación en Azure Active Directory."]
+
++
+Al crear el entorno de trabajo de Azure NetApp Files en Cloud Manager, debe proporcionar el ID de la aplicación (cliente) y el ID del directorio (inquilino) para la aplicación. Cloud Manager utiliza los ID para iniciar sesión mediante programación.
+
+. Cree un secreto de cliente para la aplicación de modo que Cloud Manager pueda utilizarlo para la autenticación de Azure AD:
++
+.. Haga clic en *certificados y secretos > Nuevo secreto de cliente*.
+.. Proporcione una descripción del secreto y una duración.
+.. Haga clic en *Agregar*.
+.. Copie el valor del secreto de cliente.
++
+image:screenshot_anf_client_secret.gif["Una captura de pantalla del portal de Azure que muestra un secreto de cliente para el director de servicio de Azure AD."]
+
+
+
+
+
+.Resultado
+La aplicación AD está configurada y debe haber copiado el ID de la aplicación (cliente), el ID del directorio (arrendatario) y el valor del secreto del cliente. Debe introducir esta información en Cloud Manager cuando añada un entorno de trabajo de Azure NetApp Files.
+
+
+
+=== Asignación de la aplicación a una función
+
+Debe enlazar el principal del servicio con la suscripción a Azure y asignarle una función personalizada que tenga los permisos necesarios.
+
+.Pasos
+. https://docs.microsoft.com/en-us/azure/role-based-access-control/custom-roles["Crear un rol personalizado en Azure"^].
++
+Los siguientes pasos describen cómo crear el rol desde el portal de Azure.
+
++
+.. Abra la suscripción y haga clic en *Control de acceso (IAM)*.
+.. Haga clic en *Agregar > Agregar rol personalizado*.
++
+image:screenshot_azure_access_control.gif[""]
+
+.. En la ficha *conceptos básicos*, escriba un nombre y una descripción para la función.
+.. Haga clic en *JSON* y haga clic en *Editar*, que aparece en la parte superior derecha del formato JSON.
+.. Agregue los siguientes permisos en _Actions_:
++
+[source, json]
+----
+"actions": [
+    "Microsoft.NetApp/*",
+    "Microsoft.Resources/resources/read",
+    "Microsoft.Resources/subscriptions/resourceGroups/read",
+    "Microsoft.Resources/subscriptions/resourcegroups/resources/read",
+    "Microsoft.Resources/subscriptions/resourceGroups/write",
+    "Microsoft.Network/virtualNetworks/read",
+    "Microsoft.Insights/Metrics/Read"
+    ],
+----
+.. Haga clic en *Guardar*, haga clic en *Siguiente* y, a continuación, haga clic en *Crear*.
+
+
+. Ahora asigne la aplicación al rol que acaba de crear:
++
+.. En el portal de Azure, abra la suscripción y haga clic en *Control de acceso (IAM) > Agregar > Agregar asignación de funciones*.
+.. Seleccione la función personalizada que ha creado.
+.. Mantener seleccionado *usuario, grupo o principal de servicio de Azure AD*.
+.. Busque el nombre de la aplicación (no puede encontrarlo en la lista desplazándose).
++
+image:screenshot_anf_app_role.gif["Captura de pantalla que muestra el formulario Agregar asignación de funciones en el portal de Azure."]
+
+.. Seleccione la aplicación y haga clic en *Guardar*.
++
+El director de servicio de Cloud Manager ahora tiene los permisos de Azure necesarios para esa suscripción.
+
+
+
+
+
+
+
+== Crear un entorno de trabajo de Azure NetApp Files
+
+Configure un entorno de trabajo de Azure NetApp Files en Cloud Manager para que pueda empezar a crear volúmenes.
+
+. En la página entornos de trabajo, haga clic en *Agregar entorno de trabajo*.
+. Seleccione *Microsoft Azure* y, a continuación, *Azure NetApp Files*.
+. Proporcione detalles acerca de la aplicación AD configurada anteriormente.
++
+image:screenshot_anf_details.gif["Captura de pantalla de los campos necesarios para crear un entorno de trabajo Azure NetApp Files, que incluye un nombre, ID de aplicación, secreto de cliente e ID de directorio."]
+
+. Haga clic en *Agregar*.
+
+
+.Resultado
+Ahora debería tener un entorno de trabajo de Azure NetApp Files.
+
+image:screenshot_anf_we.gif["Captura de pantalla de un entorno de trabajo Azure NetApp Files."]
+
+.El futuro
+link:task_manage_anf_volumes.html["Comience a crear y gestionar volúmenes"].

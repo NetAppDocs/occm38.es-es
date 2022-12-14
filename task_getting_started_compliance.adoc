@@ -1,0 +1,180 @@
+---
+sidebar: sidebar 
+permalink: task_getting_started_compliance.html 
+keywords: cloud compliance, get started, enable cloud compliance, cifs credentials, smb credentials, outbound internet, endpoints, cloud compliance internet, web browser connectivity, cloud compliance access, privacy, compliance, dp volumes, data protection volumes 
+summary: Complete unos pasos para comenzar a usar Cloud Compliance para Azure NetApp Files o Cloud Volumes ONTAP en AWS o Azure. 
+---
+= Primeros pasos con el cumplimiento de normativas cloud para Cloud Volumes ONTAP y Azure NetApp Files
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Complete unos pasos para comenzar a utilizar el cumplimiento de normativas cloud para Cloud Volumes ONTAP o Azure NetApp Files.
+
+
+
+== Inicio rápido
+
+Empiece rápidamente siguiendo estos pasos o desplácese hacia abajo hasta las secciones restantes para obtener todos los detalles.
+
+
+
+==== image:number1.png["Número 1"] Implemente la instancia de Cloud Compliance
+
+[role="quick-margin-para"]
+link:task_deploy_cloud_compliance.html["Ponga en marcha Cloud Compliance en Cloud Manager"^] si aún no hay una instancia implementada.
+
+
+
+==== image:number2.png["Número 2"] Habilite el cumplimiento de normativas del cloud en sus entornos de trabajo
+
+[role="quick-margin-para"]
+Haga clic en *Cloud Compliance*, seleccione la ficha *Configuración* y active los análisis de cumplimiento para entornos de trabajo específicos.
+
+
+
+==== image:number3.png["Número 3"] Garantice el acceso a los volúmenes
+
+[role="quick-margin-para"]
+Ahora que Cloud Compliance está habilitado, asegúrese de que pueda acceder a los volúmenes.
+
+[role="quick-margin-list"]
+* La instancia de Cloud Compliance necesita una conexión de red para cada subred de Cloud Volumes ONTAP o subred de Azure NetApp Files.
+* Los grupos de seguridad para Cloud Volumes ONTAP deben permitir conexiones entrantes desde la instancia de Cloud Compliance.
+* Las políticas de exportación de volúmenes de NFS deben permitir el acceso desde la instancia de Cloud Compliance.
+* Cloud Compliance necesita credenciales de Active Directory para analizar volúmenes CIFS.
++
+Haga clic en *Cloud Compliance* > *Scan Configuration* > *Edit CIFS Credentials* y proporcione las credenciales. Las credenciales pueden ser de sólo lectura, pero al proporcionar credenciales de administrador se garantiza que Cloud Compliance pueda leer datos que requieran permisos elevados.
+
+
+
+
+
+==== image:number4.png["Número 4"] Configure los volúmenes que desea analizar
+
+[role="quick-margin-para"]
+Seleccione los volúmenes que desea analizar y Cloud Compliance empezará a analizarlos.
+
+
+
+== Implementación de la instancia de Cloud Compliance
+
+link:task_deploy_cloud_compliance.html["Ponga en marcha Cloud Compliance en Cloud Manager"^] si aún no hay una instancia implementada.
+
+
+
+== Habilitar Cloud Compliance en sus entornos de trabajo
+
+. En la parte superior de Cloud Manager, haga clic en *cumplimiento de la nube* y, a continuación, seleccione la ficha *Configuración*.
++
+image:screenshot_cloud_compliance_we_scan_config.png["Una captura de pantalla de la ficha Configuración de exploración inmediatamente después de implementar la instancia de Cloud Compliance."]
+
+. Para analizar todos los volúmenes de un entorno de trabajo, haga clic en *Activar conformidad para todos los volúmenes*.
++
+Para analizar sólo ciertos volúmenes en un entorno de trabajo, haga clic en *o seleccione volúmenes* y, a continuación, elija los volúmenes que desea analizar.
+
+
+
+Consulte <<Habilitar y deshabilitar los análisis de cumplimiento de normativas en los volúmenes,Habilitar y deshabilitar los análisis de cumplimiento de normativas en los volúmenes>> para obtener más detalles.
+
+.Resultado
+Cloud Compliance comienza a analizar los datos en cada entorno de trabajo. Los resultados estarán disponibles en la consola de cumplimiento tan pronto como Cloud Compliance termine los análisis iniciales. El tiempo que se tarda en depende de la cantidad de datos; puede que sea unos minutos u horas.
+
+
+
+== Comprobación de que Cloud Compliance tiene acceso a los volúmenes
+
+Para asegurarse de que Cloud Compliance pueda acceder a los volúmenes, compruebe su red, los grupos de seguridad y las políticas de exportación. Necesitará proporcionar cumplimiento normativo del cloud con credenciales CIFS para poder acceder a volúmenes CIFS.
+
+.Pasos
+. Asegúrese de que haya una conexión de red entre la instancia de Cloud Compliance y cada red que incluya los volúmenes para Cloud Volumes ONTAP o Azure NetApp Files.
++
+
+NOTE: Para Azure NetApp Files, Cloud Compliance solo puede analizar volúmenes que se encuentren en la misma región que Cloud Manager.
+
+. Asegúrese de que el grupo de seguridad para Cloud Volumes ONTAP permite el tráfico entrante desde la instancia de Cloud Compliance.
++
+Puede abrir el grupo de seguridad para el tráfico desde la dirección IP de la instancia de Cloud Compliance, o bien puede abrir el grupo de seguridad para todo el tráfico desde dentro de la red virtual.
+
+. Compruebe que las políticas de exportación de volúmenes NFS incluyan la dirección IP de la instancia de Cloud Compliance para poder acceder a los datos de cada volumen.
+. Si utiliza CIFS, proporcione Cloud Compliance con credenciales de Active Directory para que pueda analizar volúmenes CIFS.
++
+.. En la parte superior de Cloud Manager, haga clic en *Cloud Compliance*.
+.. Haga clic en la ficha *Configuración*.
++
+image:screenshot_cifs_credentials.gif["Captura de pantalla de la ficha cumplimiento que muestra el botón Estado del análisis que está disponible en la parte superior derecha del panel de contenido."]
+
+.. Para cada entorno de trabajo, haga clic en *Editar credenciales CIFS* e introduzca el nombre de usuario y la contraseña que Cloud Compliance necesita para acceder a los volúmenes CIFS en el sistema.
++
+Las credenciales pueden ser de sólo lectura, pero al proporcionar credenciales de administrador se garantiza que Cloud Compliance pueda leer cualquier dato que requiera permisos elevados. Las credenciales se almacenan en la instancia de Cloud Compliance.
+
++
+Después de introducir las credenciales, debe ver un mensaje que indica que todos los volúmenes CIFS se autenticaron correctamente.
+
++
+image:screenshot_cifs_status.gif["Captura de pantalla que muestra la página Configuración de exploración y un sistema Cloud Volumes ONTAP para el que se han proporcionado las credenciales CIFS correctamente."]
+
+
+
+. En la página _Scan Configuration_, haga clic en *View Details* para revisar el estado de cada volumen CIFS y NFS y corregir los errores.
++
+Por ejemplo, la siguiente imagen muestra tres volúmenes; uno de los cuales no puede analizar Cloud Compliance debido a problemas de conectividad de red entre la instancia de Cloud Compliance y el volumen.
+
++
+image:screenshot_compliance_volume_details.gif["Captura de pantalla de la página Ver detalles de la configuración de exploración que muestra tres volúmenes, uno de los cuales no se analiza debido a la conectividad de red entre Cloud Compliance y el volumen."]
+
+
+
+
+
+== Habilitar y deshabilitar los análisis de cumplimiento de normativas en los volúmenes
+
+Puede detener o iniciar el análisis de volúmenes en un entorno de trabajo en cualquier momento desde la página Configuración de análisis. Le recomendamos que analice todos los volúmenes.
+
+image:screenshot_volume_compliance_selection.png["Captura de pantalla de la página de configuración de captura en la que puede activar o desactivar el análisis de volúmenes individuales."]
+
+[cols="40,50"]
+|===
+| Para: | Haga lo siguiente: 
+
+
+| Desactivar el análisis de un volumen | Mueva el control deslizante de volumen hacia la izquierda 
+
+
+| Desactive el análisis en todos los volúmenes | Mueva el control deslizante *Activar cumplimiento para todos los volúmenes* a la izquierda 
+
+
+| Active la búsqueda de un volumen | Mueva el control deslizante de volumen a la derecha 
+
+
+| Active el análisis de todos los volúmenes | Mueva el control deslizante *Activar cumplimiento para todos los volúmenes* a la cierto 
+|===
+
+TIP: Los nuevos volúmenes agregados al entorno de trabajo se analizan automáticamente sólo cuando está activada la opción *Activar cumplimiento para todos los volúmenes*. Cuando este ajuste está desactivado, deberá activar el análisis en cada volumen nuevo que cree en el entorno de trabajo.
+
+
+
+== Análisis de volúmenes de protección de datos
+
+De manera predeterminada, los volúmenes de protección de datos (DP) no se analizan porque no se exponen externamente y que Cloud Compliance no puede acceder a ellos. Estos volúmenes suelen ser los volúmenes de destino de las operaciones de SnapMirror de un clúster ONTAP en las instalaciones.
+
+Inicialmente, la lista de volúmenes de Cloud Compliance identifica estos volúmenes como _Type_ *DP* con el _Status_ *no Scanning* y el _Required Action_ *Enable Access to DP Volumes*.
+
+image:screenshot_cloud_compliance_dp_volumes.png["Una captura de pantalla que muestra el botón Activar acceso a volúmenes DP que puede seleccionar para analizar volúmenes de protección de datos."]
+
+.Pasos
+Si desea analizar estos volúmenes de protección de datos:
+
+. Haga clic en el botón *Activar acceso a volúmenes DP* situado en la parte superior de la página.
+. Active cada volumen DP que desee analizar o utilice el control *Activar cumplimiento para todos los volúmenes* para activar todos los volúmenes, incluidos todos los volúmenes DP.
+
+
+Una vez habilitada, Cloud Compliance crea un recurso compartido NFS de cada volumen DP que se activó para la opción de cumplimiento de normativas de manera que se pueda analizar. Las políticas de exportación compartidas solo permiten el acceso desde la instancia de Cloud Compliance.
+
+
+NOTE: Solo se muestran en la lista de volúmenes los volúmenes que se crearon inicialmente como volúmenes NFS en el sistema ONTAP de origen. Los volúmenes de origen creados inicialmente como CIFS no aparecen actualmente en Cloud Compliance.

@@ -1,0 +1,229 @@
+---
+sidebar: sidebar 
+permalink: task_deploying_gcp.html 
+keywords: Cloud Volumes ONTAP, deploying, launching, creating, deploy, launch, create, gcp, BYOL, license key, serial number, location, license, preconfigured packages, programmatic deployments, disk size, write speed, access control, volume protection, usage profile, register, CIFS share, quota, qtree, google, google cloud 
+summary: Puede iniciar un sistema Cloud Volumes ONTAP de un solo nodo en GCP creando un entorno de trabajo. 
+---
+= Lanzamiento de Cloud Volumes ONTAP en GCP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Puede iniciar un sistema Cloud Volumes ONTAP de un solo nodo en GCP creando un entorno de trabajo.
+
+.Lo que necesitará
+* Usted debe tener un link:task_creating_connectors_aws.html["Conector asociado al área de trabajo"].
++
+
+NOTE: Debe ser un administrador de cuentas para crear un conector. Al crear el primer entorno de trabajo de Cloud Volumes ONTAP, Cloud Manager le solicita que cree un conector si todavía no lo tiene.
+
+* link:concept_connectors.html["Debe estar preparado para dejar el conector funcionando en en todo momento"].
+* Debe haber elegido una configuración y haber obtenido la información de red de GCP de su administrador. Para obtener más información, consulte link:task_planning_your_config_gcp.html["Planificación de la configuración de Cloud Volumes ONTAP"].
+* Para poner en marcha un sistema BYOL, necesita el número de serie (clave de licencia) de 20 dígitos para cada nodo.
+* Deben estar las siguientes API de Google Cloud https://cloud.google.com/apis/docs/getting-started#enabling_apis["habilitado en el proyecto"^]:
++
+** API de Cloud Deployment Manager V2
+** API de registro en la nube
+** API de Cloud Resource Manager
+** API del motor de computación
+** API de gestión de acceso e identidad (IAM)
+
+
+
+
+.Pasos
+. En la página entornos de trabajo, haga clic en *Agregar entorno de trabajo* y siga las indicaciones.
+. *Elija una ubicación*: Seleccione *Google Cloud* y *Cloud Volumes ONTAP*.
+. *Detalles y credenciales*: Seleccione un proyecto, especifique un nombre de clúster, añada etiquetas de manera opcional y especifique las credenciales.
++
+En la siguiente tabla se describen los campos que podrían presentar dificultades:
+
++
+[cols="25,75"]
+|===
+| Campo | Descripción 
+
+
+| Nombre del entorno de trabajo | Cloud Manager utiliza el nombre del entorno de trabajo para nombrar tanto el sistema Cloud Volumes ONTAP como la instancia de GCP VM. También utiliza el nombre como prefijo para el grupo de seguridad predefinido si selecciona esa opción. 
+
+
+| Agregar etiquetas | Las etiquetas son metadatos para sus recursos de GCP. Cloud Manager añade las etiquetas al sistema Cloud Volumes ONTAP y a los recursos de GCP asociados con el sistema. Puede añadir hasta cuatro etiquetas desde la interfaz de usuario al crear un entorno de trabajo y, después, puede agregar más. Tenga en cuenta que la API no le limita a cuatro etiquetas al crear un entorno de trabajo. Para obtener más información sobre las etiquetas, consulte https://cloud.google.com/compute/docs/labeling-resources["Documentación de Google Cloud: Etiquetado de recursos"^]. 
+
+
+| Nombre de usuario y contraseña | Estas son las credenciales de la cuenta de administrador del clúster de Cloud Volumes ONTAP. Puede usar estas credenciales para conectarse a Cloud Volumes ONTAP a través de System Manager o de la CLI. 
+
+
+| Editar proyecto  a| 
+Seleccione el proyecto en el que desea que resida Cloud Volumes ONTAP. El proyecto predeterminado es el proyecto en el que reside Cloud Manager.
+
+Si no ve ningún proyecto adicional en la lista desplegable, aún no ha asociado la cuenta de servicio de Cloud Manager con otros proyectos. Vaya a la consola de Google Cloud, abra el servicio IAM y seleccione el proyecto. Añada la cuenta de servicio con la función Cloud Manager a ese proyecto. Deberá repetir este paso con cada proyecto.
+
+
+NOTE: Esta es la cuenta de servicio que configuró para Cloud Manager link:task_getting_started_gcp.html#service-account["como se describe en el paso 2b de esta página"].
+
+Haga clic en *Agregar suscripción* para asociar las credenciales seleccionadas a una suscripción.
+
+Para crear un sistema Cloud Volumes ONTAP de pago por uso, debe seleccionar un proyecto de GCP asociado con una suscripción a Cloud Volumes ONTAP desde el mercado de GCP.
+
+|===
++
+En el siguiente vídeo se muestra cómo asociar una suscripción de mercado de pago por uso a su proyecto de GCP:
+
++
+video::video_subscribing_gcp.mp4[width=848,height=480]
+. *ubicación y conectividad*: Seleccione una ubicación, elija una política de firewall y seleccione la casilla de verificación para confirmar la conectividad de red al almacenamiento de Google Cloud para la organización en niveles de datos.
++
+Si desea organizar los datos inactivos en niveles en un bucket de Google Cloud Storage, la subred en la que reside Cloud Volumes ONTAP debe estar configurada para Private Google Access. Para obtener instrucciones, consulte https://cloud.google.com/vpc/docs/configure-private-google-access["Documentación de Google Cloud: Configuración de Private Google Access"^].
+
+. *cuenta del sitio de soporte y licencia*: Indique si desea usar el modelo de pago por uso o con su propia licencia y, a continuación, especifique una cuenta del sitio de soporte de NetApp.
++
+Para comprender cómo funcionan las licencias, consulte link:concept_licensing.html["Licencia"].
+
++
+Una cuenta del sitio de soporte de NetApp es opcional para el pago por uso, pero obligatoria para los sistemas BYOL. link:task_adding_nss_accounts.html["Aprenda a añadir cuentas del sitio de soporte de NetApp"].
+
+. *Paquetes preconfigurados*: Seleccione uno de los paquetes para implementar rápidamente un sistema Cloud Volumes ONTAP, o haga clic en *Crear mi propia configuración*.
++
+Si selecciona uno de los paquetes, solo tiene que especificar un volumen y, a continuación, revisar y aprobar la configuración.
+
+. *Licencia*: Cambie la versión de Cloud Volumes ONTAP según sea necesario, seleccione una licencia y seleccione un tipo de máquina virtual.
++
+image:screenshot_cvo_licensing_gcp.gif["Captura de pantalla de la página licencias. Muestra la versión Cloud Volumes ONTAP, la licencia (Explore, Estándar o Premium) y el tipo de máquina."]
+
++
+Si sus necesidades cambian después de iniciar el sistema, puede modificar la licencia o el tipo de máquina virtual más adelante.
+
++
+
+NOTE: Si hay disponible un candidato de versión, disponibilidad general o versión de revisión más reciente para la versión seleccionada, Cloud Manager actualiza el sistema a esa versión al crear el entorno de trabajo. Por ejemplo, la actualización se produce si selecciona Cloud Volumes ONTAP 9.6 RC1 y 9.6 GA está disponible. La actualización no se produce de una versión a otra; por ejemplo, de 9.6 a 9.7.
+
+. *Recursos de almacenamiento subyacentes*: Elija la configuración del agregado inicial: Un tipo de disco y el tamaño de cada disco.
++
+El tipo de disco es para el volumen inicial. Es posible seleccionar un tipo de disco diferente para volúmenes posteriores.
+
++
+El tamaño de disco es para todos los discos del agregado inicial y para cualquier agregado adicional que Cloud Manager cree cuando utilice la opción de aprovisionamiento simple. Puede crear agregados que utilicen un tamaño de disco diferente mediante la opción de asignación avanzada.
+
++
+Para obtener ayuda a elegir el tipo y el tamaño de disco, consulte link:task_planning_your_config_gcp.html#sizing-your-system-in-gcp["Ajuste de tamaño de su sistema en GCP"].
+
+. *escribir velocidad y GUSANO*: Elija *velocidad de escritura normal* o *Alta*, y active el almacenamiento de escritura única, lectura múltiple (WORM), si lo desea.
++
+Además, es posible seleccionar una velocidad de escritura con sistemas de un solo nodo.
+
++
+link:task_planning_your_config_gcp.html#choosing-a-write-speed["Más información sobre la velocidad de escritura"].
+
++
+NO se puede habilitar WORM si la organización en niveles de datos está habilitada.
+
++
+link:concept_worm.html["Más información acerca del almacenamiento WORM"].
+
+. *Segmentación de datos en Google Cloud Platform*: Elija si desea habilitar la organización en niveles de los datos en el agregado inicial, elija una clase de almacenamiento para los datos almacenados en niveles y, a continuación, seleccione una cuenta de servicio con el rol de administrador de almacenamiento predefinido (se requiere para Cloud Volumes ONTAP 9.7) o seleccione una cuenta de GCP (se requiere para Cloud Volumes ONTAP 9.6).
++
+Tenga en cuenta lo siguiente:
+
++
+** Cloud Manager establece la cuenta de servicio en la instancia de Cloud Volumes ONTAP. Esta cuenta de servicio proporciona permisos para organizar los datos en niveles en un bloque de Google Cloud Storage. Asegúrese de añadir la cuenta del servicio Cloud Manager como usuario de la cuenta del servicio de organización en niveles. De lo contrario, no puede seleccionarla en Cloud Manager.
+** Si necesita ayuda para añadir una cuenta de GCP, consulte link:task_adding_gcp_accounts.html["Configuración y adición de cuentas de GCP para la organización de datos en niveles con 9.6"].
+** Se puede elegir una política de organización en niveles de volumen específica cuando se crea o se edita un volumen.
+** Si deshabilita la organización en niveles de datos, puede habilitarla en agregados posteriores, pero tendrá que apagar el sistema y agregar una cuenta de servicio desde la consola de GCP.
++
+link:concept_data_tiering.html["Más información acerca de la organización en niveles de los datos"].
+
+
+
+. *Crear volumen*: Introduzca los detalles del nuevo volumen o haga clic en *Omitir*.
++
+Algunos de los campos en esta página son claros y explicativos. En la siguiente tabla se describen los campos que podrían presentar dificultades:
+
++
+[cols="25,75"]
+|===
+| Campo | Descripción 
+
+
+| Tamaño | El tamaño máximo que puede introducir depende en gran medida de si habilita thin provisioning, lo que le permite crear un volumen que sea mayor que el almacenamiento físico que hay disponible actualmente. 
+
+
+| Control de acceso (solo para NFS) | Una política de exportación define los clientes de la subred que pueden acceder al volumen. De forma predeterminada, Cloud Manager introduce un valor que proporciona acceso a todas las instancias de la subred. 
+
+
+| Permisos y usuarios/grupos (solo para CIFS) | Estos campos permiten controlar el nivel de acceso a un recurso compartido para usuarios y grupos (también denominados listas de control de acceso o ACL). Es posible especificar usuarios o grupos de Windows locales o de dominio, o usuarios o grupos de UNIX. Si especifica un nombre de usuario de Windows de dominio, debe incluir el dominio del usuario con el formato domain\username. 
+
+
+| Política de Snapshot | Una política de copia de Snapshot especifica la frecuencia y el número de copias de Snapshot de NetApp creadas automáticamente. Una copia snapshot de NetApp es una imagen del sistema de archivos puntual que no afecta al rendimiento y requiere un almacenamiento mínimo. Puede elegir la directiva predeterminada o ninguna. Es posible que no elija ninguno para los datos transitorios: Por ejemplo, tempdb para Microsoft SQL Server. 
+
+
+| Opciones avanzadas (solo para NFS) | Seleccione una versión de NFS para el volumen: NFSv3 o NFSv4. 
+
+
+| Grupo del iniciador y IQN (solo para iSCSI) | Los destinos de almacenamiento iSCSI se denominan LUN (unidades lógicas) y se presentan a los hosts como dispositivos de bloque estándar. Los iGroups son tablas de los nombres de los nodos de host iSCSI y controlan qué iniciadores tienen acceso a qué LUN. Los destinos iSCSI se conectan a la red a través de adaptadores de red Ethernet (NIC) estándar, tarjetas DEL motor de descarga TCP (TOE) con iniciadores de software, adaptadores de red convergente (CNA) o adaptadores de host de salida dedicados (HBA) y se identifican mediante nombres cualificados de iSCSI (IQN). Cuando se crea un volumen iSCSI, Cloud Manager crea automáticamente un LUN. Lo hemos hecho sencillo creando sólo una LUN por volumen, por lo que no hay que realizar ninguna gestión. Después de crear el volumen, link:task_provisioning_storage.html#connecting-a-lun-to-a-host["Utilice el IQN para conectarse con la LUN del hosts"]. 
+|===
++
+En la siguiente imagen, se muestra la página volumen rellenada para el protocolo CIFS:
+
++
+image:screenshot_cot_vol.gif["Captura de pantalla: Muestra la página volumen rellenada para una instancia de Cloud Volumes ONTAP."]
+
+. *Configuración CIFS*: Si elige el protocolo CIFS, configure un servidor CIFS.
++
+[cols="25,75"]
+|===
+| Campo | Descripción 
+
+
+| DNS Dirección IP principal y secundaria | Las direcciones IP de los servidores DNS que proporcionan resolución de nombres para el servidor CIFS. Los servidores DNS enumerados deben contener los registros de ubicación de servicio (SRV) necesarios para localizar los servidores LDAP de Active Directory y los controladores de dominio del dominio al que se unirá el servidor CIFS. 
+
+
+| Dominio de Active Directory al que unirse | El FQDN del dominio de Active Directory (AD) al que desea que se una el servidor CIFS. 
+
+
+| Credenciales autorizadas para unirse al dominio | Nombre y contraseña de una cuenta de Windows con privilegios suficientes para agregar equipos a la unidad organizativa (OU) especificada dentro del dominio AD. 
+
+
+| Nombre NetBIOS del servidor CIFS | Nombre de servidor CIFS que es único en el dominio de AD. 
+
+
+| Unidad organizacional | La unidad organizativa del dominio AD para asociarla con el servidor CIFS. El valor predeterminado es CN=Computers. 
+
+
+| Dominio DNS | El dominio DNS para la máquina virtual de almacenamiento (SVM) de Cloud Volumes ONTAP. En la mayoría de los casos, el dominio es el mismo que el dominio de AD. 
+
+
+| Servidor NTP | Seleccione *usar dominio de Active Directory* para configurar un servidor NTP mediante el DNS de Active Directory. Si necesita configurar un servidor NTP con una dirección diferente, debe usar la API. Consulte link:api.html["Guía para desarrolladores de API de Cloud Manager"^] para obtener más detalles. 
+|===
+. *Perfil de uso, Tipo de disco y Directiva de organización en niveles*: Elija si desea activar las funciones de eficiencia del almacenamiento y cambiar la política de organización en niveles de volumen, si es necesario.
++
+Para obtener más información, consulte link:task_planning_your_config_gcp.html#choosing-a-volume-usage-profile["Descripción de los perfiles de uso de volumen"] y.. link:concept_data_tiering.html["Información general sobre organización en niveles de datos"].
+
+. *revisar y aprobar*: Revise y confirme sus selecciones.
++
+.. Consulte los detalles de la configuración.
+.. Haga clic en *más información* para revisar los detalles sobre el soporte técnico y los recursos de GCP que adquirirá Cloud Manager.
+.. Active las casillas de verificación *comprendo...*.
+.. Haga clic en *Ir*.
+
+
+
+
+.Resultado
+Cloud Manager pone en marcha el sistema Cloud Volumes ONTAP. Puede realizar un seguimiento del progreso en la línea de tiempo.
+
+Si tiene algún problema con la implementación del sistema Cloud Volumes ONTAP, revise el mensaje de error. También puede seleccionar el entorno de trabajo y hacer clic en *Volver a crear entorno*.
+
+Para obtener más ayuda, vaya a. https://mysupport.netapp.com/GPS/ECMLS2588181.html["Soporte Cloud Volumes ONTAP de NetApp"^].
+
+.Después de terminar
+* Si ha aprovisionado un recurso compartido CIFS, proporcione permisos a usuarios o grupos a los archivos y carpetas y compruebe que esos usuarios pueden acceder al recurso compartido y crear un archivo.
+* Si desea aplicar cuotas a los volúmenes, use System Manager o la interfaz de línea de comandos.
++
+Las cuotas le permiten restringir o realizar un seguimiento del espacio en disco y del número de archivos que usan un usuario, un grupo o un qtree.
+
+

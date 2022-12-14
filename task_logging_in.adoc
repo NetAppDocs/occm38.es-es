@@ -1,0 +1,25 @@
+---
+sidebar: sidebar 
+permalink: task_logging_in.html 
+keywords: logging in, log in, sign in, signing in, cloud central, netapp cloud central, user account 
+summary: 'Un usuario basado en SaaS puede acceder a la interfaz de Cloud Manager interfaz vaya a. https://cloudmanager.netapp.com[].' 
+---
+= Inicio de sesión en Cloud Manager
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Un usuario basado en SaaS puede acceder a la interfaz de Cloud Manager interfaz vaya a. https://cloudmanager.netapp.com[].
+
+.Pasos
+. Abra un explorador web y vaya a. https://cloudmanager.netapp.com[].
+. Inicie sesión con sus credenciales de Cloud Central de NetApp.
++
+image:screenshot_login.gif["La pantalla de inicio de sesión de Cloud Central."]
+
+

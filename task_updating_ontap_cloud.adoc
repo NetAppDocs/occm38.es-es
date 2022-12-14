@@ -1,0 +1,214 @@
+---
+sidebar: sidebar 
+permalink: task_updating_ontap_cloud.html 
+keywords: update, updating, upgrading, upgrade, software, downgrade, downgrading, FTP, HTTP, mediator, local image 
+summary: Cloud Manager incluye varias opciones que se pueden utilizar para actualizar a la versión actual de Cloud Volumes ONTAP o degradar Cloud Volumes ONTAP a una versión anterior. Debe preparar los sistemas de Cloud Volumes ONTAP antes de actualizar o degradar el software. 
+---
+= Actualización del software Cloud Volumes ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Manager incluye varias opciones que se pueden utilizar para actualizar a la versión actual de Cloud Volumes ONTAP o degradar Cloud Volumes ONTAP a una versión anterior. Debe preparar los sistemas de Cloud Volumes ONTAP antes de actualizar o degradar el software.
+
+
+
+== Cloud Manager debe completar las actualizaciones de software
+
+Las actualizaciones de Cloud Volumes ONTAP se deben completar desde Cloud Manager. No debe actualizar Cloud Volumes ONTAP con System Manager o CLI. Hacerlo puede afectar a la estabilidad del sistema.
+
+
+
+== Formas de actualizar Cloud Volumes ONTAP
+
+Cloud Manager muestra una notificación en entornos de trabajo de Cloud Volumes ONTAP cuando hay disponible una nueva versión de Cloud Volumes ONTAP:
+
+image:screenshot_cot_upgrade.gif["Captura de pantalla: Muestra la notificación Nueva versión disponible que se muestra en la página entornos de trabajo después de seleccionar un entorno de trabajo."]
+
+Puede iniciar el proceso de actualización a partir de esta notificación, que automatiza el proceso. Para ello, obtenga la imagen de software de un bloque de S3, instale la imagen y, a continuación, reinicie el sistema. Para obtener más información, consulte <<Actualizar Cloud Volumes ONTAP a partir de notificaciones de Cloud Manager>>.
+
+
+NOTE: Para los sistemas de alta disponibilidad de AWS, Cloud Manager puede actualizar al mediador de alta disponibilidad como parte del proceso de actualización.
+
+
+
+=== Opciones avanzadas para actualizaciones de software
+
+Cloud Manager también ofrece las siguientes opciones avanzadas para actualizar el software Cloud Volumes ONTAP:
+
+* Actualizaciones de software mediante una imagen en una URL externa
++
+Esta opción resulta útil si Cloud Manager no puede acceder al bloque de S3 para actualizar el software, si se le proporcionó un parche o si desea degradar el software a una versión concreta.
+
++
+Para obtener más información, consulte <<Actualización o degradación de Cloud Volumes ONTAP mediante un servidor HTTP o FTP>>.
+
+* Actualizaciones de software usando la imagen alternativa del sistema
++
+Puede utilizar esta opción para cambiar a la versión anterior haciendo que la imagen de software alternativa sea la predeterminada. Esta opción no está disponible para pares de alta disponibilidad.
+
++
+Para obtener más información, consulte <<Degradación de Cloud Volumes ONTAP mediante una imagen local>>.
+
+
+
+
+
+== Preparando la actualización del software Cloud Volumes ONTAP
+
+Antes de realizar una actualización o una degradación, debe verificar que los sistemas estén preparados y realizar los cambios de configuración necesarios.
+
+* <<Planificación de los tiempos de inactividad>>
+* <<Revisión de los requisitos de versión>>
+* <<Verificación de que la devolución automática sigue activada>>
+* <<Suspensión de las transferencias de SnapMirror>>
+* <<Verificación de que los agregados están en línea>>
+
+
+
+
+=== Planificación de los tiempos de inactividad
+
+Al actualizar un sistema de un solo nodo, el proceso de actualización desconecta el sistema durante un máximo de 25 minutos, durante el cual se interrumpen las operaciones de I/O.
+
+Actualizar un par de alta disponibilidad no provoca interrupciones y la I/o se realiza de forma ininterrumpida. Durante este proceso de actualización no disruptiva, cada nodo se actualiza conjuntamente para seguir proporcionando I/o a los clientes.
+
+
+
+=== Revisión de los requisitos de versión
+
+La versión de ONTAP a la que se puede actualizar o degradar varía en función de la versión de ONTAP que esté ejecutándose actualmente en el sistema.
+
+Para conocer los requisitos de la versión, consulte http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-dot-upgrade/GUID-AC0EB781-583F-4C90-A4C4-BC7B14CEFD39.html["Documentación de ONTAP 9: Requisitos de actualización del clúster"^].
+
+
+
+=== Verificación de que la devolución automática sigue activada
+
+La devolución automática debe estar habilitada en una pareja de ha de Cloud Volumes ONTAP (esta es la configuración predeterminada). Si no lo es, la operación fallará.
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-hacg/GUID-3F50DE15-0D01-49A5-BEFD-D529713EC1FA.html["Documentación de ONTAP 9: Comandos para configurar el retorno automático"^]
+
+
+
+=== Suspensión de las transferencias de SnapMirror
+
+Si un sistema Cloud Volumes ONTAP tiene relaciones SnapMirror activas, se recomienda suspender las transferencias antes de actualizar el software Cloud Volumes ONTAP. La suspensión de las transferencias evita que se produzcan fallos de SnapMirror. Debe suspender las transferencias del sistema de destino.
+
+.Acerca de esta tarea
+Estos pasos describen cómo utilizar System Manager para la versión 9.3 y posteriores.
+
+.Pasos
+. link:task_connecting_to_otc.html["Inicie sesión en System Manager"] desde el sistema de destino.
+. Haga clic en *Protección > Relaciones*.
+. Seleccione la relación y haga clic en *Operaciones > Quiesce*.
+
+
+
+
+=== Verificación de que los agregados están en línea
+
+Los agregados para Cloud Volumes ONTAP deben estar en línea antes de actualizar el software. Los agregados deben estar en línea en la mayoría de las configuraciones, pero si no lo están, debe conectarlos conectados.
+
+.Acerca de esta tarea
+Estos pasos describen cómo utilizar System Manager para la versión 9.3 y posteriores.
+
+.Pasos
+. En el entorno de trabajo, haga clic en el icono de menú y, a continuación, haga clic en *Avanzado > asignación avanzada*.
+. Seleccione un agregado, haga clic en *Info* y, a continuación, compruebe que el estado está en línea.
++
+image:screenshot_aggr_state.gif["Captura de pantalla: Muestra el campo Estado cuando se visualiza información de un agregado."]
+
+. Si el agregado está sin conexión, use System Manager para conectar el agregado:
++
+.. link:task_connecting_to_otc.html["Inicie sesión en System Manager"].
+.. Haga clic en *almacenamiento > agregados y discos > agregados*.
+.. Seleccione el agregado y, a continuación, haga clic en *más acciones > Estado > en línea*.
+
+
+
+
+
+
+== Actualizar Cloud Volumes ONTAP a partir de notificaciones de Cloud Manager
+
+Cloud Manager notifica el momento en que una nueva versión de Cloud Volumes ONTAP está disponible. Haga clic en la notificación para iniciar el proceso de actualización.
+
+.Antes de empezar
+No deben estar en curso en el sistema de Cloud Volumes ONTAP operaciones de Cloud Manager, como la creación de volúmenes o agregados.
+
+.Pasos
+. Haga clic en *entornos de trabajo*.
+. Seleccione un entorno de trabajo.
++
+Aparece una notificación en el panel derecho si hay una nueva versión disponible:
+
++
+image:screenshot_cot_upgrade.gif["Captura de pantalla: Muestra la notificación Nueva versión disponible que se muestra en la página entornos de trabajo después de seleccionar un entorno de trabajo."]
+
+. Si hay una nueva versión disponible, haga clic en *Actualizar*.
+. En la página Información de versión, haga clic en el vínculo para leer las Notas de versión de la versión especificada y, a continuación, active la casilla de verificación *he leído...* .
+. En la página Contrato de licencia para el usuario final (EULA), lea el EULA y, a continuación, seleccione *he leído y aprobado el EULA*.
+. En la página revisar y aprobar, lea las notas importantes, seleccione *comprendo...* y, a continuación, haga clic en *Ir*.
+
+
+.Resultado
+Cloud Manager inicia la actualización del software. Puede realizar acciones en el entorno de trabajo una vez completada la actualización de software.
+
+.Después de terminar
+Si ha suspendido las transferencias de SnapMirror, use System Manager para reanudar las transferencias.
+
+
+
+== Actualización o degradación de Cloud Volumes ONTAP mediante un servidor HTTP o FTP
+
+Puede colocar la imagen del software Cloud Volumes ONTAP en un servidor HTTP o FTP e iniciar la actualización del software desde Cloud Manager. Se puede usar esta opción si Cloud Manager no puede acceder al bloque de S3 para actualizar el software o si desea degradar el software.
+
+.Pasos
+. Configure un servidor HTTP o FTP que pueda alojar la imagen del software Cloud Volumes ONTAP.
+. Si tiene una conexión VPN a la red virtual, puede colocar la imagen del software Cloud Volumes ONTAP en un servidor HTTP o FTP en su propia red. De lo contrario, debe colocar el archivo en un servidor HTTP o FTP en la nube.
+. Si utiliza su propio grupo de seguridad para Cloud Volumes ONTAP, asegúrese de que las reglas salientes permiten conexiones HTTP o FTP para que Cloud Volumes ONTAP pueda acceder a la imagen del software.
++
+
+NOTE: El grupo de seguridad Cloud Volumes ONTAP predefinido permite conexiones HTTP y FTP salientes de forma predeterminada.
+
+. Obtenga la imagen del software de https://mysupport.netapp.com/products/p/cloud_ontap.html["El sitio de soporte de NetApp"^].
+. Copie la imagen de software en el directorio del servidor HTTP o FTP a partir del que se servirá el archivo.
+. En el entorno de trabajo de Cloud Manager, haga clic en el icono de menú y, a continuación, haga clic en *Avanzado > Actualizar Cloud Volumes ONTAP*.
+. En la página de actualización del software, elija *Seleccione una imagen disponible en una dirección URL*, introduzca la dirección URL y, a continuación, haga clic en *Cambiar imagen*.
+. Haga clic en *continuar* para confirmar.
+
+
+.Resultado
+Cloud Manager inicia la actualización de software. Puede realizar acciones en el entorno de trabajo una vez completada la actualización de software.
+
+.Después de terminar
+Si ha suspendido las transferencias de SnapMirror, use System Manager para reanudar las transferencias.
+
+
+
+== Degradación de Cloud Volumes ONTAP mediante una imagen local
+
+La transición de Cloud Volumes ONTAP a una versión anterior de la misma familia de versiones (por ejemplo, 9.5 a 9.4) se conoce como una degradación. Es posible degradar sin ayuda cuando se degrade un clúster nuevo o de prueba, pero debe ponerse en contacto con el soporte técnico si desea degradar un clúster de producción.
+
+Cada sistema Cloud Volumes ONTAP puede contener dos imágenes de software: La imagen actual en ejecución y una imagen alternativa que puede arrancar. Cloud Manager puede cambiar la imagen alternativa para que sea la imagen predeterminada. Puede utilizar esta opción para cambiar a la versión anterior de Cloud Volumes ONTAP si tiene problemas con la imagen actual.
+
+.Acerca de esta tarea
+Este proceso de degradación solo está disponible para sistemas Cloud Volumes ONTAP individuales. No está disponible para pares de alta disponibilidad.
+
+.Pasos
+. En el entorno de trabajo, haga clic en el icono de menú y, a continuación, haga clic en *Avanzado > Actualizar Cloud Volumes ONTAP*.
+. En la página Actualizar software, seleccione la imagen alternativa y, a continuación, haga clic en *Cambiar imagen*.
+. Haga clic en *continuar* para confirmar.
+
+
+.Resultado
+Cloud Manager inicia la actualización de software. Puede realizar acciones en el entorno de trabajo una vez completada la actualización de software.
+
+.Después de terminar
+Si ha suspendido las transferencias de SnapMirror, use System Manager para reanudar las transferencias.

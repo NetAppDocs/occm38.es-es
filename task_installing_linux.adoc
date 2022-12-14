@@ -1,0 +1,120 @@
+---
+sidebar: sidebar 
+permalink: task_installing_linux.html 
+keywords: install connector, manually install connector, install connector software, installation, installing, linux, installer, software, on prem, on-prem, silent 
+summary: La forma más común de crear un conector es directamente desde Cloud Manager o desde el mercado de un proveedor de cloud. Pero tiene la opción de descargar e instalar el software Connector en un host Linux existente en su red o en la nube. 
+---
+= Instalar el software del conector en un host Linux existente
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+La forma más común de crear un conector es directamente desde Cloud Manager o desde el mercado de un proveedor de cloud. Pero tiene la opción de descargar e instalar el software Connector en un host Linux existente en su red o en la nube.
+
+
+NOTE: Si desea crear un sistema Cloud Volumes ONTAP en Google Cloud, también debe tener un conector en Google Cloud. No puede utilizar un conector que se ejecute en otra ubicación.
+
+.Requisitos
+* El host debe encontrarse link:reference_cloud_mgr_reqs.html["Requisitos para el conector"].
+* Debe registrarse un sistema Red Hat Enterprise Linux con Red Hat Subscription Management. Si no está registrado, el sistema no puede acceder a los repositorios para actualizar el software necesario de terceros durante la instalación.
+* El instalador del conector tiene acceso a varias direcciones URL durante el proceso de instalación. Debe asegurarse de que se permita el acceso saliente a Internet a estos puntos finales:
++
+** \http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
+** \https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+** \https://s3.amazonaws.com/aws-cli/awscli-bundle.zip
++
+Es posible que el host intente actualizar paquetes de sistema operativo durante la instalación. El host puede ponerse en contacto con diferentes sitios de duplicación para estos paquetes de SO.
+
+
+
+
+
+.Acerca de esta tarea
+* No se requieren privilegios de usuario raíz para instalar el conector.
+* La instalación instala las herramientas de línea de comandos de AWS (awscli) para habilitar los procedimientos de recuperación del soporte de NetApp.
++
+Si recibe un mensaje que ha fallado al instalar el awscli, puede ignorar el mensaje de forma segura. El conector puede funcionar correctamente sin las herramientas.
+
+* El instalador disponible en el sitio de soporte de NetApp puede ser una versión anterior. Después de la instalación, el conector se actualiza automáticamente si hay una nueva versión disponible.
+
+
+.Pasos
+. Descargue el software Cloud Manager del https://mysupport.netapp.com/site/products/all/details/cloud-manager/downloads-tab["Sitio de soporte de NetApp"^]Y, a continuación, cópielo en el host Linux.
++
+Para obtener ayuda sobre la conexión y copia del archivo en una instancia de EC2 en AWS, consulte http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html["Documentación de AWS: Conexión a la instancia de Linux mediante SSH"^].
+
+. Asigne permisos para ejecutar el script.
++
+*ejemplo*
+
++
+ chmod +x OnCommandCloudManager-V3.8.4.sh
+. Ejecute el script de instalación:
++
+ ./OnCommandCloudManager-V3.8.4.sh [silent] [proxy=ipaddress] [proxyport=port] [proxyuser=user_name] [proxypwd=password]
++
+_silent_ ejecuta la instalación sin solicitar información.
+
++
+se requiere _proxy_ si el host está detrás de un servidor proxy.
+
++
+_proxyport_ es el puerto del servidor proxy.
+
++
+_proxyuser_ es el nombre de usuario del servidor proxy, si se requiere autenticación básica.
+
++
+_proxypwd_ es la contraseña del nombre de usuario que ha especificado.
+
+. A menos que haya especificado el parámetro silent, escriba *y* para continuar la secuencia de comandos y, a continuación, introduzca los puertos HTTP y HTTPS cuando se le solicite.
++
+Cloud Manager ya está instalado. Al finalizar la instalación, el servicio Cloud Manager (occm) se reinicia dos veces si especificó un servidor proxy.
+
+. Abra un explorador web e introduzca la siguiente URL:
++
+https://_ipaddress_:__port__[]
+
++
+_ipaddress_ puede ser localhost, una dirección IP privada o una dirección IP pública, dependiendo de la configuración del host. Por ejemplo, si el conector está en la nube pública sin una dirección IP pública, debe introducir una dirección IP privada desde un host que tenga una conexión con el host del conector.
+
++
+_Port_ es obligatorio si cambia los puertos HTTP (80) o HTTPS (443) predeterminados. Por ejemplo, si el puerto HTTPS se ha cambiado a 8443, debe introducir https://_ipaddress_:8443[]
+
+. Regístrese en NetApp Cloud Central o inicie sesión.
+. Después de iniciar sesión, configure Cloud Manager:
++
+.. Especifique la cuenta de Cloud Central que desea asociar con el conector.
++
+link:concept_cloud_central_accounts.html["Obtenga más información acerca de las cuentas de Cloud Central"].
+
+.. Escriba un nombre para el sistema.
++
+image:screenshot_set_up_cloud_manager.gif["Captura de pantalla que muestra la pantalla de configuración que permite seleccionar una cuenta de Cloud Central y dar nombre al sistema."]
+
+
+
+
+
+.Resultado
+El conector ya está instalado y configurado con su cuenta de Cloud Central. Cloud Manager utilizará automáticamente este conector cuando cree nuevos entornos de trabajo.
+
+.Después de terminar
+Configure permisos para que Cloud Manager pueda gestionar recursos y procesos en su entorno de cloud público:
+
+* AWS: link:task_adding_aws_accounts.html["Configure una cuenta de AWS y, a continuación, añádela Cloud Manager"].
+* Azure: link:task_adding_azure_accounts.html["Configure una cuenta de Azure y añada a. Cloud Manager"].
+* GCP: Configure una cuenta de servicio que tenga los permisos que Cloud Manager necesita para crear y gestionar sistemas Cloud Volumes ONTAP en proyectos.
++
+.. https://cloud.google.com/iam/docs/creating-custom-roles#iam-custom-roles-create-gcloud["Crear un rol en GCP"^] esto incluye los permisos definidos en la https://occm-sample-policies.s3.amazonaws.com/Policy_for_Cloud_Manager_3.8.0_GCP.yaml["Política de Cloud Manager para GCP"^].
+.. https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating_a_service_account["Cree una cuenta de servicio de GCP y aplique el rol personalizado que acaba de crear"^].
+.. https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances#changeserviceaccountandscopes["Asocie esta cuenta de servicio a la máquina virtual del conector"^].
+.. Si desea poner en marcha Cloud Volumes ONTAP en otros proyectos, https://cloud.google.com/iam/docs/granting-changing-revoking-access#granting-console["Conceda el acceso añadiendo la cuenta de servicio con la nube La función de gerente de ese proyecto"^]. Deberá repetir este paso con cada proyecto.
+
+
+

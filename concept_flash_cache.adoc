@@ -1,0 +1,54 @@
+---
+sidebar: sidebar 
+permalink: concept_flash_cache.html 
+keywords: cloud volumes ontap, aws, ec2, flash cache, read-intensive, read, random, databases, email, file services, c5d.4xlarge, c5d.9xlarge, r5d.2xlarge, compression, performance, azure, nvme, standard, l8s, vm type, virtual machine, m5d.8xlarge, m5d.12xlarge, c5d.18xlarge 
+summary: Algunas configuraciones de Cloud Volumes ONTAP en AWS y Azure incluyen almacenamiento NVMe local, que Cloud Volumes ONTAP utiliza como Flash Cache para mejorar el rendimiento. 
+---
+= Flash Cache
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Algunas configuraciones de Cloud Volumes ONTAP en AWS y Azure incluyen almacenamiento NVMe local, que Cloud Volumes ONTAP utiliza como _Flash Cache_ para mejorar el rendimiento.
+
+
+
+== ¿Qué es Flash Cache?
+
+Flash Cache acelera el acceso a los datos mediante el almacenamiento en caché inteligente en tiempo real de datos recientes de usuarios y metadatos de NetApp. Es eficaz para cargas de trabajo de lectura intensiva aleatoria, como bases de datos, correo electrónico y servicios de archivos.
+
+
+
+== Instancias compatibles en AWS
+
+Seleccione uno de los siguientes tipos de instancia de EC2 con un sistema Cloud Volumes ONTAP Premium o BYOL nuevo o existente:
+
+* c5d.4 x grande
+* c5d.9xlarge
+* c5d.18xlarge
+* m5d.8xgrande
+* m5d.12xlarge
+* r5d.2xgrande
+
+
+
+
+== Tipo de máquina virtual compatible en Azure
+
+Seleccione el tipo de máquina virtual Standard_L8S_v2 con un sistema BYOL de Cloud Volumes ONTAP de un solo nodo en Azure.
+
+
+
+== Limitaciones
+
+* La compresión debe deshabilitarse en todos los volúmenes para aprovechar las mejoras de rendimiento de Flash Cache.
++
+No seleccione ninguna eficiencia de almacenamiento cuando cree un volumen desde Cloud Manager, ni cree un volumen y, a continuación, http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-vsmg/GUID-8508A4CB-DB43-4D0D-97EB-859F58B29054.html["Deshabilite la compresión de datos mediante la CLI"^].
+
+* Cloud Volumes ONTAP no admite el recalentamiento de la caché después de un reinicio.
+

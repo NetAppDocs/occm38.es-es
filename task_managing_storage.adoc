@@ -1,0 +1,365 @@
+---
+sidebar: sidebar 
+permalink: task_managing_storage.html 
+keywords: volumes, aggregates, managing, cloning, editing, CIFS server, edit, flexclone, snapshot copy, restore, mount, tier, delete, advanced allocation, disks, cifs setup, DNS, active directory, AD, domain, NetBIOS, identify, move, capacity, action required, clone, snapshot copies, restoring, disk type, add disk, change disk, vol move, volume move, move a volume, volume move slow, volume move performance 
+summary: Cloud Manager le permite gestionar volúmenes, agregados y servidores CIFS. También indica que se deben mover los volúmenes para evitar problemas de capacidad. 
+---
+= Gestión del almacenamiento existente
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Manager le permite gestionar volúmenes, agregados y servidores CIFS. También indica que se deben mover los volúmenes para evitar problemas de capacidad.
+
+
+
+== Gestión de los volúmenes existentes
+
+Puede gestionar los volúmenes existentes a medida que cambien sus necesidades de almacenamiento. Es posible ver, editar, clonar, restaurar y eliminar volúmenes.
+
+.Pasos
+. En la página Working Environments, haga doble clic en el entorno de trabajo de Cloud Volumes ONTAP en el que desea gestionar los volúmenes.
+. Gestione sus volúmenes:
++
+[cols="30,70"]
+|===
+| Tarea | Acción 
+
+
+| Permite ver la información de un volumen | Seleccione un volumen y, a continuación, haga clic en *Info*. 
+
+
+| Editar un volumen (solo volúmenes de lectura y escritura)  a| 
+.. Seleccione un volumen y, a continuación, haga clic en *Editar*.
+.. Modifique la directiva Snapshot del volumen, la versión del protocolo NFS, la lista de control de acceso NFS o los permisos de uso compartido y, a continuación, haga clic en *Actualizar*.
+
+
+
+NOTE: Si necesita políticas de Snapshot personalizadas, puede crearlas mediante System Manager.
+
+
+
+| Clonar un volumen  a| 
+.. Seleccione un volumen y, a continuación, haga clic en *Clonar*.
+.. Modifique el nombre del clon según sea necesario y, a continuación, haga clic en *Clonar*.
+
+
+Este proceso crea un volumen FlexClone. Un volumen FlexClone es una copia editable, de un momento específico, que gestiona el espacio de forma eficiente, porque utiliza una pequeña cantidad de espacio para los metadatos y, a continuación, solo consume espacio adicional a medida que se modifican o agregan datos.
+
+Para obtener más información sobre los volúmenes FlexClone, consulte http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-vsmg/home.html["Guía de gestión de almacenamiento lógico de ONTAP 9"^].
+
+
+
+| Restaurar datos de una copia Snapshot en un volumen nuevo  a| 
+.. Seleccione un volumen y, a continuación, haga clic en *Restaurar desde copia Snapshot*.
+.. Seleccione una copia Snapshot, introduzca un nombre para el nuevo volumen y, a continuación, haga clic en *Restaurar*.
+
+
+
+
+| Cree una copia Snapshot bajo demanda  a| 
+.. Seleccione un volumen y, a continuación, haga clic en *Crear una copia Snapshot*.
+.. Si es necesario, cambie el nombre y, a continuación, haga clic en *Crear*.
+
+
+
+
+| Obtenga el comando de montaje NFS  a| 
+.. Seleccione un volumen y, a continuación, haga clic en *comando de montaje*.
+.. Haga clic en *Copiar*.
+
+
+
+
+| Vea el IQN objetivo para un volumen iSCSI  a| 
+.. Seleccione un volumen y, a continuación, haga clic en *IQN objetivo*.
+.. Haga clic en *Copiar*.
+.. link:task_provisioning_storage.html#connecting-a-lun-to-a-host["Utilice el IQN para conectarse con la LUN del hosts"].
+
+
+
+
+| Cambie el tipo de disco subyacente  a| 
+.. Seleccione un volumen y, a continuación, haga clic en *Cambiar tipo de disco y directiva de organización en niveles*.
+.. Seleccione el tipo de disco y, a continuación, haga clic en *Cambiar*.
+
+
+
+NOTE: Cloud Manager mueve el volumen a un agregado existente que utiliza el tipo de disco seleccionado o crea un nuevo agregado para el volumen.
+
+
+
+| Cambie la política de organización en niveles  a| 
+.. Seleccione un volumen y, a continuación, haga clic en *Cambiar tipo de disco y directiva de organización en niveles*.
+.. Haga clic en *Editar directiva*.
+.. Seleccione una directiva diferente y haga clic en *Cambiar*.
+
+
+
+NOTE: Cloud Manager mueve el volumen a un agregado existente que utiliza el tipo de disco seleccionado con organización en niveles o crea un nuevo agregado para el volumen.
+
+
+
+| Eliminar un volumen  a| 
+.. Seleccione un volumen y, a continuación, haga clic en *Eliminar*.
+.. Vuelva a hacer clic en *Eliminar* para confirmar.
+
+
+|===
+
+
+
+
+== Gestión de los agregados existentes
+
+Gestione los agregados usted mismo añadiendo discos, visualizando información sobre los agregados y suprimiéndolos.
+
+.Antes de empezar
+Si desea eliminar un agregado, primero debe haber eliminado los volúmenes del agregado.
+
+.Acerca de esta tarea
+Si se está quedando sin espacio un agregado, puede mover volúmenes a otro agregado mediante System Manager de OnCommand.
+
+.Pasos
+. En la página entornos de trabajo, haga doble clic en el entorno de trabajo de Cloud Volumes ONTAP en el que desea gestionar agregados.
+. Haga clic en el icono de menú y, a continuación, haga clic en *Avanzado > asignación avanzada*.
+. Gestione los agregados:
++
+[cols="30,70"]
+|===
+| Tarea | Acción 
+
+
+| Ver información sobre un agregado | Seleccione un agregado y haga clic en *Info*. 
+
+
+| Cree un volumen en un agregado específico | Seleccione un agregado y haga clic en *Crear volumen*. 
+
+
+| Añada discos a un agregado  a| 
+.. Seleccione un agregado y haga clic en *Agregar discos de AWS* o *Agregar discos de Azure*.
+.. Seleccione el número de discos que desea agregar y haga clic en *Agregar*.
++
+
+TIP: Todos los discos de un agregado deben tener el mismo tamaño.
+
+
+
+
+
+| Eliminar un agregado  a| 
+.. Seleccione un agregado que no contenga ningún volumen y haga clic en *Eliminar*.
+.. Vuelva a hacer clic en *Eliminar* para confirmar.
+
+
+|===
+
+
+
+
+== Modificación del servidor CIFS
+
+Si cambia sus servidores DNS o dominio de Active Directory, debe modificar el servidor CIFS en Cloud Volumes ONTAP para seguir sirviendo almacenamiento a los clientes.
+
+.Pasos
+. En el entorno de trabajo, haga clic en el icono de menú y, a continuación, haga clic en *Avanzado > Configuración CIFS*.
+. Especifique la configuración del servidor CIFS:
++
+[cols="30,70"]
+|===
+| Tarea | Acción 
+
+
+| DNS Dirección IP principal y secundaria | Las direcciones IP de los servidores DNS que proporcionan resolución de nombres para el servidor CIFS. Los servidores DNS enumerados deben contener los registros de ubicación de servicio (SRV) necesarios para localizar los servidores LDAP de Active Directory y los controladores de dominio del dominio al que se unirá el servidor CIFS. 
+
+
+| Dominio de Active Directory al que unirse | El FQDN del dominio de Active Directory (AD) al que desea que se una el servidor CIFS. 
+
+
+| Credenciales autorizadas para unirse al dominio | Nombre y contraseña de una cuenta de Windows con privilegios suficientes para agregar equipos a la unidad organizativa (OU) especificada dentro del dominio AD. 
+
+
+| Nombre NetBIOS del servidor CIFS | Nombre de servidor CIFS que es único en el dominio de AD. 
+
+
+| Unidad organizacional | La unidad organizativa del dominio AD para asociarla con el servidor CIFS. El valor predeterminado es CN=Computers. Si configura Microsoft AD administrado de AWS como servidor AD para Cloud Volumes ONTAP, debe introducir *OU=equipos,OU=corp* en este campo. 
+
+
+| Dominio DNS | El dominio DNS para la máquina virtual de almacenamiento (SVM) de Cloud Volumes ONTAP. En la mayoría de los casos, el dominio es el mismo que el dominio de AD. 
+
+
+| Servidor NTP | Seleccione *usar dominio de Active Directory* para configurar un servidor NTP mediante el DNS de Active Directory. Si necesita configurar un servidor NTP con una dirección diferente, debe usar la API. Consulte link:api.html["Guía para desarrolladores de API de Cloud Manager"^] para obtener más detalles. 
+|===
+. Haga clic en *Guardar*.
+
+
+.Resultado
+Cloud Volumes ONTAP actualiza el servidor CIFS con los cambios.
+
+
+
+== Mover un volumen
+
+Mueva volúmenes para mejorar el aprovechamiento de la capacidad, mejorar el rendimiento y cumplir los acuerdos de nivel de servicio.
+
+Puede mover un volumen en System Manager seleccionando un volumen y el agregado de destino, iniciando la operación de movimiento de volúmenes y, opcionalmente, supervisando el trabajo de movimiento de volúmenes. Cuando se usa System Manager, una operación de movimiento de volúmenes se completa automáticamente.
+
+.Pasos
+. Utilice System Manager o la interfaz de línea de comandos para mover los volúmenes al agregado.
++
+En la mayoría de las situaciones, se puede usar System Manager para mover volúmenes.
+
++
+Para ver instrucciones, consulte http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-vol-move/home.html["Guía exprés de traslado de volúmenes de ONTAP 9"^].
+
+
+
+
+
+== Movimiento de un volumen cuando Cloud Manager muestra una acción requerida mensaje
+
+Cloud Manager puede mostrar un mensaje de acción obligatorio que dice que es necesario mover un volumen para evitar problemas de capacidad, pero que no puede ofrecer recomendaciones para corregir el problema. Si sucede esto, debe identificar cómo corregir el problema y luego mover uno o más volúmenes.
+
+.Pasos
+. <<Identificación de cómo corregir los problemas de capacidad,Identificar cómo se corrige el problema>>.
+. Según su análisis, mueva volúmenes para evitar problemas de capacidad:
++
+** <<Mover volúmenes a otro sistema para evitar problemas de capacidad,Mueva volúmenes a otro sistema>>.
+** <<Mover volúmenes a otro agregado para evitar problemas de capacidad,Mueva volúmenes a otro agregado del mismo sistema>>.
+
+
+
+
+
+
+=== Identificación de cómo corregir los problemas de capacidad
+
+Si Cloud Manager no puede proporcionar recomendaciones para mover un volumen para evitar problemas de capacidad, debe identificar los volúmenes que debe mover y si debe moverlos a otro agregado del mismo sistema o a otro sistema.
+
+.Pasos
+. Consulte la información avanzada en el mensaje Action Required para identificar el agregado que ha alcanzado su límite de capacidad.
++
+Por ejemplo, la información avanzada debería decir algo similar a lo siguiente: La agrupación aggr1 ha alcanzado su límite de capacidad.
+
+. Identifique uno o varios volúmenes para mover fuera del agregado:
++
+.. En el entorno de trabajo, haga clic en el icono de menú y, a continuación, haga clic en *Avanzado > asignación avanzada*.
+.. Seleccione el agregado y, a continuación, haga clic en *Info*.
+.. Expanda la lista de volúmenes.
++
+image:screenshot_aggr_volumes.gif["Captura de pantalla: Muestra la lista de volúmenes de un agregado en el cuadro de diálogo de información de agregado."]
+
+.. Revise el tamaño de cada volumen y seleccione uno o varios volúmenes para mover fuera del agregado.
++
+Debe elegir volúmenes que sean lo suficientemente grandes como para liberar espacio en el agregado para evitar problemas de capacidad adicionales en el futuro.
+
+
+
+. Si el sistema no ha alcanzado el límite de discos, debe mover los volúmenes a un agregado existente o a un nuevo agregado del mismo sistema.
++
+Para obtener más información, consulte link:task_managing_storage.html#moving-volumes-to-another-aggregate-to-avoid-capacity-issues["Mover volúmenes a otro agregado para evitar problemas de capacidad"].
+
+. Si el sistema ha alcanzado el límite de discos, realice una de las siguientes acciones:
++
+.. Elimine los volúmenes que no se utilizan.
+.. Reorganice los volúmenes para liberar espacio en un agregado.
++
+Para obtener más información, consulte link:task_managing_storage.html#moving-volumes-to-another-aggregate-to-avoid-capacity-issues["Mover volúmenes a otro agregado para evitar problemas de capacidad"].
+
+.. Mueva dos o más volúmenes a otro sistema que tenga espacio.
++
+Para obtener más información, consulte link:task_managing_storage.html#moving-volumes-to-another-system-to-avoid-capacity-issues["Mover volúmenes a otro sistema para evitar problemas de capacidad"].
+
+
+
+
+
+
+
+=== Mover volúmenes a otro sistema para evitar problemas de capacidad
+
+Es posible mover uno o más volúmenes a otro sistema Cloud Volumes ONTAP para evitar problemas de capacidad. Es posible que deba hacer esto si el sistema alcanzó su límite de discos.
+
+.Acerca de esta tarea
+Puede seguir los pasos de esta tarea para corregir el siguiente mensaje Acción necesaria:
+
+ Moving a volume is necessary to avoid capacity issues; however, Cloud Manager cannot perform this action for you because the system has reached the disk limit.
+.Pasos
+. Identifique un sistema Cloud Volumes ONTAP con capacidad disponible o implemente un nuevo sistema.
+. Arrastre y suelte el entorno de trabajo de origen en el entorno de trabajo de destino para realizar una replicación de datos única del volumen.
++
+Para obtener más información, consulte link:task_replicating_data.html["Replicación de datos entre sistemas"].
+
+. Vaya a la página Replication Status y, a continuación, rompa la relación de SnapMirror para convertir el volumen replicado de un volumen de protección de datos a un volumen de lectura/escritura.
++
+Para obtener más información, consulte link:task_replicating_data.html#managing-data-replication-schedules-and-relationships["Gestionar programaciones y relaciones de replicación de datos"].
+
+. Configure el volumen para el acceso a los datos.
++
+Para obtener información sobre la configuración de un volumen de destino para el acceso a los datos, consulte http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-sm-ic-fr/home.html["Guía exprés de recuperación de desastres de volúmenes de ONTAP 9"^].
+
+. Elimine el volumen original.
++
+Para obtener más información, consulte link:task_managing_storage.html#managing-existing-volumes["Gestión de los volúmenes existentes"].
+
+
+
+
+
+=== Mover volúmenes a otro agregado para evitar problemas de capacidad
+
+Puede mover uno o varios volúmenes a otro agregado para evitar problemas de capacidad.
+
+.Acerca de esta tarea
+Puede seguir los pasos de esta tarea para corregir el siguiente mensaje Acción necesaria:
+
+ Moving two or more volumes is necessary to avoid capacity issues; however, Cloud Manager cannot perform this action for you.
+.Pasos
+. Compruebe si un agregado existente tiene capacidad disponible para los volúmenes que se necesitan mover:
++
+.. En el entorno de trabajo, haga clic en el icono de menú y, a continuación, haga clic en *Avanzado > asignación avanzada*.
+.. Seleccione cada agregado, haga clic en *Info* y, a continuación, vea la capacidad disponible (capacidad agregada menos capacidad agregada utilizada).
++
+image:screenshot_aggr_capacity.gif["Captura de pantalla: Muestra la capacidad total del agregado y la capacidad utilizada de agregado disponible en el cuadro de diálogo de información de agregado."]
+
+
+
+. Si es necesario, añada discos a un agregado existente:
++
+.. Seleccione el agregado y, a continuación, haga clic en *Agregar discos*.
+.. Seleccione el número de discos que desea agregar y, a continuación, haga clic en *Agregar*.
+
+
+. Si no hay agregados con capacidad disponible, cree un nuevo agregado.
++
+Para obtener más información, consulte link:task_provisioning_storage.html#creating-aggregates["Creación de agregados"].
+
+. Utilice System Manager o la interfaz de línea de comandos para mover los volúmenes al agregado.
+. En la mayoría de las situaciones, se puede usar System Manager para mover volúmenes.
++
+Para ver instrucciones, consulte http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-vol-move/home.html["Guía exprés de traslado de volúmenes de ONTAP 9"^].
+
+
+
+
+
+== Motivos por los que es posible que un movimiento de volumen sea lento
+
+El movimiento de un volumen puede tardar más de lo esperado si se da alguna de las siguientes condiciones en el caso de Cloud Volumes ONTAP:
+
+* El volumen es un clon.
+* El volumen es el elemento principal de un clon.
+* Los agregados de origen o destino tienen un único disco HDD de rendimiento optimizado (st1).
+* El sistema Cloud Volumes ONTAP está en AWS y un agregado utiliza un esquema de nomenclatura anterior para los objetos. Ambos agregados tienen que utilizar el mismo formato de nombre.
++
+Se utiliza un esquema de nomenclatura anterior si se habilitó la organización en niveles de datos en un agregado de la versión 9.4 o anterior.
+
+* La configuración de cifrado no coincide con los agregados de origen y destino; o bien, hay una nueva clave en curso.
+* Se especificó la opción _-Tiering-policy_ en el movimiento del volumen para cambiar la política de organización en niveles.
+* Se especificó la opción _-generate-destination-key_ en el movimiento de volúmenes.
+

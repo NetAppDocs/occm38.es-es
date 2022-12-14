@@ -1,0 +1,439 @@
+---
+sidebar: sidebar 
+permalink: task_controlling_private_data.html 
+keywords: personal files, personal data, sensitive personal files, sensitive personal data, health data, ethnic origin, political opinions, gdpr, email address, credit card, ip address, iban, national ID, identifier, sex, criminal, compliance, privacy 
+summary: Controle sus datos privados al ver los detalles sobre los datos personales y los datos personales confidenciales de su empresa. También puede ver las categorías y los tipos de archivos que cumple con las normativas del cloud de los datos. 
+---
+= Obtener visibilidad y control de los datos privados
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Controle sus datos privados al ver los detalles sobre los datos personales y los datos personales confidenciales de su empresa. También puede ver las categorías y los tipos de archivos que cumple con las normativas del cloud de los datos.
+
+De forma predeterminada, la consola de Cloud Compliance muestra los datos de cumplimiento de normativas de todas las bases de datos y entornos de trabajo.
+
+image:screenshot_compliance_dashboard.png["Una captura de pantalla del panel Cloud Compliance"]
+
+Si sólo desea ver datos para algunos de los entornos de trabajo, <<Visualización de datos de entornos de trabajo específicos,seleccione esos entornos de trabajo>>.
+
+
+
+== Datos personales
+
+Cloud Compliance identifica automáticamente palabras, cadenas y patrones específicos (Regex) dentro de los datos. Por ejemplo, Información de identificación personal (PII), números de tarjeta de crédito, números de seguridad social, números de cuenta bancaria y mucho más. <<Tipos de datos personales,Consulte la lista completa>>.
+
+Para algunos tipos de datos personales, Cloud Compliance utiliza _proximity validation_ para validar sus hallazgos. La validación se produce buscando una o más palabras clave predefinidas cerca de los datos personales encontrados. Por ejemplo, Cloud Compliance identifica una normativa estadounidense Número de seguridad social (SSN) como un SSN si ve una palabra de proximidad junto a ella (por ejemplo, _SSN_ o _seguridad social_). <<Tipos de datos personales,La siguiente lista>> Muestra cuándo Cloud Compliance utiliza la validación de proximidad.
+
+
+
+=== Visualización de archivos que contienen datos personales
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *cumplimiento de la nube* y haga clic en la ficha *Panel*.
+. Para investigar los detalles de todos los datos personales, haga clic en el icono situado junto al porcentaje de datos personales.
++
+image:screenshot_compliance_personal.gif["Captura de pantalla de selección del porcentaje de datos personales."]
+
+. Para investigar los detalles de un tipo específico de datos personales, haga clic en *Ver todos* y, a continuación, haga clic en el icono *investigar resultados* para obtener un tipo específico de datos personales.
++
+image:screenshot_personal_files.gif["Una captura de pantalla del cuadro de diálogo Archivos personales donde puede hacer clic en el icono resultados de investigación situado junto a un tipo de datos personales."]
+
+. Investigue los datos buscando, ordenando, ampliando los detalles de un archivo específico, haciendo clic en *investigar resultados* para ver la información enmascarada o descargando la lista de archivos.
++
+image:screenshot_compliance_investigation_page.gif["Captura de pantalla de información detallada después de hacer clic en investigar resultados."]
+
+. También puede filtrar el contenido de la página Investigación para que muestre solo los resultados que desea ver. Las pestañas de nivel superior le permiten ver datos de archivos (datos no estructurados) o de bases de datos (datos estructurados).
++
+A continuación, dispone de filtros para entorno de trabajo, repositorio de almacenamiento, categoría, datos privados, tipo de archivo, Fecha de la última modificación, y si los permisos del objeto S3 están abiertos al acceso público.
+
++
+image:screenshot_compliance_investigation_filtered.png["Captura de pantalla de los filtros disponibles al afinar los resultados en la página Investigación."]
+
+
+
+
+
+=== Tipos de datos personales
+
+Los datos personales encontrados en los archivos pueden ser datos personales generales o identificadores nacionales. La tercera columna identifica si Cloud Compliance utiliza <<Datos personales,validación de proximidad>> validar los resultados del identificador.
+
+[cols="20,50,18"]
+|===
+| Tipo | Identificador | ¿validación de proximidad? 
+
+
+.3+| Generales | Dirección de correo electrónico | No 
+
+
+| Número de tarjeta de crédito | No 
+
+
+| Número de iban (número de cuenta bancaria internacional) | No 
+
+
+.31+| Identificadores nacionales | ID belga (Numero Nacional) | Sí 
+
+
+| ID brasileño (CPF) | Sí 
+
+
+| ID búlgaro (UCN) | Sí 
+
+
+| Licencia de conducir de California | Sí 
+
+
+| Croata ID (OIB) | Sí 
+
+
+| Número de identificación fiscal de Chipre (TIC) | Sí 
+
+
+| ID checo/eslovaco | Sí 
+
+
+| ID danés (CPR) | Sí 
+
+
+| Dutch ID (BSN) | Sí 
+
+
+| Identificación Estonia | Sí 
+
+
+| Finlandés ID (HETU) | Sí 
+
+
+| Número de identificación fiscal francés (SPI) | Sí 
+
+
+| Número de identificación fiscal alemán (Steuerliche Identifikationsnummer) | Sí 
+
+
+| ID griego | Sí 
+
+
+| Número de identificación fiscal húngaro | Sí 
+
+
+| Irish ID (PPS) | Sí 
+
+
+| Documento de identidad israelí | Sí 
+
+
+| Número de identificación fiscal italiana | Sí 
+
+
+| ID letón | Sí 
+
+
+| ID lituano | Sí 
+
+
+| ID de Luxemburgo | Sí 
+
+
+| Identificación maltesa | Sí 
+
+
+| Identificación polaca (PESEL) | Sí 
+
+
+| Número de identificación fiscal (NIF) en portugués | Sí 
+
+
+| Rumano ID (CNP) | Sí 
+
+
+| ID esloveno (EMSO) | Sí 
+
+
+| ID sudafricano | Sí 
+
+
+| Número de identificación fiscal en español | Sí 
+
+
+| ID sueco | Sí 
+
+
+| REINO UNIDO ID (NINO) | Sí 
+
+
+| Número de Seguro Social de Estados Unidos (SSN) | Sí 
+|===
+
+
+== Datos personales confidenciales
+
+Cloud Compliance identifica automáticamente los tipos especiales de información personal confidencial, tal como se definen en normativas de privacidad como https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e2051-1-1["Artículos 9 y 10 del RGPD"^]. Por ejemplo, información sobre la salud, origen étnico o orientación sexual de una persona. <<Tipos de datos personales confidenciales,Consulte la lista completa>>.
+
+Cloud Compliance utiliza la inteligencia artificial (IA), el procesamiento de lenguaje natural (NLP), el aprendizaje automático (ML) y la computación cognitiva (CC) para comprender el significado del contenido que analiza con el fin de extraer entidades y categorizar según sea necesario.
+
+Por ejemplo, una categoría de datos confidenciales sobre el GDPR es su origen étnico. Debido a sus habilidades para NLP, Cloud Compliance puede distinguir la diferencia entre una frase que dice "George es mexicano" (que indica datos confidenciales como se especifica en el artículo 9 del RGPD), frente a "George está comiendo comida mexicana".
+
+
+NOTE: Sólo se admite inglés cuando se escanea datos personales confidenciales. Más adelante se añadirá compatibilidad con más idiomas.
+
+
+
+=== Visualización de archivos que contienen datos personales confidenciales
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Cloud Compliance*.
+. Para investigar los detalles de todos los datos personales confidenciales, haga clic en el icono situado junto al porcentaje de datos personales confidenciales.
++
+image:screenshot_compliance_sensitive_personal.gif["Captura de pantalla de selección del porcentaje de datos personales confidenciales."]
+
+. Para investigar los detalles de un tipo específico de datos personales confidenciales, haga clic en *Ver todo* y, a continuación, haga clic en el icono *investigar resultados* para obtener un tipo específico de datos personales confidenciales.
++
+image:screenshot_sensitive_personal_files.gif["Una captura de pantalla del cuadro de diálogo archivos personales confidenciales donde puede hacer clic en el icono resultados de investigación situado junto a un tipo de datos personales."]
+
+. Investigue los datos buscando, ordenando, ampliando los detalles de un archivo específico, haciendo clic en *investigar resultados* para ver la información enmascarada o descargando la lista de archivos.
+
+
+
+
+=== Tipos de datos personales confidenciales
+
+Los datos personales confidenciales que Cloud Compliance puede encontrar en los archivos incluyen los siguientes:
+
+Procedimientos penales referencia:: Datos relativos a las condenas y delitos penales de una persona natural.
+Referencia étnica:: Datos relativos al origen racial o étnico de una persona natural.
+Referencia de Salud:: Datos relativos a la salud de una persona física.
+Códigos médicos ICD-9-cm:: Códigos utilizados en la industria médica y de la salud.
+Códigos médicos ICD-10-cm:: Códigos utilizados en la industria médica y de la salud.
+Creencias filosóficas referencia:: Datos relativos a las creencias filosóficas de una persona natural.
+Referencia de creencias religiosas:: Datos relativos a las creencias religiosas de una persona natural.
+Referencia de vida sexual o orientación:: Datos relativos a la vida sexual o la orientación sexual de una persona natural.
+
+
+
+
+== Categorías
+
+Cloud Compliance toma los datos que ha analizado y los divide en diferentes tipos de categorías. Las categorías son temas basados en el análisis de IA del contenido y los metadatos de cada archivo. <<Tipos de categorías,Vea la lista de categorías>>.
+
+Las categorías pueden ayudarle a entender lo que está pasando con sus datos mostrándole los tipos de información que tiene. Por ejemplo, una categoría como currículos o contratos de empleados puede incluir datos confidenciales. Cuando investiga los resultados, puede que encuentre que los contratos de empleados están almacenados en una ubicación insegura. Entonces puede corregir ese problema.
+
+
+NOTE: Solo se admite inglés para categorías. Más adelante se añadirá compatibilidad con más idiomas.
+
+
+
+=== Ver archivos por categorías
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Cloud Compliance*.
+. Haga clic en el icono *investigar resultados* de una de las 4 categorías principales directamente desde la pantalla principal, o haga clic en *Ver todos* y luego haga clic en el icono de cualquiera de las categorías.
++
+image:screenshot_categories.gif["Una captura de pantalla del cuadro de diálogo Categorías donde puede hacer clic en el icono resultados de investigación situado junto a una categoría."]
+
+. Investigue los datos buscando, ordenando, ampliando los detalles de un archivo específico, haciendo clic en *investigar resultados* para ver la información enmascarada o descargando la lista de archivos.
+
+
+
+
+=== Tipos de categorías
+
+Cloud Compliance categoriza sus datos de la siguiente manera:
+
+Finanzas::
++
+--
+* Hojas de balance
+* Órdenes de compra
+* Facturas
+* Informes trimestrales
+
+
+--
+RR. HH::
++
+--
+* Comprobaciones de fondo
+* Planes de compensación
+* Contratos de empleados
+* Revisiones de empleados
+* Salud
+* Se reanudará
+
+
+--
+Legal::
++
+--
+* NDAS
+* Contratos con el proveedor y el cliente
+
+
+--
+Marketing::
++
+--
+* Campañas
+* Conferencias
+
+
+--
+Operaciones::
++
+--
+* Informes de auditoría
+
+
+--
+Ventas::
++
+--
+* Pedidos de ventas
+
+
+--
+Servicios::
++
+--
+* RFI
+* RFP
+* CERDA
+* Entrenamiento
+
+
+--
+Soporte técnico::
++
+--
+* Quejas y boletos
+
+
+--
+Categorías de metadatos::
++
+--
+* Datos de aplicaciones
+* Archivos de archivo
+* Audio
+* Datos de aplicaciones de negocio
+* Archivos CAD
+* Codificación
+* Archivos de base de datos e índice
+* Archivos de diseño
+* Datos de aplicación de correo electrónico
+* Ejecutables
+* Datos de aplicaciones financieras
+* Datos de aplicación de salud
+* Imágenes
+* Registros
+* Documentos varios
+* Presentaciones diversas
+* Hojas de cálculo varias
+* Vídeos
+
+
+--
+
+
+
+
+== Tipos de archivo
+
+Cloud Compliance toma los datos que ha analizado y los divide por tipo de archivo. La revisión de los tipos de archivo puede ayudarle a controlar los datos confidenciales porque puede encontrar que determinados tipos de archivo no se almacenan correctamente. <<Tipos de archivos,Consulte la lista de tipos de archivo>>.
+
+Por ejemplo, puede almacenar archivos CAD que incluyan información muy confidencial sobre su organización. Si no está seguro, puede tomar el control de los datos confidenciales restringiendo permisos o moviendo los archivos a otra ubicación.
+
+
+
+=== Visualización de tipos de archivo
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Cloud Compliance*.
+. Haga clic en el icono *investigar resultados* de uno de los 4 tipos de archivo principales directamente desde la pantalla principal, o haga clic en *Ver todos* y, a continuación, haga clic en el icono de cualquiera de los tipos de archivo.
++
+image:screenshot_file_types.gif["Una captura de pantalla del cuadro de diálogo tipos de archivos, donde puede hacer clic en el icono resultados de investigación situado junto a un tipo de archivo."]
+
+. Investigue los datos buscando, ordenando, ampliando los detalles de un archivo específico, haciendo clic en *investigar resultados* para ver la información enmascarada o descargando la lista de archivos.
+
+
+
+
+=== Tipos de archivos
+
+Cloud Compliance analiza todos los archivos para obtener información sobre categorías y metadatos y muestra todos los tipos de archivos en la sección tipos de archivos de la consola.
+
+Pero cuando Cloud Compliance detecta la información personal identificable (PII) o cuando realiza una búsqueda DSAR, sólo se admiten los siguientes formatos de archivo: .PDF, .DOCX, .DOC, .PPTX, .XLS, .CSV, .TXT, .RTF y .JSON.
+
+
+
+== Visualización de datos de entornos de trabajo específicos
+
+Puede filtrar el contenido del panel de Cloud Compliance para ver los datos de cumplimiento de normativas de todos los entornos de trabajo y bases de datos, o solo en entornos de trabajo específicos.
+
+Al filtrar la consola, Cloud Compliance determina los datos de cumplimiento de normativas e informa solo a los entornos de trabajo que haya seleccionado.
+
+.Pasos
+. Haga clic en el menú desplegable filtro, seleccione los entornos de trabajo para los que desea ver datos y haga clic en *Ver*.
++
+image:screenshot_cloud_compliance_filter.gif[""]
+
+
+
+
+
+== Precisión de la información encontrada
+
+NetApp no puede garantizar una precisión del 100 % de los datos personales y datos personales confidenciales que identifica Cloud Compliance. Siempre debe validar la información revisando los datos.
+
+La siguiente tabla, basada en nuestras pruebas, muestra la precisión de la información que encuentra Cloud Compliance. La dividiremos por _precision_ y _RECALL_:
+
+Precisión:: La probabilidad de que lo que encontró el cumplimiento de cloud se haya identificado correctamente. Por ejemplo, una tasa de precisión del 90% para los datos personales significa que 9 de cada 10 archivos identificados como que contienen información personal contienen realmente información personal. 1 de cada 10 archivos sería un falso positivo.
+Recuperar:: La probabilidad de que el cumplimiento de normativas en el cloud encuentre lo que debería. Por ejemplo, una tasa de recuperación del 70 % para los datos personales significa que Cloud Compliance puede identificar 7 de cada 10 archivos que contienen información personal en su organización. Cloud Compliance faltaría el 30 % de los datos y no aparecerá en el panel.
+
+
+Cloud Compliance se encuentra en un lanzamiento de disponibilidad controlado y constantemente mejoramos la precisión de los resultados. Dichas mejoras estarán disponibles automáticamente en los próximos lanzamientos de Cloud Compliance.
+
+[cols="25,20,20"]
+|===
+| Tipo | Precisión | Recuperar 
+
+
+| Datos personales - General | 90%-95% | 60%-80% 
+
+
+| Datos personales: Identificadores de país | 30%-60% | 40%-60% 
+
+
+| Datos personales confidenciales | 80%-95% | 20%-30% 
+
+
+| Categorías | 90%-97% | 60%-80% 
+|===
+
+
+== Qué se incluye en cada informe de lista de archivos (archivo CSV)
+
+Desde cada página de investigación puede descargar listas de archivos (en formato CSV) que incluyen detalles sobre los archivos identificados. Si hay más de 10,000 resultados, sólo los 10,000 primeros aparecen en la lista.
+
+Cada lista de archivos incluye la siguiente información:
+
+* Nombre de archivo
+* Tipo de ubicación
+* Entorno de trabajo
+* Repositorio de almacenamiento
+* Protocolo
+* Ruta del archivo
+* Tipo de archivo
+* Categoría
+* Información personal
+* Información personal confidencial
+* Fecha de detección de eliminación
++
+Una fecha de detección de eliminación identifica la fecha en la que se eliminó o movió el archivo. Esto le permite identificar cuándo se han movido los archivos confidenciales. Los archivos eliminados no forman parte del recuento de números de archivo que aparece en el panel o en la página Investigación. Los archivos solo aparecen en los informes CSV.
+
+

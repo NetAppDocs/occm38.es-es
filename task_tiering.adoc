@@ -1,0 +1,210 @@
+---
+sidebar: sidebar 
+permalink: task_tiering.html 
+keywords: tier, tiering, cold data, hot data, storage tiering, data tiering, S3 tiering, fabricpool, fabric pool, s3 endpoint, endpoint, connection, performance tier, capacity tier, object store, azure tiering, blob tiering, azure blob, container, inactive, gcp, tiering in gcp, tiering requirements 
+summary: Puede reducir los costes de almacenamiento de Cloud Volumes ONTAP combinando un nivel de rendimiento de SSD o HDD para datos activos con un nivel de capacidad de almacenamiento de objetos para los datos inactivos. 
+---
+= Organización en niveles de los datos inactivos en almacenamiento de objetos de bajo coste
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Puede reducir los costes de almacenamiento de Cloud Volumes ONTAP combinando un nivel de rendimiento de SSD o HDD para datos activos con un nivel de capacidad de almacenamiento de objetos para los datos inactivos. Para obtener información general de alto nivel, consulte link:concept_data_tiering.html["Información general sobre organización en niveles de datos"].
+
+Para configurar la organización en niveles de los datos, solo tiene que hacer lo siguiente:
+
+
+
+==== image:number1.png["Número 1"] Elija una configuración compatible
+
+[role="quick-margin-para"]
+La mayoría de configuraciones son compatibles. Si tiene un sistema Cloud Volumes ONTAP estándar, Premium o BYOL con la versión más reciente, debería ser bueno. link:task_tiering.html#configurations-that-support-data-tiering["Leer más"].
+
+
+
+==== image:number2.png["Número 2"] Garantice la conectividad entre Cloud Volumes ONTAP y el almacenamiento de objetos
+
+[role="quick-margin-list"]
+* Para AWS, necesitará un extremo de VPC a S3. <<Requisitos para organizar en niveles los datos fríos en AWS S3,Leer más>>.
+* Para Azure, ya no tendrá que hacer nada mientras Cloud Manager tenga los permisos necesarios. <<Requisitos para organizar los datos fríos en niveles en almacenamiento de Azure Blob,Leer más>>.
+* Para GCP, necesita configurar la subred para Google Access privado y configurar una cuenta de servicio. <<Requisitos para organizar los datos inactivos en niveles en Google Cloud Storage cucharón,Leer más>>.
+
+
+
+
+==== image:number3.png["Número 3"] Elija una política de organización en niveles cuando cree, modifique o replique un volumen
+
+[role="quick-margin-para"]
+Cloud Manager le solicita que elija una política de organización en niveles al crear, modificar o replicar un volumen.
+
+[role="quick-margin-list"]
+* link:task_tiering.html#tiering-data-from-read-write-volumes["Organización en niveles de los datos en volúmenes de lectura y escritura"]
+* link:task_tiering.html#tiering-data-from-data-protection-volumes["Organización en niveles de los datos en los volúmenes de protección de datos"]
+
+
+[NOTE]
+.Qué&#8217;no se requiere para la organización en niveles de datos
+====
+* No es necesario instalar una licencia de funciones para habilitar la organización en niveles de datos.
+* No necesita crear el nivel de capacidad (un bloque de S3, un contenedor de Azure Blob o un bloque de GCP). Cloud Manager lo hace por usted.
+
+
+====
+
+
+== Configuraciones compatibles con la organización en niveles de los datos
+
+Puede habilitar la organización en niveles de los datos al utilizar configuraciones y funciones específicas:
+
+* La organización en niveles de los datos es compatible con Cloud Volumes ONTAP Standard, Premium y BYOL, a partir de las siguientes versiones:
++
+** La versión 9.2 en AWS
+** Versión 9.4 en Azure con sistemas de un solo nodo
+** Versión 9.6 en Azure con parejas de alta disponibilidad
+** Versión 9.6 en GCP
++
+
+NOTE: No se admite la organización en niveles de datos en Azure con el tipo de máquina virtual DS3_v2.
+
+
+
+* En AWS, el nivel de rendimiento puede ser SSD de uso general, SSD con aprovisionamiento IOPS o HDD optimizados para el rendimiento.
+* En Azure, el nivel de rendimiento puede ser discos gestionados por SSD Premium, discos gestionados por SSD estándar o discos gestionados por HDD estándar.
+* En GCP, el nivel de rendimiento puede ser SSD o HDD (discos estándar).
+* Las tecnologías de cifrado admiten la organización en niveles de datos.
+* Debe estar habilitado thin provisioning en los volúmenes.
+
+
+
+
+== Requisitos para organizar en niveles los datos fríos en AWS S3
+
+Compruebe que Cloud Volumes ONTAP tenga una conexión con S3. La mejor forma de proporcionar esa conexión es crear un extremo de VPC con el servicio S3. Para ver instrucciones, consulte https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpce-gateway.html#create-gateway-endpoint["Documentación de AWS: Crear un extremo de puerta de enlace"^].
+
+Al crear el extremo VPC, asegúrese de seleccionar la región, VPC y tabla de rutas que correspondan a la instancia de Cloud Volumes ONTAP. También debe modificar el grupo de seguridad para añadir una regla de HTTPS de salida que habilite el tráfico hacia el extremo de S3. De lo contrario, Cloud Volumes ONTAP no puede conectarse con el servicio S3.
+
+Si experimenta algún problema, consulte https://aws.amazon.com/premiumsupport/knowledge-center/connect-s3-vpc-endpoint/["Centro de conocimientos de soporte de AWS: ¿por qué no puedo conectarme a un bloque de S3 mediante un extremo de VPC de puerta de enlace?"^].
+
+
+
+== Requisitos para organizar los datos fríos en niveles en almacenamiento de Azure Blob
+
+No es necesario configurar una conexión entre el nivel de rendimiento y el nivel de capacidad siempre que Cloud Manager tenga los permisos necesarios. Cloud Manager habilita un extremo de servicio vnet para usted si la política de Cloud Manager tiene estos permisos:
+
+[source, json]
+----
+"Microsoft.Network/virtualNetworks/subnets/write",
+"Microsoft.Network/routeTables/join/action",
+----
+Los permisos se incluyen en el último https://mysupport.netapp.com/site/info/cloud-manager-policies["Política de Cloud Manager"].
+
+
+
+== Requisitos para organizar los datos inactivos en niveles en Google Cloud Storage cucharón
+
+* La subred en la que reside Cloud Volumes ONTAP debe estar configurada para acceso privado a Google. Para obtener instrucciones, consulte https://cloud.google.com/vpc/docs/configure-private-google-access["Documentación de Google Cloud: Configuración de Private Google Access"^].
+* Se necesita una cuenta de servicio que tenga el rol predefinido Storage Admin. Deberá seleccionar esta cuenta de servicio al crear un entorno de trabajo de Cloud Volumes ONTAP.
++
+https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating_a_service_account["Configure esta cuenta de servicio de organización en niveles del siguiente modo"^]:
+
++
+.. Asigne el rol _Storage Admin_ predefinido a la cuenta del servicio de organización en niveles.
+.. Agregue la cuenta de servicio conector como un _Usuario de cuenta de servicio_ a la cuenta de servicio de organización en niveles.
++
+Puede proporcionar el rol de usuario https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating_a_service_account["en el paso 3 del asistente al crear el cuenta de servicio de organización en niveles"], o. https://cloud.google.com/iam/docs/granting-roles-to-service-accounts#granting_access_to_a_user_for_a_service_account["otorgue el rol después de crear la cuenta de servicio"^].
+
++
+Deberá seleccionar más adelante la cuenta del servicio de organización en niveles cuando cree un entorno de trabajo de Cloud Volumes ONTAP.
+
++
+Si no habilita la organización en niveles de datos y selecciona una cuenta de servicio al crear el sistema Cloud Volumes ONTAP, tendrá que desactivar el sistema y añadir la cuenta de servicio a Cloud Volumes ONTAP desde la consola de GCP.
+
+
+
+
+
+
+
+== Organización en niveles de los datos de volúmenes de lectura y escritura
+
+Cloud Volumes ONTAP puede organizar los datos inactivos en niveles en volúmenes de lectura y escritura para un almacenamiento de objetos rentable, liberando al nivel de rendimiento de los datos activos.
+
+.Pasos
+. En el entorno de trabajo, cree un volumen nuevo o cambie el nivel de un volumen existente:
++
+[cols="30,70"]
+|===
+| Tarea | Acción 
+
+
+| Cree un nuevo volumen | Haga clic en *Añadir nuevo volumen*. 
+
+
+| Modifique un volumen existente | Seleccione el volumen y haga clic en *Change Disk Type & Tiering Policy*. 
+|===
+. Seleccione una política de organización en niveles.
++
+Para obtener una descripción de estas políticas, consulte link:concept_data_tiering.html["Información general sobre organización en niveles de datos"].
+
++
+*ejemplo*
+
++
+image:screenshot_tiered_storage.gif["Captura de pantalla que muestra el icono para habilitar la organización en niveles en el almacenamiento de objetos."]
+
++
+Cloud Manager crea un nuevo agregado para el volumen si aún no existe un agregado con organización en niveles de datos habilitada.
+
++
+
+TIP: Si prefiere crear agregados usted mismo, puede habilitar la organización en niveles de datos en los agregados al crearlos.
+
+
+
+
+
+== Organización en niveles de los datos de los volúmenes de protección de datos
+
+Cloud Volumes ONTAP puede organizar los datos en niveles desde un volumen de protección de datos a un nivel de capacidad. Si activa el volumen de destino, los datos se mueven gradualmente al nivel de rendimiento a medida que se leen.
+
+.Pasos
+. En la página entornos de trabajo, seleccione el entorno de trabajo que contiene el volumen de origen y, a continuación, arrástrelo al entorno de trabajo al que desea replicar el volumen.
+. Siga las indicaciones hasta llegar a la página Tiering y habilitar la organización en niveles de datos en el almacenamiento de objetos.
++
+*ejemplo*
+
++
+image:screenshot_replication_tiering.gif["Captura de pantalla que muestra la opción S3 Tiering al replicar un volumen."]
+
++
+Para obtener ayuda sobre la replicación de datos, consulte link:task_replicating_data.html["Replicar datos hacia y desde el cloud"].
+
+
+
+
+
+== Cambio del tipo de almacenamiento para datos organizados por niveles
+
+Después de poner en marcha Cloud Volumes ONTAP, puede reducir sus costes de almacenamiento cambiando la clase de almacenamiento para los datos inactivos a los que no se ha accedido durante 30 días. Los costes de acceso son más elevados si se accede a los datos, por lo que debe tener en cuenta antes de cambiar la clase de almacenamiento.
+
+El tipo de almacenamiento para los datos por niveles es de amplio alcance del sistema: ​it no por volumen.
+
+Para obtener más información sobre las clases de almacenamiento compatibles, consulte link:concept_data_tiering.html["Información general sobre organización en niveles de datos"].
+
+.Pasos
+. En el entorno de trabajo, haga clic en el icono de menú y, a continuación, haga clic en *clases de almacenamiento* o *almacenamiento en blob*.
+. Elija una clase de almacenamiento y, a continuación, haga clic en *Guardar*.
+
+
+
+
+== ¿Puedo habilitar la organización en niveles de los datos en un agregado existente?
+
+No, no es posible habilitar la organización en niveles de datos en un agregado existente. Solo puede habilitar la organización en niveles de datos en nuevos agregados.
+
+Tampoco puede habilitar la organización en niveles de los datos en un agregado nuevo link:task_provisioning_storage.html#creating-aggregates["creando usted mismo un agregado"] o. <<Organización en niveles de los datos de volúmenes de lectura y escritura,mediante la creación de un volumen nuevo con la función de organización en niveles de datos habilitada>>. A continuación, Cloud Manager crearía un nuevo agregado para el volumen en caso de que no existiera un agregado con organización en niveles de datos habilitada.

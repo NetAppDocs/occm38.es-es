@@ -1,0 +1,184 @@
+---
+sidebar: sidebar 
+permalink: concept_cloud_tiering.html 
+keywords: cloud tiering, overview, conceptual, value, features, cost, charging, service connector 
+summary: Cloud Tiering es un servicio gestionado por NetApp que puede reducir sus costes de almacenamiento en las instalaciones al organizar en niveles automáticamente los datos inactivos en el almacenamiento de objetos en el cloud. Esto le permite ampliar su centro de datos al cloud público sin cambiar la capa de aplicaciones. 
+---
+= Más información acerca de Cloud Tiering
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+El servicio Cloud Tiering de NetApp amplía su centro de datos al cloud organizando en niveles los datos inactivos de los clústeres ONTAP en las instalaciones al almacenamiento de objetos. Esto libera un valioso espacio en el clúster para más cargas de trabajo sin tener que realizar cambios en la capa de la aplicación. La organización en niveles del cloud puede reducir los costes en su centro de datos y permite cambiar de un modelo de gastos de capital a uno operativo.
+
+El servicio Cloud Tiering aprovecha las funcionalidades de _FabricPool_. FabricPool es una tecnología Data Fabric de NetApp que permite la organización en niveles automatizada de los datos en un almacenamiento de objetos de bajo coste. Los datos activos permanecen en unidades SSD de alto rendimiento, mientras que los datos inactivos se organizan en niveles en almacenamiento de objetos de bajo coste a la vez que se mantienen las eficiencias de datos de ONTAP.
+
+
+
+== Funciones
+
+La organización en niveles del cloud ofrece automatización, supervisión, informes y una interfaz de gestión común:
+
+* Gracias a la automatización, resulta más sencillo configurar y gestionar los datos Organización en niveles desde clústeres de ONTAP en las instalaciones al cloud
+* Un único panel elimina la necesidad de disponer de forma independiente Gestione FabricPool en varios clústeres
+* Los informes muestran la cantidad de datos activos e inactivos en cada clúster
+* El estado de una organización en niveles le ayuda a identificar y corregir problemas a medida que ocurren
+* Si tiene sistemas Cloud Volumes ONTAP, los encontrará en la consola de clústeres para que obtenga una visión completa de la organización en niveles de los datos en su infraestructura de cloud híbrido
++
+
+TIP: Los sistemas Cloud Volumes ONTAP son de solo lectura de la organización en niveles del cloud. link:task_tiering.html["Debe configurar la organización en niveles para Cloud Volumes ONTAP en el Entorno de trabajo en Cloud Manager"].
+
+
+
+Para obtener más información sobre el valor que ofrece Cloud Tiering, https://cloud.netapp.com/cloud-tiering["Visite la página Cloud Tiering en NetApp Cloud Central"^].
+
+
+NOTE: Mientras que Cloud Tiering puede reducir significativamente el espacio de almacenamiento, no es una solución de backup.
+
+
+
+== Proveedores de almacenamiento de objetos admitidos
+
+Puede organizar en niveles los datos inactivos de un clúster de ONTAP en Amazon S3, almacenamiento de Microsoft Azure Blob, Google Cloud Storage o StorageGRID (cloud privado).
+
+
+
+== Precios y licencias
+
+Pague por niveles en el cloud mediante una suscripción de pago por uso, una licencia de organización en niveles de ONTAP llamada _FabricPool_ o una combinación de ambos. Hay disponible una prueba gratuita de 30 días para su primer grupo si no tiene una licencia.
+
+Al organizar los datos en niveles en StorageGRID, no hay ningún coste. No se requiere ni una licencia BYOL ni registro de PAYGO.
+
+https://cloud.netapp.com/cloud-tiering["Ver detalles de precios"^].
+
+
+
+=== prueba gratuita de 30 días
+
+Si no tiene una licencia de FabricPool, se inicia una prueba gratuita de 30 días de Cloud Tiering al configurar la organización en niveles en su primer clúster. Después de que finalice la prueba gratuita de 30 días, deberá pagar por Cloud Tiering mediante una suscripción de pago por uso, una licencia de FabricPool o una combinación de ambas opciones.
+
+Si su prueba gratuita finaliza y no se ha suscrito o agregado una licencia, ONTAP ya no organiza los datos inactivos en niveles para el almacenamiento de objetos, pero los datos existentes aún están disponibles para su acceso.
+
+
+
+=== Suscripción de pago por uso
+
+Cloud Tiering ofrece licencias basadas en consumo en un modelo de pago por uso. Después de suscribirse a través del mercado de su proveedor de la nube, usted paga por GB por los datos organizados en niveles --no hay pago por adelantado. Su proveedor de cloud se le factura con cargo mensual.
+
+Debe suscribirse aunque tenga una prueba gratuita o si lleva su propia licencia (BYOL):
+
+* La suscripción garantiza que no se produzcan interrupciones en el servicio una vez que finalice la prueba gratuita.
++
+Cuando finalice la prueba, se le cobrará cada hora según la cantidad de datos que organice.
+
+* Si establece un nivel de más datos del permitido por su licencia de FabricPool, la organización en niveles de datos continúa a través de la suscripción de pago por uso.
++
+Por ejemplo, si tiene una licencia de 10 TB, toda la capacidad que supere los 10 TB se cobrará a través de la suscripción de pago por uso.
+
+
+
+No se le cobrará la suscripción de pago por uso durante la prueba gratuita o si no ha superado la licencia de FabricPool.
+
+link:task_licensing_cloud_tiering.html["Aprenda a configurar una suscripción de pago por uso"].
+
+
+
+=== Con su propia licencia
+
+Con su propia licencia adquiere una licencia de ONTAP FabricPool de NetApp. Puede adquirir licencias perpetuas o basadas en plazos.
+
+Después de comprar una licencia de FabricPool, tendrá que añadirla al clúster, link:task_licensing_cloud_tiering.html#adding-a-tiering-license-to-ontap["Que puede hacer directamente desde el cloud por niveles"].
+
+Después de activar la licencia a través de Cloud Tiering, si adquiere capacidad adicional más adelante, la licencia del clúster se actualiza automáticamente con la nueva capacidad. No es necesario aplicar un nuevo archivo de licencia de NetApp (NLF) al clúster.
+
+Como se ha indicado anteriormente, le recomendamos que establezca una suscripción de pago por uso, incluso si su clúster tiene una licencia BYOL.
+
+Mailto:ng-cloud-tiering@netapp.com?Subject=Licensing[Póngase en contacto con nosotros para adquirir una licencia].
+
+
+
+== Funcionamiento de Cloud Tiering
+
+Cloud Tiering es un servicio gestionado por NetApp que utiliza tecnología de FabricPool para organizar automáticamente en niveles los datos inactivos (inactivos) de sus clústeres de ONTAP en las instalaciones en almacenamiento de objetos en su cloud público o en su cloud privado. Las conexiones a ONTAP se realizan desde un conector.
+
+La siguiente imagen muestra la relación entre cada componente:
+
+image:diagram_cloud_tiering.png["\"Una imagen de arquitectura que muestra el servicio Cloud Tiering con una conexión al Service Connector de su proveedor de cloud, al Service Connector con una conexión con su clúster de ONTAP y una conexión entre el clúster de ONTAP y el almacenamiento de objetos de su proveedor de cloud. Los datos activos residen en el clúster de ONTAP, mientras que los datos inactivos residen en el almacenamiento de objetos»."]
+
+En un nivel general, Cloud Tiering funciona como este:
+
+. Descubre su clúster en las instalaciones desde Cloud Manager.
+. Para configurar la organización en niveles, debe proporcionar detalles sobre su almacenamiento de objetos, como el contenedor/bloque y una clase de almacenamiento o nivel de acceso.
+. Cloud Manager configura ONTAP para utilizar el proveedor de almacenamiento de objetos y determina la cantidad de datos activos e inactivos en el clúster.
+. La política de organización en niveles y los volúmenes se aplican a esos volúmenes.
+. ONTAP inicia la organización en niveles de los datos inactivos en el almacén de objetos, tan pronto como estos hayan alcanzado los umbrales que se deben considerar inactivos (consulte <<Políticas de organización en niveles del volumen>>).
+
+
+
+
+=== Almacenamiento de objetos
+
+Cada clúster de ONTAP organiza los datos inactivos en un único almacén de objetos. Cuando configura la organización en niveles de datos, tiene la opción de añadir un nuevo bloque/contenedor o seleccionar un bloque/contenedor existente, junto con una clase de almacenamiento o nivel de acceso.
+
+* link:reference_aws_support.html["Obtenga información sobre las clases de almacenamiento S3 admitidas"]
+* link:reference_azure_support.html["Obtenga más información sobre los niveles de acceso de Azure Blob admitidos"]
+* link:reference_google_support.html["Obtenga información sobre las clases de almacenamiento de Google Cloud admitidas"]
+
+
+
+
+=== Políticas de organización en niveles del volumen
+
+Cuando selecciona los volúmenes que desea organizar en niveles, elige una _volume Tiering policy_ que se aplicará a cada volumen. Una política de organización en niveles determina cuándo y si los bloques de datos de usuario de un volumen se mueven al cloud.
+
+Sin política de organización en niveles:: Mantiene los datos en un volumen en el nivel de rendimiento, lo que evita que se muevan al cloud.
+Snapshots frías (solo Snapshot):: ONTAP organiza los bloques de instantáneas inactivos en el volumen que no se comparten con el sistema de archivos activo al almacenamiento de objetos. Si se leen, los bloques de datos inactivos del nivel de cloud se activan y se mueven al nivel de rendimiento.
++
+--
+Los datos se organizan en niveles solo después de que un agregado alcance el 50 % de la capacidad y cuando los datos hayan alcanzado el periodo de refrigeración. El número predeterminado de días de enfriamiento es 2, pero puede ajustar el número de días.
+
+
+NOTE: Las escrituras del nivel de cloud al nivel de rendimiento se deshabilitan si la capacidad del nivel de rendimiento es superior al 70 %. Si esto sucede, se accede a los bloques directamente desde el nivel de cloud.
+
+--
+Datos de usuario fríos (automático):: ONTAP organiza todos los bloques de datos fríos en el volumen (sin metadatos incluidos) en niveles para el almacenamiento de objetos. Los datos inactivos incluyen no solo copias snapshot, sino también datos de usuarios inactivos del sistema de archivos activo.
++
+--
+Si las lecturas se leen al azar, los bloques de datos inactivos del nivel de cloud se activan y se mueven al nivel de rendimiento. Si las lecturas secuenciales, como las asociadas con análisis de índices y antivirus, los bloques de datos inactivos del nivel de cloud permanecen inactivos y no se escriben en el nivel de rendimiento.
+
+Los datos se organizan en niveles solo después de que un agregado alcance el 50 % de la capacidad y cuando los datos hayan alcanzado el periodo de refrigeración. El período de refrigeración es el tiempo en el que los datos de usuario de un volumen deben permanecer inactivos para que los datos se puedan considerar "inactivos" y moverse al almacén de objetos. El número predeterminado de días de enfriamiento es 31, pero puede ajustar el número de días.
+
+
+NOTE: Las escrituras del nivel de cloud al nivel de rendimiento se deshabilitan si la capacidad del nivel de rendimiento es superior al 70 %. Si esto sucede, se accede a los bloques directamente desde el nivel de cloud.
+
+--
+Todos los datos de usuario (todos):: Todos los datos (no incluidos los metadatos) se marcan inmediatamente como fríos y por niveles en el almacenamiento de objetos lo antes posible. No es necesario esperar 48 horas hasta que se enfrían los bloques nuevos en un volumen. Tenga en cuenta que los bloques ubicados en el volumen antes de ajustar la normativa de todo requieren 48 horas de frío.
++
+--
+Si se leen, los bloques de datos inactivos del nivel de cloud permanecen activos y no se vuelven a escribir en el nivel de rendimiento. Esta política está disponible a partir de ONTAP 9.6.
+
+Tenga en cuenta lo siguiente antes de elegir esta política de organización en niveles:
+
+* La organización en niveles de los datos reduce inmediatamente las eficiencias del almacenamiento (solo en línea).
+* Debe usar esta política solo si confía en que los datos en frío del volumen no cambiarán.
+* El almacenamiento de objetos no es transaccional y provocará una fragmentación significativa si se somete a cambios.
+* Tenga en cuenta el impacto de las transferencias de SnapMirror antes de asignar la política de organización en niveles de todos a los volúmenes de origen en las relaciones de protección de datos.
++
+Dado que los datos se organizan en niveles de inmediato, SnapMirror lee los datos del nivel de cloud en lugar del nivel de rendimiento. Como resultado, las operaciones de SnapMirror serán más lentas, posiblemente ralentizarán otras operaciones de SnapMirror más adelante en la cola, aunque utilicen diferentes políticas de organización en niveles.
+
+
+
+--
+Todos los datos de usuario de DP (respaldo):: Todos los datos de un volumen de protección de datos (sin incluir los metadatos) se mueven inmediatamente al nivel de cloud. Si se leen, los bloques de datos inactivos del nivel de cloud permanecen inactivos y no se vuelven a escribir en el nivel de rendimiento (a partir de ONTAP 9.4).
++
+--
+
+NOTE: Esta política está disponible para ONTAP 9.5 o anterior. Se reemplazó por la política de organización en niveles *todo* a partir de ONTAP 9.6.
+
+--
+

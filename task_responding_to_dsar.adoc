@@ -1,0 +1,67 @@
+---
+sidebar: sidebar 
+permalink: task_responding_to_dsar.html 
+keywords: dsar, data subject access request, search, search for name, report, gdpr, data privacy laws, data subject, compliance 
+summary: 'Responda a una solicitud de acceso a un sujeto de datos (DSAR) buscando el nombre completo o el identificador conocido de un sujeto (como una dirección de correo electrónico) y, a continuación, descargando un informe. El informe está diseñado para ayudar en el requisito de su organización a cumplir con el RGPD o con leyes de privacidad de datos similares.' 
+---
+= Respuesta a una solicitud de acceso de un sujeto de datos
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Responda a una solicitud de acceso a un sujeto de datos (DSAR) buscando el nombre completo o el identificador conocido de un sujeto (como una dirección de correo electrónico) y, a continuación, descargando un informe. El informe está diseñado para ayudar en el requisito de su organización a cumplir con el RGPD o con leyes de privacidad de datos similares.
+
+
+NOTE: NetApp no puede garantizar una precisión del 100 % de los datos personales y datos personales confidenciales que identifica Cloud Compliance. Siempre debe validar la información revisando los datos.
+
+
+
+== ¿Qué es una solicitud de acceso de asunto de datos?
+
+Las normas de privacidad, como el GDPR europeo, otorgan a sujetos de datos (como clientes o empleados) el derecho a acceder a sus datos personales. Cuando un sujeto de datos solicita esta información, se le conoce como DSAR (solicitud de acceso a sujetos de datos). Las organizaciones deben responder a estas solicitudes "sin demora indebida" y, a más tardar, en el plazo de un mes a partir de su recepción.
+
+
+
+== ¿Cómo puede ayudarle Cloud Compliance a responder a un DSAR?
+
+Cuando realiza una búsqueda de asunto de datos, Cloud Compliance encuentra todos los archivos que contienen el nombre o identificador de esa persona. Cloud Compliance comprueba si existen los datos preindexados más recientes en cuanto a nombre o identificador. No inicia una nueva exploración.
+
+Una vez finalizada la búsqueda, puede descargar la lista de archivos para un informe de solicitud de acceso a un sujeto de datos. El informe agrega información procedente de los datos y los coloca en términos legales de los que se puede enviar a la persona.
+
+
+
+== Búsqueda de sujetos de datos y descarga de informes
+
+Busque el nombre completo o el identificador conocido del sujeto de datos y, a continuación, descargue un informe de la lista de archivos o un informe DSAR. Puede buscar por link:task_controlling_private_data.html#types-of-personal-data["cualquier tipo de información personal"^].
+
+Sólo se admite inglés al buscar los nombres de los sujetos de datos. Más adelante se añadirá compatibilidad con más idiomas.
+
+
+NOTE: La búsqueda de sujetos de datos no es compatible en las bases de datos en este momento.
+
+.Pasos
+. En la parte superior de Cloud Manager, haga clic en *Cloud Compliance*.
+. Haga clic en *Temas de datos*.
+. Busque el nombre completo o el identificador conocido del sujeto de datos.
++
+A continuación se muestra un ejemplo que muestra una búsqueda del nombre _john doe_:
+
++
+image:screenshot_dsar_search.gif["Una captura de pantalla que muestra una búsqueda del nombre \"John Doe\" para un DSAR."]
+
+. Elija una de las opciones disponibles:
++
+** *Descargar informe DSAR*: Respuesta formal a la solicitud de acceso que se puede enviar al sujeto de datos. Este informe contiene información generada automáticamente en función de los datos de que Cloud Compliance se encuentra en el asunto de los datos y se ha diseñado para su uso como plantilla. Debe completar el formulario y revisarlo internamente antes de enviarlo al sujeto de datos.
+** *investigar resultados*: Página que permite investigar los datos mediante la búsqueda, clasificación, ampliación de los detalles de un archivo específico y descarga de la lista de archivos.
++
+
+NOTE: Si hay más de 10,000 resultados, sólo los 10,000 primeros aparecen en la lista de archivos.
+
+
+
+

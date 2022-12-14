@@ -1,0 +1,352 @@
+---
+sidebar: sidebar 
+permalink: faq_sync.html 
+keywords: community, forums, help, support, videos, faq, getting help, permissions, access control lists, acls, preserve, preserving, troubleshooting, support 
+summary: Puede obtener ayuda con Cloud Sync y obtener más información a través de diversos recursos, como foros, servicios de chat y vídeos. 
+---
+= Preguntas técnicas frecuentes sobre Cloud Sync
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Estas preguntas frecuentes pueden ayudar si sólo está buscando una respuesta rápida a una pregunta.
+
+
+
+== Primeros pasos
+
+Las siguientes preguntas tratan sobre los primeros pasos con Cloud Sync.
+
+
+
+=== ¿Cómo funciona Cloud Sync?
+
+Cloud Sync utiliza el software de intermediarios de datos de NetApp para sincronizar los datos de un origen con un destino (esto se denomina _Sync Relationship_).
+
+El agente de datos controla las relaciones de sincronización entre sus orígenes y destinos. Después de configurar una relación de sincronización, Cloud Sync analiza su sistema de origen y lo divide en varios flujos de replicación para enviar los datos de destino seleccionados.
+
+Después de la copia inicial, el servicio sincroniza los datos modificados con la programación que se haya establecido.
+
+
+
+=== ¿Cómo funciona la prueba gratuita de 14 días?
+
+La prueba gratuita de 14 días se inicia cuando se inscriba en el servicio Cloud Sync. No está sujeto a los cargos por NetApp relacionados con las relaciones con Cloud Sync que cree durante 14 días. Sin embargo, sigue siendo aplicable todo coste por recursos que se cobren a los agentes de datos que se instalen.
+
+
+
+=== ¿Cuánto cuesta Cloud Sync?
+
+Hay dos tipos de costos asociados con el uso de Cloud Sync: Cargos por servicios y cargos por recursos.
+
+*cargos por servicio*
+
+Para los precios de pago por uso, los cargos del servicio Cloud Sync se cobran por hora según el número de relaciones de sincronización que cree.
+
+* https://aws.amazon.com/marketplace/pp/B01LZV5DUJ["Vea los precios de pago por uso en AWS"^]
+* https://aws.amazon.com/marketplace/pp/B06XX5V3M2["Ver precios anuales en AWS"^]
+* https://azuremarketplace.microsoft.com/en-us/marketplace/apps/netapp.cloud-sync-service?tab=PlansAndPrice["Ver los precios en Azure"^]
+
+
+Las licencias de Cloud Sync también están disponibles a través de su representante de NetApp. Cada licencia activa 20 relaciones de sincronización durante 12 meses.
+
+link:concept_cloud_sync.html["Más información sobre las licencias"].
+
+*gastos de recursos*
+
+Las cargas de recursos están relacionadas con los costes de informática y almacenamiento para ejecutar el agente de datos en el cloud.
+
+
+
+=== ¿Cómo se factura Cloud Sync?
+
+Hay dos formas de pagar las relaciones de sincronización después de que termine su prueba gratuita de 14 días. La primera opción es suscribirse a AWS o Azure, lo que le permite pagar por uso o anualmente. La segunda opción consiste en comprar licencias directamente a NetApp.
+
+
+
+=== ¿Puedo usar Cloud Sync fuera del cloud?
+
+Sí, puede usar Cloud Sync en una arquitectura que no sea de cloud. El origen y el destino pueden residir en las instalaciones, por lo que puede hacerlo el agente de datos.
+
+Tenga en cuenta los siguientes puntos clave sobre el uso de Cloud Sync fuera del cloud:
+
+* Para la sincronización en las instalaciones, hay un bloque de Amazon S3 privado disponible a través de StorageGRID de NetApp.
+* El agente de datos necesita una conexión a Internet para comunicarse con el servicio Cloud Sync.
+* Si no adquiere una licencia directamente a NetApp, necesitará una cuenta de AWS o Azure para la facturación del servicio de PAYGO Cloud Sync.
+
+
+
+
+=== ¿Cómo puedo acceder a Cloud Sync?
+
+Cloud Sync está disponible en Cloud Manager en la ficha *sincronización*.
+
+
+
+== Orígenes y objetivos compatibles
+
+Las siguientes preguntas relacionadas con el origen y los destinos que se admiten en una relación de sincronización.
+
+
+
+=== ¿Qué orígenes y destinos es compatible con Cloud Sync?
+
+Cloud Sync admite muchos tipos distintos de relaciones de sincronización. link:reference_sync_requirements.html["Vea toda la lista"].
+
+
+
+=== ¿Qué versiones de NFS y SMB es compatible Cloud Sync?
+
+Cloud Sync admite NFS versión 3 y posteriores, y SMB versión 1 y posteriores.
+
+link:reference_sync_requirements.html["Más información sobre los requisitos de sincronización"].
+
+
+
+=== Cuando Amazon S3 es el objetivo, ¿se pueden organizar los datos en niveles en un tipo de almacenamiento S3 específico?
+
+Sí, puede elegir una clase de almacenamiento S3 específica cuando AWS S3 es el destino:
+
+* Estándar (esta es la clase predeterminada)
+* Organización en niveles inteligente
+* Acceso Estándar-poco frecuente
+* Una Zona de acceso poco frecuente
+* Glaciar
+* Glacier Deep Archive
+
+
+
+
+=== ¿Qué pasa con los niveles de almacenamiento para el almacenamiento de Azure Blob?
+
+Puede elegir un nivel de almacenamiento específico de Azure Blob cuando un contenedor Blob es el destino:
+
+* Almacenamiento en caliente
+* Almacenamiento en frío
+
+
+
+
+== Redes
+
+Las siguientes preguntas hacen referencia a los requisitos de red de Cloud Sync.
+
+
+
+=== ¿Cuáles son los requisitos de red de Cloud Sync?
+
+El entorno de Cloud Sync requiere que el agente de datos esté conectado al origen y al destino a través del protocolo seleccionado (NFS, SMB, EFS) o de la API de almacenamiento de objetos (Amazon S3, Azure Blob, IBM Cloud Object Storage).
+
+Además, el agente de datos necesita una conexión a Internet saliente a través del puerto 443 para que pueda comunicarse con el servicio Cloud Sync y ponerse en contacto con otros servicios y repositorios.
+
+Si quiere más información, link:reference_sync_networking.html["revise los requisitos de red"].
+
+
+
+=== ¿Existen limitaciones de red relacionadas con la conectividad de Data broker?
+
+Los agentes de datos requieren acceso a Internet. No ofrecemos compatibilidad con un servidor proxy cuando implantamos el agente de datos en Azure o Google Cloud Platform.
+
+
+
+== Sincronización de datos
+
+Las siguientes preguntas se refieren a cómo funciona la sincronización de datos.
+
+
+
+=== ¿con qué frecuencia se produce la sincronización?
+
+La programación predeterminada se define para la sincronización diaria. Después de la sincronización inicial, puede:
+
+* Modifique la programación de sincronización con el número de días, horas o minutos que desee
+* Deshabilite la programación de sincronización
+* Eliminar la programación de sincronización (no se perderán datos; solo se eliminará la relación de sincronización)
+
+
+
+
+=== ¿Cuál es el programa de sincronización mínimo?
+
+Puede programar una relación para que se sincronice datos con una frecuencia de hasta cada 1 minuto.
+
+
+
+=== ¿vuelve a intentar el agente de datos cuando un archivo no se puede sincronizar? ¿o se agote el tiempo de espera?
+
+El agente de datos no se agotó cuando un único archivo no se transfiere. En su lugar, el agente de datos reintenta 3 veces antes de omitir el archivo. El valor de reintento se puede configurar en la configuración de una relación de sincronización.
+
+link:task_sync_managing_relationships.html#changing-the-settings-for-a-sync-relationship["Aprenda a cambiar la configuración de una relación de sincronización"].
+
+
+
+=== ¿y si tengo un conjunto de datos muy grande?
+
+Si un único directorio contiene 600,000 archivos o más, mailto:ng-cloudsync-support@netapp.com[contact US] para que le podamos ayudar a configurar el agente de datos para manejar la carga. Es posible que necesitemos agregar memoria adicional al equipo de Data broker.
+
+
+
+== Seguridad
+
+Las siguientes preguntas están relacionadas con la seguridad.
+
+
+
+=== ¿es Cloud Sync seguro?
+
+Sí. Toda la conectividad de redes del servicio Cloud Sync se realiza mediante https://aws.amazon.com/sqs/["Amazon simple Queue Service (SQS)"^].
+
+Toda la comunicación entre el agente de datos y Amazon S3, Azure Blob, Google Cloud Storage y IBM Cloud Object Storage se realiza mediante el protocolo HTTPS.
+
+Si utiliza Cloud Sync con sistemas en las instalaciones (origen o destino), puede ver algunas opciones de conectividad recomendadas:
+
+* Una conexión de AWS Direct Connect, Azure ExpressRoute o Google Cloud Interconnect, que no es enrutada por Internet (y solo puede comunicarse con las redes cloud que especifique).
+* Una conexión VPN entre el dispositivo de puerta de enlace local y el redes cloud
+* Para obtener una transferencia de datos más segura con bloques S3, almacenamiento de Azure Blob o Google Cloud Storage, se puede establecer un Amazon Private S3 Endpoint, extremos de servicio de red virtual de Azure o Google Private Access.
+
+
+Cualquiera de estos métodos establece una conexión segura entre los servidores NAS locales y un agente de datos Cloud Sync.
+
+
+
+=== ¿los datos están cifrados por Cloud Sync?
+
+* Cloud Sync admite el cifrado de datos en tiempo real entre los servidores NFS de origen y de destino. link:task_sync_nfs_encryption.html["Leer más"].
+* SMB no es compatible con el cifrado.
+* Cuando un bloque de Amazon S3 es el destino de una relación de sincronización, puede elegir si habilitar el cifrado de datos mediante el cifrado AWS KMS o el cifrado AES-256.
+
+
+
+
+== Permisos
+
+Las siguientes preguntas se refieren a los permisos de datos.
+
+
+
+=== ¿los permisos de datos del SMB se sincronizan con la ubicación de destino?
+
+Es posible configurar Cloud Sync para que se conserven las listas de control de acceso (ACL) entre un recurso compartido de SMB de origen y un recurso compartido de SMB de destino. También puede copiar manualmente las ACL usted mismo. link:task_sync_copying_acls.html["Aprenda a copiar ACL entre recursos compartidos de SMB"].
+
+
+
+=== ¿los permisos de datos NFS se sincronizan con la ubicación de destino?
+
+Cloud Sync copia automáticamente los permisos de NFS entre servidores NFS de la siguiente forma:
+
+* NFS versión 3: Cloud Sync copia los permisos y el propietario del grupo de usuarios.
+* NFS versión 4: Cloud Sync copia las ACL.
+
+
+
+
+== Rendimiento
+
+Las siguientes preguntas están relacionadas con el rendimiento de Cloud Sync.
+
+
+
+=== ¿Qué representa el indicador de progreso de una relación de sincronización?
+
+La relación de sincronización muestra el rendimiento del adaptador de red del agente de datos. Si aceleró el rendimiento de sincronización mediante el uso de varios agentes de datos, el rendimiento será la suma de todo el tráfico. Este rendimiento se actualiza cada 20 segundos.
+
+
+
+=== Estoy experimentando problemas de rendimiento. ¿podemos limitar el número de transferencias simultáneas?
+
+El agente de datos puede sincronizar 4 archivos a la vez. Si tiene archivos muy grandes (varios TB cada uno), puede tardar mucho tiempo en completar el proceso de transferencia y el rendimiento puede verse afectado.
+
+Limitar el número de transferencias simultáneas puede ser de ayuda. Mailto:ng-cloudsync-support@netapp.com[Contacte con nosotros para obtener ayuda].
+
+
+
+=== ¿por qué estoy experimentando un bajo rendimiento con Azure NetApp Files?
+
+Al sincronizar datos con o desde Azure NetApp Files, es posible que experimente errores y problemas de rendimiento si el nivel de servicio del disco es estándar.
+
+Cambie el nivel de servicio a Premium o Ultra para mejorar el rendimiento de la sincronización.
+
+https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-service-levels#throughput-limits["Obtenga más información acerca de los niveles de servicio y el rendimiento de Azure NetApp Files"^].
+
+
+
+=== ¿por qué estoy experimentando un bajo rendimiento con Cloud Volumes Service para AWS?
+
+Al sincronizar datos con un volumen de cloud o desde este, es posible que experimente errores y problemas de rendimiento si el nivel de rendimiento del volumen de cloud es estándar.
+
+Cambie el nivel de servicio a Premium o Extreme para mejorar el rendimiento de la sincronización.
+
+
+
+=== ¿Cuántos agentes de datos son necesarios?
+
+Al crear una nueva relación, comienza con un único agente de datos (a menos que haya seleccionado un agente de datos existente que pertenezca a una relación de sincronización acelerada). En muchos casos, un único agente de datos puede satisfacer los requisitos de rendimiento de una relación de sincronización. Si no lo hace, puede acelerar el rendimiento de la sincronización añadiendo agentes de datos adicionales. Pero primero debe comprobar otros factores que pueden afectar al rendimiento de la sincronización.
+
+El rendimiento de la transferencia de datos puede afectar múltiples factores. El rendimiento general de la sincronización puede verse afectado debido al ancho de banda de la red, la latencia y la topología de la red, así como las especificaciones del equipo virtual del agente de datos y el rendimiento del sistema de almacenamiento. Por ejemplo, un solo agente de datos en una relación de sincronización puede alcanzar los 100 MB/s, mientras que el rendimiento del disco en el destino sólo puede permitir 64 MB/s. Como resultado, el agente de datos sigue intentando copiar los datos, pero el objetivo no puede satisfacer el rendimiento del agente de datos.
+
+Por lo tanto, asegúrese de comprobar el rendimiento de la red y del disco en el destino.
+
+A continuación, puede plantearse acelerar el rendimiento de sincronización añadiendo un agente de datos adicional para compartir la carga de dicha relación. link:task_sync_managing_relationships.html#accelerating-sync-performance["Descubra cómo acelerar el rendimiento de la sincronización"].
+
+
+
+== Eliminar cosas
+
+Las siguientes preguntas tratan de eliminar relaciones de sincronización y datos de orígenes y destinos.
+
+
+
+=== ¿Qué sucede si elimino mi relación con Cloud Sync?
+
+Al eliminar una relación se detienen todos los datos futuros y se termina el pago. Todos los datos que se sincronizaron con el destino siguen siendo tal cual.
+
+
+
+=== ¿Qué ocurre si se elimina algo de mi servidor de origen? ¿se ha eliminado del objetivo también?
+
+De forma predeterminada, si tiene una relación de sincronización activa, el elemento eliminado en el servidor de origen no se eliminará del destino durante la siguiente sincronización. Pero hay una opción en la configuración de sincronización para cada relación, donde puede definir que Cloud Sync eliminará los archivos de la ubicación de destino si se eliminaron del origen.
+
+link:task_sync_managing_relationships.html#changing-the-settings-for-a-sync-relationship["Aprenda a cambiar la configuración de una relación de sincronización"].
+
+
+
+=== ¿Qué sucede si elimino algo de mi destino? ¿se ha eliminado de mi fuente también?
+
+Si se elimina un elemento del destino, no se eliminará del origen. La relación es unidireccional, desde la fuente hasta el objetivo. En el siguiente ciclo de sincronización, Cloud Sync compara el origen con el destino, identifica que falta el elemento y Cloud Sync lo copia de nuevo del origen al destino.
+
+
+
+== Resolución de problemas
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Cloud_Services/Cloud_Sync/Cloud_Sync_FAQ:_Support_and_Troubleshooting["Base de conocimientos de NetApp: Preguntas frecuentes de Cloud Sync: Soporte y solución de problemas"^]
+
+
+
+== Análisis en profundidad de los agentes de datos
+
+La siguiente pregunta se refiere al agente de datos.
+
+
+
+=== ¿puede explicar la arquitectura del agente de datos?
+
+Claro. Estos son los puntos más importantes:
+
+* Data broker es una aplicación node.js que se ejecuta en un host Linux.
+* Cloud Sync implementa el agente de datos de la siguiente manera:
++
+** AWS: Desde una plantilla AWS CloudFormation
+** Azure: Desde Azure Resource Manager
+** Google: De Google Cloud Deployment Manager
+** Si utiliza su propio host Linux, debe instalar manualmente el software
+
+
+* El software Data broker se actualiza automáticamente a la última versión.
+* El agente de datos utiliza AWS SQS como un canal de comunicación fiable y seguro, y para el control y la supervisión. SQS también proporciona una capa de persistencia.
+* Puede agregar agentes de datos adicionales a una relación para aumentar la velocidad de transferencia y agregar alta disponibilidad. Hay resiliencia de servicios si un agente de datos falla.
+

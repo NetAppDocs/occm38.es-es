@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: task_adding_ontap_cloud.html 
+keywords: discover, discovering, add, adding, existing 
+summary: Puede detectar y añadir sistemas de Cloud Volumes ONTAP existentes a Cloud Manager. Puede hacer esto si se implementó un nuevo sistema Cloud Manager. 
+---
+= Adición de sistemas de Cloud Volumes ONTAP existentes a Cloud Manager
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Puede detectar y añadir sistemas de Cloud Volumes ONTAP existentes a Cloud Manager. Puede hacer esto si se implementó un nuevo sistema Cloud Manager.
+
+.Antes de empezar
+Debe conocer la contraseña de la cuenta de usuario administrador de Cloud Volumes ONTAP.
+
+.Pasos
+. En la página entornos de trabajo, haga clic en *Agregar entorno de trabajo*.
+. Seleccione el proveedor de cloud en el que reside el sistema.
+. Elija el tipo de sistema Cloud Volumes ONTAP.
+. Haga clic en el enlace para detectar un sistema existente.
++
+image:screenshot_discover.gif["Captura de pantalla que muestra un enlace para descubrir un sistema Cloud Volumes ONTAP existente."]
+
+. En la página Región, seleccione la región donde se ejecutan las instancias y, a continuación, seleccione las instancias.
+. En la página credenciales, introduzca la contraseña para el usuario administrador de Cloud Volumes ONTAP y, a continuación, haga clic en *Ir*.
+
+
+.Resultado
+Cloud Manager agrega las instancias de Cloud Volumes ONTAP al espacio de trabajo.

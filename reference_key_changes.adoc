@@ -1,0 +1,176 @@
+---
+sidebar: sidebar 
+permalink: reference_key_changes.html 
+keywords: 'what"s new, key changes, saas, accounts, workspaces, users, connectors, endpoints, urls, permissions, permission changes' 
+summary: Esta página resalta los cambios _importante_ en Cloud Manager que pueden ayudarle a utilizar el servicio a medida que presentamos nuevas mejoras. Debe seguir leyendo la página Novedades para obtener información sobre las nuevas funciones y mejoras. 
+---
+= Cambios importantes en Cloud Manager
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+En esta página, se destacan cambios importantes en Cloud Manager que pueden ayudarle a utilizar el servicio a medida que presentamos nuevas mejoras. Debe seguir leyendo el link:reference_new_occm.html["Novedades"] página para obtener información sobre las nuevas funciones y mejoras.
+
+
+
+== Cambios en SaaS
+
+Hemos introducido una experiencia de software como servicio para Cloud Manager. Esta nueva experiencia le facilita el uso de Cloud Manager y nos permite proporcionar funciones adicionales para gestionar su infraestructura de cloud híbrido.
+
+* link:concept_saas.html["Cloud Manager realiza la transición a SaaS"]
+* link:concept_overview.html["Descubra cómo funciona Cloud Manager"]
+
+
+
+
+== Cambios de tipo de máquina
+
+Para garantizar que haya recursos adecuados disponibles para las funciones nuevas y próximas en Cloud Manager, hemos cambiado el tipo de instancia, máquina virtual y máquina mínimo necesario de la siguiente manera:
+
+* AWS: t3.xlarge
+* Azure: DS3 v2
+* GCP: n1-estándar-4
+
+
+Cuando actualice el tipo de máquina, tendrá acceso a funciones como una nueva experiencia de Kubernetes, la caché global de archivos, la supervisión, etc.
+
+Los tamaños predeterminados son el mínimo admitido link:reference_cloud_mgr_reqs.html["Según los requisitos de CPU y RAM"].
+
+Cloud Manager le pedirá instrucciones para cambiar el tipo de máquina del conector.
+
+
+
+== Configuración de la cuenta
+
+Presentamos las cuentas de Cloud Central para proporcionar multi-tenancy, para ayudarle a organizar usuarios y recursos en espacios de trabajo aislados y para gestionar el acceso a conectores y suscripciones.
+
+* link:concept_cloud_central_accounts.html["Obtenga información acerca de las cuentas de Cloud Central: Usuarios, espacios de trabajo, conectores y suscripciones"]
+* link:task_setting_up_cloud_central_accounts.html["Aprenda cómo empezar a utilizar su cuenta"]
+* link:task_managing_cloud_central_accounts.html["Aprenda a administrar su cuenta después de configurarla arriba"]
+
+
+
+
+== Nuevos permisos
+
+De vez en cuando, Cloud Manager requiere permisos adicionales de proveedores de cloud, ya que presentamos nuevas funciones y mejoras. Esta sección identifica los nuevos permisos que ahora son necesarios.
+
+Puede encontrar la lista más reciente de permisos en https://mysupport.netapp.com/site/info/cloud-manager-policies["Políticas de Cloud Manager"^].
+
+
+
+=== AWS
+
+A partir de la versión 3.8.1, se necesitan los siguientes permisos para utilizar Backup en la nube con Cloud Volumes ONTAP. link:task_backup_to_s3.html["Leer más"].
+
+[source, json]
+----
+{
+            "Sid": "backupPolicy",
+            "Effect": "Allow",
+            "Action": [
+                "s3:DeleteBucket",
+                "s3:GetLifecycleConfiguration",
+                "s3:PutLifecycleConfiguration",
+                "s3:PutBucketTagging",
+                "s3:ListBucketVersions",
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:ListAllMyBuckets",
+                "s3:GetBucketTagging",
+                "s3:GetBucketLocation",
+                "s3:GetBucketPolicyStatus",
+                "s3:GetBucketPublicAccessBlock",
+                "s3:GetBucketAcl",
+                "s3:GetBucketPolicy",
+                "s3:PutBucketPublicAccessBlock"
+            ],
+            "Resource": [
+                "arn:aws:s3:::netapp-backup-*"
+            ]
+        },
+----
+
+
+=== Azure
+
+* Para evitar que se produzcan errores en la implementación de Azure, asegúrese de que su política de Cloud Manager en Azure incluya el siguiente permiso:
++
+[source, json]
+----
+"Microsoft.Resources/deployments/operationStatuses/read"
+----
+* A partir de la versión 3.8.7, se requiere el siguiente permiso para cifrar los discos gestionados de Azure en sistemas Cloud Volumes ONTAP de un solo nodo mediante claves externas de otra cuenta. link:reference_new_occm.html#cloud-volumes-ontap-enhancements["Leer más"].
++
+[source, json]
+----
+"Microsoft.Compute/diskEncryptionSets/read"
+----
+* Se requieren los siguientes permisos para habilitar la caché de archivos global en Cloud Volumes ONTAP. link:concept_gfc.html["Leer más"].
++
+[source, json]
+----
+"Microsoft.Resources/deployments/operationStatuses/read",
+"Microsoft.Insights/Metrics/Read",
+"Microsoft.Compute/virtualMachines/extensions/write",
+"Microsoft.Compute/virtualMachines/extensions/read",
+"Microsoft.Compute/virtualMachines/extensions/delete",
+"Microsoft.Compute/virtualMachines/delete",
+"Microsoft.Network/networkInterfaces/delete",
+"Microsoft.Network/networkSecurityGroups/delete",
+"Microsoft.Resources/deployments/delete",
+----
+
+
+
+
+=== GCP
+
+
+
+==== Nuevos permisos para la gestión de Kubernetes
+
+A partir del lanzamiento de la versión 3.8.8, la cuenta de servicio de un conector requiere los siguientes permisos para detectar y gestionar clústeres de Kubernetes que se ejecutan en Google Kubernetes Engine (GKE):
+
+[source, yaml]
+----
+- container.*
+----
+
+
+==== Nuevos permisos para organización en niveles de los datos
+
+A partir de la versión 3.8, se necesitan los siguientes permisos para utilizar una cuenta de servicio para la organización en niveles de datos. link:reference_new_occm.html#data-tiering-enhancements-in-gcp["Leer más"].
+
+[source, yaml]
+----
+- storage.buckets.update
+- compute.instances.setServiceAccount
+- iam.serviceAccounts.getIamPolicy
+- iam.serviceAccounts.list
+----
+
+
+== Nuevos puntos finales
+
+El conector requiere acceso saliente a Internet para gestionar recursos y procesos dentro de su entorno de nube pública. En esta sección se identifican los nuevos puntos finales que ahora se requieren.
+
+Puede encontrar el link:reference_networking.html["lista completa de puntos finales a los que se accede desde su navegador web aquí"] y la link:reference_networking_cloud_manager.html#outbound-internet-access["Lista completa de puntos finales a los que accede el conector aquí"].
+
+* Los usuarios deben acceder a Cloud Manager desde un explorador web mediante la contacto con el siguiente extremo:
++
+\https://cloudmanager.netapp.com
+
+* Los conectores requieren acceso al siguiente extremo para obtener imágenes de software de componentes de contenedor para una infraestructura Docker:
++
+\https://cloudmanagerinfraprod.azurecr.io
+
++
+Asegúrese de que el firewall permite el acceso a este extremo desde el conector.
+
+

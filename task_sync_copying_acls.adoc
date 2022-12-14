@@ -1,0 +1,85 @@
+---
+sidebar: sidebar 
+permalink: task_sync_copying_acls.html 
+keywords: permissions, access control list, acls, ntfs, cifs, smb, shares, robocopy, copy, transfer, activate, operating system, os, ram, cpu, networking, copy acls to the target 
+summary: 'Cloud Sync puede copiar listas de control de acceso (ACL) entre un recurso compartido de SMB de origen y un recurso compartido de SMB de destino. Si es necesario, puede conservar manualmente las ACL usted mismo mediante robocopy.' 
+---
+= Copiar ACL entre recursos compartidos de SMB
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Sync puede copiar listas de control de acceso (ACL) entre un recurso compartido de SMB de origen y un recurso compartido de SMB de destino. Si es necesario, puede conservar manualmente las ACL usted mismo mediante robocopy.
+
+.Opciones
+* <<Configurar Cloud Sync para copiar ACL entre servidores SMB,Configure Cloud Sync para que copie automáticamente las ACL>>
+* <<Copia manual de ACL,Copie manualmente las ACL usted mismo>>
+
+
+
+
+== Configurar Cloud Sync para copiar ACL entre servidores SMB
+
+Copiar ACL entre servidores de SMB habilitando una configuración cuando se crea una relación o después de crear una relación.
+
+Tenga en cuenta que esta función está disponible para las nuevas relaciones de sincronización creadas después de la versión 23 de febrero de 2020. Si desea utilizar esta característica con relaciones existentes creadas antes de esa fecha, deberá volver a crear la relación.
+
+.Lo que necesitará
+* Una nueva relación de sincronización o una relación de sincronización existente creada después de la versión del 23 de febrero de 2020.
+* Cualquier tipo de agente de datos.
++
+Esta función funciona con _any_ type de agente de datos: AWS, Azure, Google Cloud Platform o agente de datos en las instalaciones. Se puede ejecutar el agente de datos en las instalaciones link:task_sync_installing_linux.html["cualquier sistema operativo compatible"].
+
+
+
+.Pasos para una nueva relación
+. En Cloud Sync, haga clic en *Crear nueva sincronización*.
+. Arrastre y suelte *SMB Server* al origen y al destino y haga clic en *continuar*.
+. En la página *SMB Server*:
++
+.. Introduzca un nuevo servidor SMB o seleccione un servidor existente y haga clic en *continuar*.
+.. Introduzca credenciales para el servidor SMB.
+.. Seleccione *Copiar listas de control de acceso al destino* y haga clic en *continuar*.
++
+image:screenshot_acl_support.gif["Captura de pantalla que muestra la opción para activar las listas de control de acceso de copia en el destino."]
+
+
+
+. Siga el resto de las indicaciones para crear la relación de sincronización.
+
+
+.Pasos para una relación existente
+. Pase el ratón por la relación de sincronización y haga clic en el menú de acción.
+. Haga clic en *Configuración*.
+. Seleccione *Copiar listas de control de acceso al destino*.
+. Haga clic en *Guardar configuración*.
+
+
+.Resultado
+Al sincronizar datos, Cloud Sync conserva las ACL entre los recursos compartidos de SMB de origen y de destino.
+
+
+
+== Copia manual de ACL
+
+Se pueden conservar manualmente las ACL entre recursos compartidos de SMB mediante el comando Windows robocopy.
+
+.Pasos
+. Identifique un host Windows con acceso completo a ambos recursos compartidos SMB.
+. Si alguno de los extremos requiere autenticación, utilice el comando *net use* para conectarse a los extremos desde el host de Windows.
++
+Debe realizar este paso antes de utilizar robocopy.
+
+. En Cloud Sync, cree una nueva relación entre los recursos compartidos de SMB de origen y de destino, o sincronice una relación existente.
+. Una vez finalizada la sincronización de datos, ejecute el siguiente comando desde el host de Windows para sincronizar las ACL y la propiedad:
++
+ robocopy /E /COPY:SOU /secfix [source] [target] /w:0 /r:0 /XD ~snapshots /UNILOG:”[logfilepath]
++
+Se deben especificar tanto _source_ como _target_ con el formato UNC. Por ejemplo: \\<servidor>\<recurso compartido>\<ruta>
+
+

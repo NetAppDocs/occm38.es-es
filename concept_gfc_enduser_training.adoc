@@ -1,0 +1,33 @@
+---
+sidebar: sidebar 
+permalink: concept_gfc_enduser_training.html 
+keywords: global file cache, training 
+summary: Usted querrá formar a sus usuarios en las prácticas recomendadas para acceder a los archivos compartidos a través de la caché global de archivos. 
+---
+= Formación para el usuario final
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Usted querrá formar a sus usuarios en las prácticas recomendadas para acceder a los archivos compartidos a través de la caché global de archivos.
+
+Esta es la fase final de la implementación de la caché global de archivos, la fase de implementación del usuario final.
+
+Para preparar y agilizar el proceso de integración del usuario final, utilice la siguiente plantilla de correo electrónico que le ayudará a informar a los usuarios finales sobre lo que significa trabajar en un entorno de "datos centrales". Esto ayudará a sus usuarios a aprovechar todas las ventajas de la solución Global File Cache. También hemos publicado un vídeo que se puede compartir con los usuarios "de formación" cuando sea necesario.
+
+Personalice y reenvíe los siguientes recursos a los usuarios finales para prepararlos para la implementación:
+
+* Vídeo de formación de usuarioslink:https://www.youtube.com/watch?v=RYvhnTz4bEA["Vídeo de formación para usuarios finales"^]
+* Plantilla de correo electrónicolink:https://repo.cloudsync.netapp.com/gfc/Global%20File%20Cache%20Onboarding%20Email.emltpl["Plantilla de correo electrónico para Mac (.emltpl)"]
++
+link:https://docs.netapp.com/us-en/occm/media/Global_File_Cache_Onboarding_Email.msg["Plantilla de correo electrónico de Windows (.msg)"]
+
+* Comunicaciones de incorporaciónlink:https://repo.cloudsync.netapp.com/gfc/Global%20File%20Cache%20Customer%20Onboarding%20-%20Draft.docx["Documento de Word (.docx)"]
+
+
+Consulte el capítulo 12 de la link:https://repo.cloudsync.netapp.com/gfc/NetApp%20GFC%20-%20User%20Guide.pdf["Guía del usuario de caché global de archivos de NetApp"^] para material adicional.

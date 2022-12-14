@@ -1,0 +1,140 @@
+---
+sidebar: sidebar 
+permalink: task_setup_cvs_gcp.html 
+keywords: cloud volumes service for gcp, google cloud, cloud volumes, create cloud volumes, discover cloud volumes service for gcp, cloud volumes service subscription, discover cloud volumes service subscription, discover region, allowed clients, create snapshots 
+summary: Cree un entorno de trabajo de Cloud Volumes Service para Google Cloud en Cloud Manager para crear y gestionar volúmenes y snapshots. 
+---
+= Configure Cloud Volumes Service para Google Cloud
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cree un entorno de trabajo de Cloud Volumes Service para Google Cloud en Cloud Manager para crear y gestionar volúmenes y snapshots.
+
+
+
+== Inicio rápido
+
+Empiece rápidamente siguiendo estos pasos o vaya a la siguiente sección para obtener toda la información.
+
+
+
+==== image:number1.png["Número 1"] Habilite la API de Cloud Volumes Service
+
+[role="quick-margin-para"]
+En Google, habilite la API de Cloud Volumes Service para GCP para que Cloud Manager pueda gestionar la suscripción y los volúmenes de cloud.
+
+
+
+==== image:number2.png["Número 2"] Cree una cuenta de servicio de GCP y descargue las credenciales
+
+[role="quick-margin-para"]
+Desde Google, cree una cuenta de servicio y una función de GCP para que Cloud Manager pueda acceder a su cuenta de Cloud Volumes Service para GCP.
+
+
+
+==== image:number3.png["Número 3"] Crear un entorno de trabajo de Cloud Volumes Service para GCP
+
+[role="quick-margin-para"]
+En Cloud Manager, haga clic en *Agregar entorno de trabajo* > *Google Cloud* > *Cloud Volumes Service* y, a continuación, proporcione detalles sobre la cuenta de servicio y el proyecto de Google Cloud.
+
+
+
+== Habilite la API de Cloud Volumes Service
+
+En Google Cloud Shell, ejecute el siguiente comando para habilitar la API de Cloud Volumes Service:
+
+`gcloud --project=<my-cvs-project> services enable cloudvolumesgcp-api.netapp.com`
+
+
+
+== Dé acceso a Cloud Manager a Cloud Volumes Service for Cuenta para GCP
+
+Debe completar las siguientes tareas para que Cloud Manager pueda acceder a su proyecto de Google Cloud:
+
+* Cree una nueva cuenta de servicio
+* Agregue el nuevo miembro de la cuenta de servicio al proyecto y. asignar roles específicos de ti (permisos)
+* Cree y descargue un par de claves para la cuenta de servicio Que se utiliza para autenticar en Google
+
+
+.Pasos
+. En Google Cloud Console, vaya a la página *Cuentas de servicio*.
+. Haga clic en *Seleccionar un proyecto*, elija su proyecto y haga clic en *Abrir*.
+. Haga clic en *Crear cuenta de servicio*, introduzca el nombre de la cuenta de servicio (nombre descriptivo para mostrar) y la descripción, y haga clic en *Crear*.
+. En la página _IAM_ haga clic en *Agregar* y rellene los campos de la página _Add Members_:
++
+.. En el campo nuevos miembros, introduzca el ID de cuenta de servicio completo, por ejemplo, user1-service-account-cvs@project1.iam.gserviceaccount.com.
+.. Añada estos roles:
++
+*** _NetApp Cloud Volumes Admin_
+*** _Visor de redes de computación_
+*** _Visor de carpetas_
+
+
+.. Haga clic en *Guardar*.
+
+
+. En la página _Service account details_ haga clic en *Agregar clave > Crear nueva clave*.
+. Seleccione *JSON* como el tipo de clave y haga clic en *Crear*.
++
+Al hacer clic en *Crear* se genera y descarga en el sistema su nuevo par de claves públicas/privadas. Sirve como la única copia de la clave privada. Almacene este archivo de forma segura porque puede utilizarse para autenticarse como cuenta de servicio.
+
+
+
+Si desea conocer los pasos detallados, consulte los temas de Google Cloud link:https://cloud.google.com/iam/docs/creating-managing-service-accounts["Crear y administrar cuentas de servicio"^], link:https://cloud.google.com/iam/docs/granting-changing-revoking-access["Otorgar, cambiar y revocar el acceso a los recursos"^], y. link:https://cloud.google.com/iam/docs/creating-managing-service-account-keys["Crear y administrar claves de cuenta de servicio"^].
+
+
+
+== Crear un entorno de trabajo de Cloud Volumes Service para GCP
+
+Configure un entorno de trabajo de Cloud Volumes Service para GCP en Cloud Manager para que pueda empezar a crear volúmenes.
+
+Independientemente de si ya ha creado volúmenes desde Google Cloud Console, o si acaba de suscribirse a Cloud Volumes Service para GCP y no tiene aún volúmenes, el primer paso es crear un entorno laboral para los volúmenes basados en su suscripción para GCP.
+
+Si Cloud Volumes ya existen para esta suscripción, los volúmenes aparecerán en el nuevo entorno de trabajo. Si todavía no ha añadido ningún volumen de cloud para la suscripción a GCP, podrá hacerlo después de crear el nuevo entorno de trabajo.
+
+
+TIP: Si tiene suscripciones y volúmenes en varios proyectos de GCP, deberá realizar esta tarea para cada proyecto.
+
+.Antes de empezar
+Debe disponer de la siguiente información al agregar una suscripción a cada proyecto:
+
+* Credenciales de cuenta de servicio (clave privada JSON que ha descargado)
+* Nombre del proyecto
+
+
+.Pasos
+. En Cloud Manager, agregue un nuevo entorno de trabajo, seleccione la ubicación *Google Cloud* y haga clic en *continuar*.
+. Seleccione *Cloud Volumes Service* y haga clic en *continuar*.
++
+image:screenshot_add_cvs_gcp_working_env.png["Captura de pantalla de la adición de un entorno de trabajo para una suscripción a Cloud Volumes Service para GCP."]
+
+. Proporcione información sobre su suscripción a Cloud Volumes Service:
++
+.. Introduzca el nombre del entorno de trabajo que desee utilizar.
+.. Copie y pegue la clave privada JSON que ha descargado en los pasos anteriores.
+.. Seleccione el nombre de su proyecto de Google Cloud.
+.. Haga clic en *Agregar*.
++
+image:screenshot_add_cvs_gcp_credentials.png["Captura de pantalla de la adición de credenciales para una suscripción a Cloud Volumes Service para GCP."]
+
+
+
+
+
+.Resultado
+Cloud Manager muestra su entorno de trabajo de Cloud Volumes Service para Google Cloud.
+
+image:screenshot_cvs_gcp_cloud.png["Una captura de pantalla del entorno de trabajo de Cloud Volumes Service para Google Cloud."]
+
+Si Cloud Volumes ya existe para esta suscripción, los volúmenes aparecen en el nuevo entorno de trabajo, como se muestra en la captura de pantalla. Puede añadir volúmenes de cloud adicionales desde Cloud Manager.
+
+Si no hay Cloud Volumes para esta suscripción, créelos ahora.
+
+.El futuro
+link:task_manage_cvs_gcp.html["Comience a crear y gestionar volúmenes"].

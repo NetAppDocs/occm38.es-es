@@ -1,0 +1,36 @@
+---
+sidebar: sidebar 
+permalink: task_overriding_cifs_locks.html 
+keywords: CIFS locks, azure maintenance, maintenance events, cifs sessions, storage failover 
+summary: El administrador de cuentas puede habilitar un ajuste en Cloud Manager para evitar problemas con la conmutación por error del almacenamiento de Cloud Volumes ONTAP durante eventos de mantenimiento de Azure. Cuando se habilita este ajuste, Cloud Volumes ONTAP veta CIFS locks y restablece las sesiones CIFS activas. 
+---
+= Anulación de los bloqueos de CIFS para la alta disponibilidad de Cloud Volumes ONTAP en Azure
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+El administrador de cuentas puede habilitar un ajuste en Cloud Manager para evitar problemas con la conmutación por error del almacenamiento de Cloud Volumes ONTAP durante eventos de mantenimiento de Azure. Cuando se habilita este ajuste, Cloud Volumes ONTAP veta CIFS locks y restablece las sesiones CIFS activas.
+
+.Acerca de esta tarea
+Microsoft Azure programa eventos de mantenimiento periódicos en sus máquinas virtuales. Cuando se produce un evento de mantenimiento en un nodo de un par de alta disponibilidad de Cloud Volumes ONTAP, el par de alta disponibilidad inicia la toma de control del almacenamiento. Si hay sesiones CIFS activas durante este evento de mantenimiento, los bloqueos de archivos CIFS pueden evitar la conmutación por error del almacenamiento.
+
+Si se habilita esta configuración, Cloud Volumes ONTAP vetará los bloqueos y restablecerá las sesiones CIFS activas. Como resultado, la pareja de alta disponibilidad puede completar los procesos de conmutación por error del almacenamiento durante estos eventos de mantenimiento.
+
+
+IMPORTANT: Este proceso puede provocar interrupciones en los clientes CIFS. Se pueden perder los datos que no están comprometidos con los clientes CIFS.
+
+.Lo que necesitará
+Debe crear un conector antes de poder cambiar la configuración de Cloud Manager. link:concept_connectors.html#how-to-create-a-connector["Vea cómo"].
+
+.Pasos
+. En la parte superior derecha de la consola de Cloud Manager, haga clic en el icono Configuración y seleccione *Configuración de Cloud Manager*.
++
+image:screenshot_settings_icon.gif["Captura de pantalla que muestra el icono Configuración en la parte superior derecha de la consola de Cloud Manager."]
+
+. En *bloqueos CIFS ha*, seleccione la casilla de verificación y haga clic en *Guardar*.
+

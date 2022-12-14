@@ -1,0 +1,31 @@
+---
+sidebar: sidebar 
+permalink: concept_performance.html 
+keywords: performance, technical report, TR, workload 
+summary: Es posible revisar los resultados de rendimiento con el fin de ayudarle a decidir qué cargas de trabajo son las adecuadas para Cloud Volumes ONTAP. 
+---
+= Rendimiento
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Es posible revisar los resultados de rendimiento con el fin de ayudarle a decidir qué cargas de trabajo son las adecuadas para Cloud Volumes ONTAP.
+
+* Cloud Volumes ONTAP para AWS
++
+https://www.netapp.com/us/media/tr-4383.pdf["Informe técnico de NetApp 4383: Caracterización del rendimiento de Cloud Volumes ONTAP en Amazon Web Services con cargas de trabajo de las aplicaciones"^].
+
+* Cloud Volumes ONTAP para Microsoft Azure
++
+https://www.netapp.com/us/media/tr-4671.pdf["Informe técnico de NetApp 4671: Caracterización del rendimiento de Cloud Volumes ONTAP en Azure con cargas de trabajo de aplicaciones"^].
+
+* Cloud Volumes ONTAP para Google Cloud
++
+https://www.netapp.com/us/media/tr-4816.pdf["Informe técnico de NetApp 4816: Caracterización del rendimiento de Cloud Volumes ONTAP para Google Cloud"^].
+
+

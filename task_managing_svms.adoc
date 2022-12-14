@@ -1,0 +1,83 @@
+---
+sidebar: sidebar 
+permalink: task_managing_svms.html 
+keywords: storage virtual machine, vserver, svm, storage vm, supported number, number supported 
+summary: Una máquina virtual de almacenamiento es un equipo virtual que se ejecuta en ONTAP y proporciona servicios de datos y almacenamiento a sus clientes. Puede que lo sepa como una SVM o un Vserver. Cloud Volumes ONTAP se configura con una máquina virtual de almacenamiento de forma predeterminada, pero algunas configuraciones admiten máquinas virtuales de almacenamiento adicionales. 
+---
+= Gestionar máquinas virtuales de almacenamiento
+:toc: macro
+:hardbreaks:
+:allow-uri-read: 
+:toc: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+Una máquina virtual de almacenamiento es un equipo virtual que se ejecuta en ONTAP y proporciona servicios de datos y almacenamiento a sus clientes. Puede que lo sepa como un _SVM_ o un _vserver_. Cloud Volumes ONTAP se configura con una máquina virtual de almacenamiento de forma predeterminada, pero algunas configuraciones admiten máquinas virtuales de almacenamiento adicionales.
+
+
+
+== Número admitido de máquinas virtuales de almacenamiento
+
+Cloud Volumes ONTAP 9.7 admite varios equipos virtuales de almacenamiento en AWS con determinadas configuraciones y una licencia complementaria. https://docs.netapp.com/us-en/cloud-volumes-ontap/reference_limits_aws_97.html#logical-storage-limits["Vea el número de máquinas virtuales de almacenamiento compatibles en AWS"^]. Póngase en contacto con el equipo de cuenta para obtener una licencia adicional SVM.
+
+Todas las demás configuraciones de Cloud Volumes ONTAP admiten un equipo virtual de almacenamiento que sirve datos y un equipo virtual de almacenamiento de destino utilizado para la recuperación ante desastres. Puede activar el equipo virtual de almacenamiento de destino para acceder a los datos si se produce una interrupción en el equipo virtual de almacenamiento de origen.
+
+Una máquina virtual de almacenamiento abarca todo el sistema Cloud Volumes ONTAP (par de alta disponibilidad o nodo único).
+
+
+
+== Creación de máquinas virtuales de almacenamiento adicionales
+
+Si es compatible con su configuración, puede crear equipos virtuales de almacenamiento adicionales mediante link:task_connecting_to_otc.html["System Manager o CLI"].
+
+* http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-cifs-cg/GUID-CE5DE09F-3B48-48FE-A41C-9D69C3D0C402.html["Creación de una SVM para el acceso de SMB"^]
+* http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nfs-cg/GUID-CE5DE09F-3B48-48FE-A41C-9D69C3D0C402.html["Creación de una SVM para acceso NFS"^]
+* http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-iscsi-cpg/GUID-0FCB46AA-DA18-417B-A9EF-B6A665DB77FC.html["Creación de una SVM para acceso iSCSI"^]
+* https://library.netapp.com/ecm/ecm_get_file/ECMLP2839856["Creación de una SVM de destino para recuperación ante desastres"^]
+
+
+
+
+== Trabajar con varias máquinas virtuales de almacenamiento en Cloud Manager
+
+Cloud Manager admite todas las máquinas virtuales de almacenamiento adicionales que se creen desde System Manager o desde la interfaz de línea de comandos.
+
+Por ejemplo, la siguiente imagen muestra cómo puede elegir una máquina virtual de almacenamiento al crear un volumen.
+
+image:screenshot_create_volume_svm.gif["Captura de pantalla que muestra la capacidad de seleccionar el equipo virtual de almacenamiento en el que desea crear un volumen."]
+
+Y la siguiente imagen muestra cómo puede elegir una máquina virtual de almacenamiento cuando se replica un volumen en otro sistema.
+
+image:screenshot_replicate_volume_svm.gif["Captura de pantalla que muestra la capacidad de seleccionar el equipo virtual de almacenamiento en el que desea replicar un volumen."]
+
+
+
+== Gestionar la recuperación ante desastres de equipos virtuales de almacenamiento
+
+Cloud Manager no ofrece ningún tipo de configuración ni orquestación para la recuperación ante desastres de máquinas virtuales de almacenamiento. Se debe usar System Manager o la CLI.
+
+* https://library.netapp.com/ecm/ecm_get_file/ECMLP2839856["Guía exprés de preparación para la recuperación de desastres de SVM"^]
+* https://library.netapp.com/ecm/ecm_get_file/ECMLP2839857["Guía exprés de recuperación ante desastres de SVM"^]
+
+
+
+
+== Modificación del nombre de la máquina virtual de almacenamiento
+
+Cloud Manager nombra automáticamente a la máquina virtual de almacenamiento única que crea para Cloud Volumes ONTAP. Puede modificar el nombre de la máquina virtual de almacenamiento si tiene estrictos estándares de nomenclatura. Por ejemplo, podría que el nombre coincida con el nombre que se le da a las máquinas virtuales de almacenamiento de los clústeres de ONTAP.
+
+Si creó cualquier máquina virtual de almacenamiento adicional para Cloud Volumes ONTAP, no podrá cambiar el nombre de las máquinas virtuales de almacenamiento desde Cloud Manager. Tendrá que hacerlo directamente desde Cloud Volumes ONTAP mediante System Manager o la CLI.
+
+.Pasos
+. En el entorno de trabajo, haga clic en el icono de menú y, a continuación, haga clic en *Información*.
+. Haga clic en el icono de edición a la derecha del nombre de la máquina virtual de almacenamiento.
++
+image:screenshot_svm.gif["Screen shot: Muestra el campo SVM Name y el icono de edición en el que debe hacer clic para modificar el nombre de la SVM."]
+
+. En el cuadro de diálogo Modificar nombre de SVM, cambie el nombre y, a continuación, haga clic en *Guardar*.
+

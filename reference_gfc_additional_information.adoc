@@ -1,0 +1,39 @@
+---
+sidebar: sidebar 
+permalink: reference_gfc_additional_information.html 
+keywords: global file cache 
+summary: Use los siguientes enlaces para obtener más información acerca de Global File Cache y otros productos de NetApp. 
+---
+= Información adicional
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Utilice los siguientes enlaces para obtener más información acerca de Global File Cache y otros productos de NetApp:
+
+* Preguntas más frecuentes sobre la caché global de archivos
++
+** Vea una lista de preguntas y respuestas más frecuentes link:https://cloud.netapp.com/global-file-cache-faq["aquí"^]
+
+
+* link:https://repo.cloudsync.netapp.com/gfc/NetApp%20GFC%20-%20User%20Guide.pdf["Guía del usuario de caché global de archivos de NetApp"^]
+* Documentación de productos de NetApp
++
+** Consulte documentación adicional para los productos cloud de NetApp https://docs.netapp.com/us-en/cloud/["aquí"^]
+** Consulte la documentación adicional para todos los productos de NetApp https://docs.netapp.com["aquí"^]
+
+
+* El soporte al cliente para usuarios de la caché global de archivos con Cloud Volumes ONTAP está disponible a través de los siguientes canales:
++
+** Proceso guiado de resolución de problemas, gestión de casos, base de conocimientos, descargas, herramientas y mucho más, vaya link:https://cloud.netapp.com/gfc-support["aquí"^]
+** Inicie sesión en el soporte de NetApp en https://mysupport.netapp.com[] Con sus credenciales de NSS
+** Para obtener asistencia inmediata para un problema P1, llame al +1 856.481.3990 (opción 2)
+
+
+* El soporte al cliente para usuarios de caché global de archivos que utilizan Cloud Volumes Services y Azure NetApp Files está disponible a través de un soporte estándar de su proveedor. Póngase en contacto con el Servicio de atención al cliente de Google o con el Servicio de atención al cliente de Microsoft,
+

@@ -1,0 +1,116 @@
+---
+sidebar: sidebar 
+permalink: concept_storage_management.html 
+keywords: provisioning, capacity management, storage provisioning, manual, automatic, advanced allocation, aggregates, thin provisioning, free space, mode 
+summary: Cloud Manager proporciona una gestión simplificada y avanzada del almacenamiento de Cloud Volumes ONTAP. 
+---
+= Gestión del almacenamiento
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Cloud Manager proporciona una gestión simplificada y avanzada del almacenamiento de Cloud Volumes ONTAP.
+
+
+IMPORTANT: Todos los discos y agregados deben crearse y eliminarse directamente desde Cloud Manager. No debe realizar estas acciones desde otra herramienta de gestión. De esta manera, se puede afectar a la estabilidad del sistema, se puede obstaculizar la capacidad de añadir discos en el futuro y generar potencialmente cuotas redundantes para proveedores de cloud.
+
+
+
+== Aprovisionamiento de almacenamiento
+
+Cloud Manager facilita el aprovisionamiento de almacenamiento para Cloud Volumes ONTAP al comprar discos y gestionar agregados. Solo tiene que crear volúmenes. Puede utilizar una opción de asignación avanzada para aprovisionar los agregados por sí mismo, si lo desea.
+
+
+
+=== Aprovisionamiento simplificado
+
+Los agregados proporcionan almacenamiento en cloud a volúmenes. Cloud Manager crea agregados para el usuario cuando inicia una instancia y cuando aprovisiona volúmenes adicionales.
+
+Al crear un volumen, Cloud Manager lleva a cabo una de estas tres cosas:
+
+* Coloca el volumen en un agregado existente que tiene suficiente espacio libre.
+* Coloca el volumen en una agrupación existente al comprar más discos para esa agrupación.
+* Compra discos para un nuevo agregado y coloca el volumen en ese agregado.
+
+
+Cloud Manager determina dónde colocar un nuevo volumen examinando varios factores: El tamaño máximo de un agregado, si está habilitado el aprovisionamiento ligero y los umbrales de espacio libre para los agregados.
+
+
+TIP: El administrador de cuentas puede modificar los umbrales de espacio libre desde la página *Configuración*.
+
+
+
+==== Selección de tamaño de disco para agregados en AWS
+
+Cuando Cloud Manager crea nuevos agregados para Cloud Volumes ONTAP en AWS, aumenta gradualmente el tamaño del disco en un agregado, a medida que aumenta el número de agregados del sistema. Cloud Manager logra esto para garantizar que la capacidad máxima del sistema se pueda utilizar antes de que alcance el número máximo de discos de datos permitidos en AWS.
+
+Por ejemplo, Cloud Manager podría elegir los siguientes tamaños de disco para los agregados en un sistema Premium o BYOL de Cloud Volumes ONTAP:
+
+[cols="3*"]
+|===
+| Número de agregado | Tamaño de disco | Capacidad máxima de agregado 
+
+
+| 1 | 500 MB | 3 TB 
+
+
+| 4 | 1 TB | 6 TB 
+
+
+| 6 | 2 TB | 12 TB 
+|===
+Puede elegir el tamaño del disco usted mismo utilizando la opción de asignación avanzada.
+
+
+
+=== Asignación avanzada
+
+En lugar de dejar que Cloud Manager gestione agregados, puede hacerlo usted mismo. link:task_provisioning_storage.html#creating-aggregates["Desde la página *asignación avanzada*"], puede crear nuevos agregados que incluyan un número específico de discos, agregar discos a un agregado existente y crear volúmenes en agregados específicos.
+
+
+
+== Gestión de la capacidad
+
+El administrador de cuentas puede elegir si Cloud Manager notifica las decisiones sobre capacidad de almacenamiento o si Cloud Manager gestiona automáticamente los requisitos de capacidad. Puede que le resulte útil comprender cómo funcionan estos modos.
+
+
+
+=== Gestión de la capacidad automática
+
+El modo de gestión de la capacidad se establece como automático de manera predeterminada. En este modo, Cloud Manager adquiere automáticamente discos nuevos para instancias de Cloud Volumes ONTAP cuando se necesita más capacidad, elimina las colecciones de discos (agregados) no utilizadas, mueve volúmenes entre agregados cuando es necesario e intenta dejar los discos sin fallo.
+
+A continuación se muestran ejemplos de cómo funciona este modo:
+
+* Si un agregado con 5 o menos discos EBS llega al umbral de capacidad, Cloud Manager compra automáticamente nuevos discos para ese agregado, de modo que los volúmenes puedan seguir creciendo.
+* Si un agregado con 12 discos de Azure alcanza el umbral de capacidad, Cloud Manager mueve automáticamente un volumen de ese agregado a un agregado con capacidad disponible o a un nuevo agregado.
++
+Si Cloud Manager crea un nuevo agregado para el volumen, elige un tamaño de disco que aloja el tamaño de ese volumen.
+
++
+Tenga en cuenta que ahora hay espacio libre disponible en el agregado original. Los volúmenes existentes o los volúmenes nuevos pueden usar ese espacio. En este escenario, no se puede devolver el espacio a AWS, Azure o GCP.
+
+* Si un agregado no contiene volúmenes durante más de 12 horas, Cloud Manager los elimina.
+
+
+
+
+==== Gestión de LUN con gestión de la capacidad automática
+
+La gestión automática de la capacidad de Cloud Manager no se aplica a las LUN. Cuando Cloud Manager crea un LUN, deshabilita la función de crecimiento automático.
+
+
+
+==== Gestión de inodos con gestión automática de la capacidad
+
+Cloud Manager supervisa el uso de nodos de información en un volumen. Cuando se utiliza el 85 % de los inodos, Cloud Manager aumenta el tamaño del volumen para aumentar el número de inodos disponibles. El número de archivos que puede contener un volumen está determinado por la cantidad de inodos que tiene.
+
+
+
+=== Gestión manual de la capacidad
+
+Si el administrador de cuentas establece el modo de gestión de la capacidad en manual, Cloud Manager muestra los mensajes de acción necesarios cuando se deben tomar decisiones sobre la capacidad. Los mismos ejemplos descritos en el modo automático se aplican al modo manual, pero depende de usted aceptar las acciones.

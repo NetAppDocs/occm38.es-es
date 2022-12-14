@@ -1,0 +1,149 @@
+---
+sidebar: sidebar 
+permalink: concept_connectors.html 
+keywords: 'concept, connectors, learn about connectors, service connectors, what are connectors, what is a connector, what"s a connector, days, 14 days' 
+summary: En la mayoría de los casos, deberá poner en marcha un conector en su cloud o en su red local. El conector permite a Cloud Manager gestionar recursos y procesos dentro de su entorno de cloud público. 
+---
+= Más información sobre conectores
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+En la mayoría de los casos, un administrador de cuentas tendrá que poner en marcha un _Connector_ en su red local o en la nube. El conector permite a Cloud Manager gestionar recursos y procesos dentro de su entorno de cloud público.
+
+
+
+== Cuando se necesita un conector
+
+Se requiere un conector para utilizar cualquiera de las siguientes funciones en Cloud Manager:
+
+* Cloud Volumes ONTAP
+* Clústeres de ONTAP en las instalaciones
+* Cumplimiento de normativas en el cloud
+* Kubernetes
+* Backup a cloud
+* Supervisión
+* Organización en niveles en las instalaciones
+* Caché de archivos global
+* Detección de bloques de Amazon S3
+
+
+Se requiere un conector *_no_* para Azure NetApp Files, Cloud Volumes Service o Cloud Sync.
+
+
+NOTE: Mientras que un conector no es necesario para configurar y administrar Azure NetApp Files, es necesario un conector si desea utilizar Cloud Compliance para analizar datos de Azure NetApp Files.
+
+
+
+== Ubicaciones admitidas
+
+Se admite un conector en las siguientes ubicaciones:
+
+* Amazon Web Services
+* Microsoft Azure
+* Google Cloud
+* En sus instalaciones
+
+
+
+NOTE: Si desea crear un sistema Cloud Volumes ONTAP en Google Cloud, también debe tener un conector en Google Cloud. No puede utilizar un conector que se ejecute en otra ubicación.
+
+
+
+== Los conectores deben permanecer en funcionamiento
+
+Un conector debe permanecer en funcionamiento en todo momento. Es importante para la salud y el funcionamiento continuos de los servicios que usted habilita.
+
+Por ejemplo, un conector es un componente clave en la salud y el funcionamiento de los sistemas de Cloud Volumes ONTAP PAYGO. Si el conector está apagado, los sistemas de Cloud Volumes ONTAP PAYGO se apagarán tras perder la comunicación con un conector durante más de 14 días.
+
+
+
+== Cómo crear un conector
+
+Un administrador de cuentas debe crear un conector antes de que un administrador de área de trabajo pueda crear un entorno de trabajo Cloud Volumes ONTAP y utilizar cualquiera de las demás funciones enumeradas anteriormente.
+
+Un administrador de cuentas puede crear un conector de varias maneras:
+
+* Directamente desde Cloud Manager (recomendado)
++
+** link:task_creating_connectors_aws.html["Cree en AWS"]
+** link:task_creating_connectors_azure.html["Cree en Azure"]
+** link:task_creating_connectors_gcp.html["Crear en GCP"]
+
+
+* link:task_launching_aws_mktp.html["Desde el AWS Marketplace"]
+* link:task_launching_azure_mktp.html["Desde Azure Marketplace"]
+* link:task_installing_linux.html["Descargando e instalando el software en un Linux existente host"]
+
+
+Al crear su primer entorno de trabajo de Cloud Volumes ONTAP, Cloud Manager le solicitará que cree un conector si aún no lo tiene.
+
+
+
+== Permisos
+
+Se necesitan permisos específicos para crear el conector y se necesita otro conjunto de permisos para la propia instancia del conector.
+
+
+
+=== Permisos para crear un conector
+
+El usuario que crea un conector desde Cloud Manager necesita permisos específicos para implementar la instancia en el proveedor de cloud que usted elija. Cloud Manager le recordará los requisitos de permisos al crear un conector.
+
+https://mysupport.netapp.com/site/info/cloud-manager-policies["Vea políticas para cada proveedor de cloud"^].
+
+
+
+=== Permisos para la instancia de conector
+
+El conector necesita permisos específicos de proveedor de cloud para realizar operaciones en su nombre. Por ejemplo, para poner en marcha y gestionar Cloud Volumes ONTAP.
+
+Al crear un conector directamente desde Cloud Manager, Cloud Manager crea el conector con los permisos que necesita. No hay nada que usted necesita hacer.
+
+Si crea el conector usted mismo desde AWS Marketplace, Azure Marketplace o mediante la instalación manual del software, tendrá que asegurarse de que cuenta con los permisos adecuados.
+
+https://mysupport.netapp.com/site/info/cloud-manager-policies["Vea políticas para cada proveedor de cloud"^].
+
+
+
+== Cuándo usar varios conectores
+
+En algunos casos, es posible que sólo necesite un conector, pero es posible que necesite dos o más conectores.
+
+A continuación, se muestran algunos ejemplos:
+
+* Utiliza un entorno multicloud (AWS y Azure), por lo que tiene un conector en AWS y otro en Azure. Cada una de ellas gestiona los sistemas Cloud Volumes ONTAP que se ejecutan en estos entornos.
+* Un proveedor de servicios puede utilizar una cuenta de Cloud Central para proporcionar servicios a sus clientes mientras utiliza otra cuenta para proporcionar recuperación ante desastres para una de sus unidades de negocio. Cada cuenta tendría conectores independientes.
+
+
+
+
+== Cuándo cambiar entre conectores
+
+Al crear el primer conector, Cloud Manager utiliza automáticamente ese conector para cada entorno de trabajo adicional que cree. Una vez creado un conector adicional, deberá cambiar entre ellos para ver los entornos de trabajo específicos de cada conector.
+
+link:task_managing_connectors.html#switch-between-connectors["Aprenda a cambiar entre conectores"].
+
+
+
+== La interfaz de usuario local
+
+Mientras debe realizar casi todas las tareas de la https://cloudmanager.netapp.com["Interfaz de usuario de SaaS"^], una interfaz de usuario local todavía está disponible en el conector. Esta interfaz es necesaria para algunas tareas que se deben realizar desde el propio conector:
+
+* link:task_configuring_proxy.html["Establecimiento de un servidor proxy"]
+* Instalación de un parche (Normalmente, trabajará con el personal de NetApp para instalar un parche).
+* Descargando mensajes de AutoSupport (Normalmente dirigido por el personal de NetApp cuando tiene problemas)
+
+
+link:task_managing_connectors.html#accessing-the-local-ui["Aprenda a acceder a la interfaz de usuario local"].
+
+
+
+== Actualizaciones de conectores
+
+El conector actualiza automáticamente su software a la última versión, siempre que lo haya hecho link:reference_networking_cloud_manager.html["acceso a internet de salida"] para obtener la actualización de software.
